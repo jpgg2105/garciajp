@@ -440,12 +440,12 @@ footer a{color:var(--muted)}
       <section class="build explainer" id="ex" data-slug="how-transformers-work" aria-label="How transformers and attention work, step by step">
         <div class="build-track" style="height:450vh">
           <div class="pin">
-            <ol class="steps"><li class="step on"><span class="n">1</span><h3>Split text into tokens</h3><p>The model reads tokens, pieces of words with an ID each, not letters or whole sentences.</p></li><li class="step"><span class="n">2</span><h3>Give each token a vector</h3><p>Each token ID is looked up in a table of learned vectors, its embedding. Position information is added so word order counts.</p></li><li class="step"><span class="n">3</span><h3>Attention: decide what to look at</h3><p>For each token, attention scores every other token by relevance. Here “it” looks mostly at “cat”.</p></li><li class="step"><span class="n">4</span><h3>Many heads, many patterns</h3><p>Attention runs in parallel heads, and each learns a different pattern: what a word refers to, the word just before, what is said about a subject.</p></li><li class="step"><span class="n">5</span><h3>Predict the next token</h3><p>After many layers, the model gives a probability to every token in its vocabulary. One is picked, appended, and the process repeats.</p></li></ol>
+            <ol class="steps"><li class="step on"><span class="n">1</span><h3>Split text into tokens</h3><p>The model reads tokens, pieces of words with an ID each, not letters or whole sentences.</p></li><li class="step"><span class="n">2</span><h3>Give each token a vector</h3><p>Each token ID is looked up in a table of learned vectors, its embedding. Position information is included so word order counts.</p></li><li class="step"><span class="n">3</span><h3>Attention: decide what to look at</h3><p>For each token, attention scores every other token by relevance. Here “it” looks mostly at “cat”.</p></li><li class="step"><span class="n">4</span><h3>Many heads, many patterns</h3><p>Attention runs in parallel heads, and each learns a different pattern: what a word refers to, the word just before, what is said about a subject.</p></li><li class="step"><span class="n">5</span><h3>Predict the next token</h3><p>After many layers, the model gives a probability to every token in its vocabulary. One is picked, appended, and the process repeats.</p></li></ol>
             <div class="screen" aria-hidden="true">
               <div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="file">How transformers and attention work</span><span class="sample">Illustration</span></div>
               <canvas width="532" height="476"></canvas>
             </div>
-            <div class="ex-stills"><div class="ex-still"><h3>Split text into tokens</h3><p>The model reads tokens, pieces of words with an ID each, not letters or whole sentences.</p><canvas aria-hidden="true"></canvas></div><div class="ex-still"><h3>Give each token a vector</h3><p>Each token ID is looked up in a table of learned vectors, its embedding. Position information is added so word order counts.</p><canvas aria-hidden="true"></canvas></div><div class="ex-still"><h3>Attention: decide what to look at</h3><p>For each token, attention scores every other token by relevance. Here “it” looks mostly at “cat”.</p><canvas aria-hidden="true"></canvas></div><div class="ex-still"><h3>Many heads, many patterns</h3><p>Attention runs in parallel heads, and each learns a different pattern: what a word refers to, the word just before, what is said about a subject.</p><canvas aria-hidden="true"></canvas></div><div class="ex-still"><h3>Predict the next token</h3><p>After many layers, the model gives a probability to every token in its vocabulary. One is picked, appended, and the process repeats.</p><canvas aria-hidden="true"></canvas></div></div>
+            <div class="ex-stills"><div class="ex-still"><h3>Split text into tokens</h3><p>The model reads tokens, pieces of words with an ID each, not letters or whole sentences.</p><canvas aria-hidden="true"></canvas></div><div class="ex-still"><h3>Give each token a vector</h3><p>Each token ID is looked up in a table of learned vectors, its embedding. Position information is included so word order counts.</p><canvas aria-hidden="true"></canvas></div><div class="ex-still"><h3>Attention: decide what to look at</h3><p>For each token, attention scores every other token by relevance. Here “it” looks mostly at “cat”.</p><canvas aria-hidden="true"></canvas></div><div class="ex-still"><h3>Many heads, many patterns</h3><p>Attention runs in parallel heads, and each learns a different pattern: what a word refers to, the word just before, what is said about a subject.</p><canvas aria-hidden="true"></canvas></div><div class="ex-still"><h3>Predict the next token</h3><p>After many layers, the model gives a probability to every token in its vocabulary. One is picked, appended, and the process repeats.</p><canvas aria-hidden="true"></canvas></div></div>
             <div class="progress"><i style="transform: scaleX(0);"></i></div>
           </div>
         </div>
@@ -1043,7 +1043,7 @@ footer a{color:var(--muted)}
         ],
         [
           "Give each token a vector",
-          "Each token ID is looked up in a table of learned vectors, its embedding. Position information is added so word order counts."
+          "Each token ID is looked up in a table of learned vectors, its embedding. Position information is included so word order counts."
         ],
         [
           "Attention: decide what to look at",
@@ -1514,8 +1514,9 @@ const SCENES = {
       D.order.slice(0, 3).forEach(i => { const p = D.ragChunks[i]; K.arrow(D.q[0], D.q[1], p.x, p.y, { p: K.seg(S, 3.4, 3.9), color: C.accent, head: false, lw: .3 }); });
     }
     // rerank list
-    const listA = K.seg(S, 3.95, 4.3);
-    const cand = [[0, 1, .81], [0, 2, .52], [0, 0, .94], [2, 0, .33], [1, 1, .04]]; // retrieval order: [doc, chunk, rerank score]
+    const listA = K.seg(S, 3.95, 4.05);
+    const rr = [[.94, .81, .52], [.05, .04, .03], [.33, .12, .21]]; // reranker score per [doc][chunk]
+    const cand = D.order.slice(0, 5).map(i => [D.ragChunks[i].d, D.ragChunks[i].c, rr[D.ragChunks[i].d][D.ragChunks[i].c], D.ragChunks[i]]);
     const reranked = cand.map((c, i) => [i, c[2]]).sort((a, b) => b[1] - a[1]).map(a => a[0]);
     if (listA > 0){
       K.alpha(listA);
@@ -1524,6 +1525,12 @@ const SCENES = {
       cand.forEach((c, i) => {
         const from = 36 + i * 10.5, to = 36 + reranked.indexOf(i) * 10.5, y = K.lerp(from, to, mv);
         const top = reranked.indexOf(i) < 2 && mv > .9;
+        const g = K.io(K.seg(S, 3.95 + i * .05, 4.3 + i * .05));
+        if (g < 1){
+          K.alpha(1); K.rect(K.lerp(c[3].x - 1.2, 4, g), K.lerp(c[3].y - 1.2, y - 4.2, g), K.lerp(2.4, 44, g), K.lerp(2.4, 9, g), K.lerp(1.2, 1.8, g), { fill: K.lerp(0, 1, g) < .4 ? C.accent : C.surface, stroke: C.accent, lw: .3 });
+          return;
+        }
+        K.alpha(K.seg(S, 4.3 + i * .05, 4.38 + i * .05));
         K.rect(4, y - 4.2, 44, 9, 1.8, { fill: C.surface, stroke: top ? C.accent : C.line, lw: top ? .45 : .3 });
         K.text(texts[c[0]][c[1]], 6, y - 1.1, { size: 2.6, weight: 500 });
         K.rect(6, y + 2, 30 * c[2] * K.seg(S, 4.1, 4.5), 1, .5, { fill: top ? C.accent : C.strong });
@@ -1704,9 +1711,10 @@ const SCENES = {
     if (fade > .1) for (let l = 0; l < 3; l++){
       const a = ys(D.layers[l]), b = ys(D.layers[l + 1]);
       a.forEach((y1, i) => b.forEach((y2, j) => {
-        const W = D.weights[l][i][j], upd = K.seg(S, 3.2, 3.9), w = W.w - .5 * W.g * upd;
-        K.alpha(K.seg(S, .2 + l * .15, .6 + l * .15) * fade * (.25 + Math.abs(w) * .55));
+        const W = D.weights[l][i][j], w = W.w, grad = S >= 3 ? K.seg(S, 3 + (2 - l) * .25, 3.35 + (2 - l) * .25) : 0;
+        K.alpha(K.seg(S, .2 + l * .15, .6 + l * .15) * fade * (.25 + Math.abs(w) * .55) * (1 - .6 * grad));
         K.line(X[l] + 3, y1, X[l + 1] - 3, y2, { color: w >= 0 ? C.accent : C.strong, lw: .15 + Math.abs(w) * .55 });
+        if (grad > 0 && S < 4){ K.alpha(fade * grad * Math.abs(W.g) * .9); K.line(X[l] + 3, y1, X[l + 1] - 3, y2, { color: C.warn, lw: .2 + Math.abs(W.g) * .6 }); }
         if (fw > l && fw < l + 1){ K.alpha(fade); K.packet(X[l] + 3, y1, X[l + 1] - 3, y2, fw - l, { r: .7 }); }
         if (bw < l + 1 && bw > l){ K.alpha(fade); K.packet(X[l + 1] - 3, y2, X[l] + 3, y1, (l + 1) - bw, { r: .7, color: C.warn }); }
       }));
@@ -1735,7 +1743,7 @@ const SCENES = {
       K.rect(80, 88, 30, 8, 2, { fill: C.raised, stroke: C.warn, lw: .4 });
       K.text("loss 0.34", 95, 92, { size: 3, mono: true, align: "center", color: C.warn, weight: 600 });
     }
-    if (S >= 3 && S < 4){ K.alpha(K.seg(S, 3.05, 3.3)); K.text("gradients flow backward and adjust every weight", 60, 12, { size: 2.8, align: "center", color: C.warn }); }
+    if (S >= 3 && S < 4){ K.alpha(K.seg(S, 3.05, 3.3)); K.text("each weight gets a gradient: its share of the error", 60, 12, { size: 2.8, align: "center", color: C.warn }); }
     // gradient descent plot
     const pa = K.seg(S, 4.1, 4.4);
     if (pa > 0){
@@ -1745,7 +1753,7 @@ const SCENES = {
       K.text("loss", 22, 20, { size: 2.6, color: C.muted }); K.text("weight value", 104, 86, { size: 2.6, color: C.muted, align: "right" });
       K.ctx.beginPath(); for (let x = 25; x <= 104; x += 1){ const y = 82 - f(x) * 2.3; x === 25 ? K.ctx.moveTo(x, y) : K.ctx.lineTo(x, y); }
       K.ctx.strokeStyle = C.strong; K.ctx.lineWidth = .45; K.ctx.stroke();
-      const xs = [27, 45, 57, 64, 68, 70.5], losses = [2.43, 0.87, 0.27, 0.08, 0.02, 0.01];
+      const xs = [27, 45, 57, 64, 68, 70], losses = xs.map(x => f(x) / 10);
       const k = K.seg(S, 4.4, 4.95) * (xs.length - 1), i = Math.floor(k), fr = K.ease(k - i);
       for (let j = 0; j < Math.min(i, xs.length - 1); j++){
         K.alpha(pa * .8); K.arrow(xs[j], 82 - f(xs[j]) * 2.3, xs[j + 1], 82 - f(xs[j + 1]) * 2.3, { color: C.accent, lw: .3, hs: 1.2 });
@@ -1753,19 +1761,21 @@ const SCENES = {
       const cx = i >= xs.length - 1 ? xs[xs.length - 1] : K.lerp(xs[i], xs[i + 1], fr);
       K.alpha(pa); K.dot(cx, 82 - f(cx) * 2.3 - 1.6, 1.6, { fill: C.accent });
       const li = Math.min(xs.length - 1, Math.round(k));
-      K.text(`step ${li + 1} · loss ${losses[li].toFixed(2)}`, 60, 12, { size: 3, mono: true, align: "center", color: C.accent, weight: 600 });
+      K.text(`step ${li + 1} · loss ${losses[li].toFixed(3)}`, 60, 12, { size: 3, mono: true, align: "center", color: C.accent, weight: 600 });
     }
     K.alpha(1);
   },
 
   /* ---------- Embeddings & vector search ---------- */
   vectors(K, S){
-    const C = K.C, O = [62, 52];
-    const P = { dog: [34, 30], cat: [44, 22], kitten: [48, 31], horse: [26, 42],
-                pizza: [84, 24], pasta: [94, 31], bread: [80, 36], cheese: [92, 43],
-                car: [72, 74], truck: [84, 82], bus: [64, 86], bike: [54, 72] };
-    const names = Object.keys(P), Q = [40, 35];
-    const groups = [["animals", [36, 31], 15], ["food", [87, 33], 14], ["vehicles", [69, 79], 15]];
+    const C = K.C, O = [60, 56];
+    const P = { dog: [24.7, 37.2], cat: [35.4, 24.5], kitten: [38.4, 35.2], horse: [26.3, 51.3], pizza: [76.9, 24.2], pasta: [91.7, 25.4], bread: [79.9, 39.3], cheese: [98.9, 40.3], car: [74.2, 91.2], truck: [62.4, 83.9], bus: [53.7, 91.5], bike: [77.2, 80.6] };
+    const names = Object.keys(P), Q = [36.8, 40.3];
+    const vec = p => [p[0] - O[0], p[1] - O[1]];
+    const cos = (a, b) => { const u = vec(a), v = vec(b); return (u[0]*v[0] + u[1]*v[1]) / (Math.hypot(...u) * Math.hypot(...v)); };
+    const ranked = names.map(n => [n, cos(Q, P[n])]).sort((a, b) => b[1] - a[1]).slice(0, 3);
+    const top3 = ranked.map(r => r[0]);
+    const groups = [["animals", [32, 37], 17], ["food", [86, 30], 14], ["vehicles", [66, 86], 13]];
     const ga = K.seg(S, .7, 1);
     groups.forEach(([n, c, r]) => {
       K.alpha(ga * .5 * (1 - .6 * K.seg(S, 3, 3.3))); K.dot(c[0], c[1], r, { fill: false, stroke: C.line, lw: .3 });
@@ -1777,21 +1787,21 @@ const SCENES = {
       const near = n => names.filter(m => m !== n).sort((a, b) => Math.hypot(P[a][0] - P[n][0], P[a][1] - P[n][1]) - Math.hypot(P[b][0] - P[n][0], P[b][1] - P[n][1])).slice(0, 2);
       K.alpha(gr * .55);
       names.forEach(n => near(n).forEach(m => K.line(P[n][0], P[n][1], P[m][0], P[m][1], { color: C.strong, lw: .25 })));
-      K.line(P.bike[0], P.bike[1], P.horse[0], P.horse[1], { color: C.strong, lw: .25 });
-      const path = ["bus", "bike", "horse", "dog"];
+      [["bike", "bread"], ["bread", "kitten"], ["bus", "horse"]].forEach(([a, b]) => K.line(P[a][0], P[a][1], P[b][0], P[b][1], { color: C.strong, lw: .25 }));
+      const path = ["truck", "bike", "bread", "kitten"];
       const hp = K.seg(S, 3.3, 3.85) * (path.length - 1);
       for (let i = 0; i < path.length - 1; i++){
         const p = K.clamp(hp - i); if (p <= 0) break;
         K.alpha(1); K.arrow(P[path[i]][0], P[path[i]][1], P[path[i + 1]][0], P[path[i + 1]][1], { p, color: C.accent, lw: .55, hs: 1.6 });
       }
-      K.alpha(K.seg(S, 3.3, 3.45)); K.text("start", P.bus[0], P.bus[1] + 4.5, { size: 2.5, align: "center", color: C.accent });
+      K.alpha(K.seg(S, 3.3, 3.45)); K.text("start", P.truck[0], P.truck[1] + 4.5, { size: 2.5, align: "center", color: C.accent });
       K.alpha(K.seg(S, 3.85, 4)); K.text("3 hops instead of 12 comparisons", 60, 95, { size: 2.8, align: "center", color: C.accent, weight: 600 });
     }
     // points
     names.forEach((n, i) => {
       const t = K.ease(K.seg(S, .05 + i * .03, .5 + i * .03)), x = K.lerp(O[0], P[n][0], t), y = K.lerp(O[1], P[n][1], t);
-      const hit = (S >= 2 && S < 3 && ["dog", "kitten", "cat"].includes(n) && K.seg(S, 2.45, 2.6) > 0);
-      const dim = S >= 2 && S < 3 && !["dog", "kitten", "cat"].includes(n) ? 1 - .6 * K.seg(S, 2.45, 2.6) : 1;
+      const hit = (S >= 2 && S < 3 && top3.includes(n) && K.seg(S, 2.45, 2.6) > 0);
+      const dim = S >= 2 && S < 3 && !top3.includes(n) ? 1 - .6 * K.seg(S, 2.45, 2.6) : 1;
       K.alpha(K.seg(S, i * .03, .2 + i * .03) * dim);
       K.dot(x, y, 1.3, { fill: hit ? C.accent : C.ink });
       K.text(n, x + 2, y - .2, { size: 2.8, weight: hit ? 600 : 500, color: hit ? C.accent : C.ink });
@@ -1799,7 +1809,7 @@ const SCENES = {
     // cosine similarity
     if (S >= 1 && S < 2){
       const a = K.seg(S, 1, 1.15), first = S < 1.55;
-      const pair = first ? ["dog", "cat"] : ["dog", "car"], sim = first ? "0.92" : "0.11";
+      const pair = first ? ["dog", "cat"] : ["dog", "pizza"], sim = (Math.abs(cos(P[pair[0]], P[pair[1]])) < .005 ? 0 : cos(P[pair[0]], P[pair[1]])).toFixed(2);
       K.alpha(1);
       K.dot(O[0], O[1], .9, { fill: C.muted });
       pair.forEach(n => K.arrow(O[0], O[1], P[n][0], P[n][1], { p: K.seg(S, first ? 1.05 : 1.6, first ? 1.3 : 1.85), color: C.accent, lw: .4 }));
@@ -1808,8 +1818,9 @@ const SCENES = {
       let lo = Math.min(a1, a2), hi = Math.max(a1, a2); if (hi - lo > Math.PI){ const t = lo; lo = hi; hi = t + Math.PI * 2; }
       K.ctx.beginPath(); K.ctx.arc(O[0], O[1], 7, lo, hi); K.ctx.strokeStyle = C.accent; K.ctx.lineWidth = .4; K.ctx.stroke();
       K.text(`${pair[0]} vs ${pair[1]}: cosine ${sim}`, 60, 95, { size: 3, align: "center", color: C.accent, weight: 600 });
-      K.alpha(a); K.text("origin", O[0] + 2.5, O[1] - 2.5, { size: 2.4, color: C.muted });
+      K.alpha(a); K.text("origin", O[0] + 2, O[1] + 3, { size: 2.4, color: C.muted });
     }
+    if (S >= 2 && S < 3){ K.alpha(1); K.dot(O[0], O[1], .9, { fill: C.muted }); K.arrow(O[0], O[1], Q[0], Q[1], { p: K.seg(S, 2.05, 2.3), color: C.accent, lw: .3, dash: [1, .8] }); }
     // query
     if (S >= 2 && S < 3){
       const qa = K.seg(S, 2, 2.2);
@@ -1819,11 +1830,11 @@ const SCENES = {
       K.text("puppy", Q[0] + 2.6, Q[1] + 3.6, { size: 3, weight: 700, color: C.accent });
       const ra = K.seg(S, 2.55, 2.8);
       if (ra > 0){
-        K.alpha(ra); K.rect(4, 64, 34, 26, 2.4, { fill: C.surface, stroke: C.strong });
-        K.text("closest to “puppy”", 7, 69, { size: 2.6, color: C.muted });
-        [["dog", "0.94"], ["kitten", "0.90"], ["cat", "0.88"]].forEach(([n, s], i) => {
-          K.text(`${i + 1}  ${n}`, 7, 75 + i * 5, { size: 2.9, weight: 600 });
-          K.text(s, 35, 75 + i * 5, { size: 2.6, mono: true, align: "right", color: C.accent });
+        K.alpha(ra); K.rect(3, 68, 30, 25, 2.4, { fill: C.surface, stroke: C.strong });
+        K.text("closest to “puppy”", 6, 73, { size: 2.6, color: C.muted });
+        ranked.forEach(([n, v], i) => {
+          K.text(`${i + 1}  ${n}`, 6, 79 + i * 5, { size: 2.9, weight: 600 });
+          K.text(v.toFixed(2), 30.5, 79 + i * 5, { size: 2.6, mono: true, align: "right", color: C.accent });
         });
       }
     }
@@ -1919,7 +1930,7 @@ function initExplainer(){
   }
   const canvas = host.querySelector(".screen canvas"), steps = [...host.querySelectorAll(".steps .step")], bar = host.querySelector(".progress i");
   const track = host.querySelector(".build-track");
-  let P = 0, cur = -1, raf = 0, visible = true, alive = true;
+  let P = 0, Pd = -1, last = 0, cur = -1, raf = 0, visible = true, alive = true;
   const setP = p => { P = Math.min(.9999, Math.max(0, p)); };
   let stopScroll;
   if (M && M.scroll){ const st = M.scroll(p => setP(p), { target: track, offset: ["start start", "end end"] }); stopScroll = typeof st === "function" ? st : null; }
@@ -1930,9 +1941,11 @@ function initExplainer(){
   function frame(now){
     if (!alive || !visible) { raf = 0; return; }
     if (now - lastC > 300){ C = exColors(); lastC = now; }
-    const S = P * N, idx = Math.min(N - 1, Math.floor(S));
+    const dt = Math.min(.05, last ? (now - last) / 1000 : .016); last = now;
+    Pd = Pd < 0 ? P : Pd + (P - Pd) * (1 - Math.exp(-dt * 10));
+    const S = Pd * N, idx = Math.min(N - 1, Math.floor(S));
     if (idx !== cur){ cur = idx; steps.forEach((s, i) => s.classList.toggle("on", i === idx)); }
-    bar.style.transform = `scaleX(${P})`;
+    bar.style.transform = `scaleX(${Pd})`;
     exDraw(canvas, scene, S, (now - t0) / 1000, C);
     raf = requestAnimationFrame(frame);
   }
