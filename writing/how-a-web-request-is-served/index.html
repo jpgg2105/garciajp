@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Juan Pablo García · AI Developer, RAG and Multi-Agent Systems</title>
-<meta name="description" content="Juan Pablo García, AI developer in Argentina. RAG pipelines, multi-agent systems and the full-stack products around them.">
-<link rel="canonical" href="https://garciajp.com/">
+<title>How a web request is served · Juan Pablo García</title>
+<meta name="description" content="Load balancing, caching and the database: the path most web requests take.">
+<link rel="canonical" href="https://garciajp.com/writing/how-a-web-request-is-served/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Juan Pablo García">
-<meta property="og:url" content="https://garciajp.com/">
-<meta property="og:title" content="Juan Pablo García · AI Developer, RAG and Multi-Agent Systems">
-<meta property="og:description" content="Juan Pablo García, AI developer in Argentina. RAG pipelines, multi-agent systems and the full-stack products around them.">
+<meta property="og:url" content="https://garciajp.com/writing/how-a-web-request-is-served/">
+<meta property="og:title" content="How a web request is served · Juan Pablo García">
+<meta property="og:description" content="Load balancing, caching and the database: the path most web requests take.">
 <meta property="og:image" content="https://garciajp.com/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -18,7 +18,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://garciajp.com/og.png">
 <meta name="author" content="Juan Pablo García">
-<script type="application/ld+json" id="ld">{"@context": "https://schema.org", "@graph": [{"@type": "ProfilePage", "url": "https://garciajp.com/", "name": "Juan Pablo García · AI Developer, RAG and Multi-Agent Systems", "mainEntity": {"@type": "Person", "@id": "https://garciajp.com/#person", "name": "Juan Pablo García", "url": "https://garciajp.com/", "image": "https://garciajp.com/og.png", "jobTitle": "AI Developer", "description": "Juan Pablo García, AI developer in Argentina. RAG pipelines, multi-agent systems and the full-stack products around them.", "email": "mailto:jpgarcia2154@gmail.com", "address": {"@type": "PostalAddress", "addressLocality": "San Juan", "addressRegion": "San Juan", "addressCountry": "AR"}, "alumniOf": [{"@type": "CollegeOrUniversity", "name": "University of Pennsylvania"}, {"@type": "CollegeOrUniversity", "name": "Universidad de Palermo"}], "worksFor": {"@type": "Organization", "name": "Nodos Hub"}, "knowsAbout": ["Retrieval-augmented generation", "Multi-agent systems", "LLM evaluation", "Python", "FastAPI", "React", "PostgreSQL", "Vector search"], "sameAs": ["https://github.com/jpgg2105", "https://www.linkedin.com/in/juan-pablo-garc%C3%ADa-ba3496360"]}}, {"@type": "WebSite", "url": "https://garciajp.com/", "name": "Juan Pablo García", "author": {"@id": "https://garciajp.com/#person"}}]}</script>
+<script type="application/ld+json" id="ld">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "url": "https://garciajp.com/writing/how-a-web-request-is-served/", "headline": "How a web request is served", "description": "Load balancing, caching and the database: the path most web requests take.", "datePublished": "2026-10-09", "author": {"@type": "Person", "@id": "https://garciajp.com/#person", "name": "Juan Pablo García", "url": "https://garciajp.com/", "image": "https://garciajp.com/og.png", "jobTitle": "AI Developer", "description": "Juan Pablo García, AI developer in Argentina. RAG pipelines, multi-agent systems and the full-stack products around them.", "email": "mailto:jpgarcia2154@gmail.com", "address": {"@type": "PostalAddress", "addressLocality": "San Juan", "addressRegion": "San Juan", "addressCountry": "AR"}, "alumniOf": [{"@type": "CollegeOrUniversity", "name": "University of Pennsylvania"}, {"@type": "CollegeOrUniversity", "name": "Universidad de Palermo"}], "worksFor": {"@type": "Organization", "name": "Nodos Hub"}, "knowsAbout": ["Retrieval-augmented generation", "Multi-agent systems", "LLM evaluation", "Python", "FastAPI", "React", "PostgreSQL", "Vector search"], "sameAs": ["https://github.com/jpgg2105", "https://www.linkedin.com/in/juan-pablo-garc%C3%ADa-ba3496360"]}, "genre": "Explainers"}]}</script>
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#0E0F12">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231D6B70'/%3E%3Ctext x='32' y='42' font-family='Helvetica,Arial,sans-serif' font-size='28' font-weight='700' fill='%23FFFFFF' text-anchor='middle'%3EJP%3C/text%3E%3C/svg%3E">
@@ -425,94 +425,34 @@ footer a{color:var(--muted)}
 <header class="top" id="top">
   <div class="wrap">
     <a class="brand" href="/" data-nav>Juan Pablo García</a>
-    <nav class="nav" id="nav" aria-label="Main"><a href="/" data-k="home" aria-current="page">Home</a><a href="/projects/" data-k="projects">Projects</a><a href="/services/" data-k="services">Services</a><a href="/resume/" data-k="resume">Resume</a><a href="/stack/" data-k="stack">Stack</a><a href="/writing/" data-k="writing">Writing</a><a href="/book/" data-k="book" class="cta-link">Book a call</a></nav>
+    <nav class="nav" id="nav" aria-label="Main"><a href="/" data-k="home">Home</a><a href="/projects/" data-k="projects">Projects</a><a href="/services/" data-k="services">Services</a><a href="/resume/" data-k="resume">Resume</a><a href="/stack/" data-k="stack">Stack</a><a href="/writing/" data-k="writing" aria-current="page">Writing</a><a href="/book/" data-k="book" class="cta-link">Book a call</a></nav>
   </div>
 </header>
 
 <main class="wrap" id="view" tabindex="-1">
     <div class="page">
-      <section class="hero">
-        <h1>I build AI systems that work <em>in production.</em></h1>
-        <p class="sub">I'm Juan Pablo, an AI developer in Argentina. I build <b>RAG pipelines, multi-agent systems</b> and the full-stack apps around them.</p>
-        <div class="row"><a class="btn" href="/book/">Book a 15-minute call <span class="arr"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"></path></svg></span></a><a class="btn line" href="/projects/">See my projects</a></div>
-        <div class="sched" aria-label="Availability"><div class="full"><b>October</b><span>Booked</span></div><a href="/book/"><b>November</b><span>Available</span></a><a href="/book/"><b>December</b><span>Available</span></a></div>
+      <section class="proj-head">
+        <a class="crumb" href="/writing/"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"></path></svg> All writing</a>
+        <div class="ex-meta"><span class="tag explainer">Explainer</span><span>5 steps · scroll to play</span></div>
+        <h1>How a web request is served</h1>
+        <p class="lede">Most web systems follow the same path: a load balancer spreads requests across servers, a cache answers the common ones fast, and a database holds the truth.</p>
       </section>
-      
-  <section class="build" aria-label="How I build an AI feature, from database to production">
-    <div class="build-track" id="track">
-      <div class="pin">
-        <ol class="steps" id="steps"><li class="step on"><span class="n">1</span><h3>Model the data</h3><p>Schemas that keep every customer's data apart and still make sense two years from now.</p></li><li class="step"><span class="n">2</span><h3>Retrieve the right context</h3><p>Hybrid search and reranking, so the model answers from the right passages.</p></li><li class="step"><span class="n">3</span><h3>Let agents check the work</h3><p>A planner, researcher and critic catch unsupported answers before users see them.</p></li><li class="step"><span class="n">4</span><h3>Ship it</h3><p>Deployed on a real server, tested, and handed over with docs.</p></li></ol>
-        <div class="screen" aria-hidden="true">
-          <div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="file" id="file">schema.sql</span><span class="sample">Sample data</span></div>
-          <div class="layer on" data-l="0"><pre class="code" id="sql"><span class="caret"></span></pre></div>
-          <div class="layer" data-l="1"><pre class="code" id="api"></pre></div>
-          <div class="layer" data-l="2">
-  <div class="run">
-    <div class="run-head"><div><h4>Agent run</h4><span class="muted" style="font-size:14px">4 agents · 5.7 s</span></div><div class="run-score num">8.6<small> / 10</small></div></div>
-    <div class="agent" data-row=""><b>Planner</b><span class="t">Split the question into 3 sub-questions</span><span class="muted num" style="font-size:14px">0.8 s</span></div><div class="agent" data-row=""><b>Researcher</b><span class="t">Searched 214 passages, kept 9</span><span class="muted num" style="font-size:14px">2.1 s</span></div><div class="agent" data-row=""><b>Critic</b><span class="t">One claim had no source, sent it back<span class="flag">Revised</span></span><span class="muted num" style="font-size:14px">1.2 s</span></div><div class="agent" data-row=""><b>Synthesizer</b><span class="t">Wrote the answer with 6 citations</span><span class="muted num" style="font-size:14px">1.6 s</span></div>
-  </div></div>
-          <div class="layer" data-l="3">
-  <div class="ship">
-    <div class="ship-url"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3 3 7-7"></path></svg> help.yourcompany.com/ask</div>
-    <div class="log"><span class="dim">$</span> git push origin main<br><span class="dim">Pipeline passed · 48 tests</span><br><span class="dim">gunicorn restarted · nginx reloaded</span><br><span class="ok">Live in production</span></div>
-    <div class="mini-app"><div class="ask"><span>Can I get a refund on an annual plan?</span><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"></path></svg></div>
-      <p class="ans">Yes, within 30 days of purchase<sup>1</sup>. The money goes back to the original card<sup>2</sup>.</p></div>
-  </div></div>
+      <section class="build explainer" id="ex" data-slug="how-a-web-request-is-served" aria-label="How a web request is served, step by step">
+        <div class="build-track" style="height:450vh">
+          <div class="pin">
+            <ol class="steps"><li class="step on"><span class="n">1</span><h3>A request arrives</h3><p>A browser sends a request. Before any of your code runs, it reaches a load balancer.</p></li><li class="step"><span class="n">2</span><h3>Spread the load</h3><p>The load balancer sends each request to a different server, so no single machine gets overwhelmed.</p></li><li class="step"><span class="n">3</span><h3>Check the cache first</h3><p>The server asks an in-memory cache for the answer. A hit comes back in a couple of milliseconds.</p></li><li class="step"><span class="n">4</span><h3>Fall back to the database</h3><p>On a miss, the server queries the database, which is slower, then saves the result in the cache for the next request.</p></li><li class="step"><span class="n">5</span><h3>Scale out</h3><p>When traffic grows, add servers behind the balancer. Watch the slowest requests (p99), not only the average.</p></li></ol>
+            <div class="screen" aria-hidden="true">
+              <div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="file">How a web request is served</span><span class="sample">Illustration</span></div>
+              <canvas width="532" height="476"></canvas>
+            </div>
+            <div class="ex-stills"><div class="ex-still"><h3>A request arrives</h3><p>A browser sends a request. Before any of your code runs, it reaches a load balancer.</p><canvas aria-hidden="true"></canvas></div><div class="ex-still"><h3>Spread the load</h3><p>The load balancer sends each request to a different server, so no single machine gets overwhelmed.</p><canvas aria-hidden="true"></canvas></div><div class="ex-still"><h3>Check the cache first</h3><p>The server asks an in-memory cache for the answer. A hit comes back in a couple of milliseconds.</p><canvas aria-hidden="true"></canvas></div><div class="ex-still"><h3>Fall back to the database</h3><p>On a miss, the server queries the database, which is slower, then saves the result in the cache for the next request.</p><canvas aria-hidden="true"></canvas></div><div class="ex-still"><h3>Scale out</h3><p>When traffic grows, add servers behind the balancer. Watch the slowest requests (p99), not only the average.</p><canvas aria-hidden="true"></canvas></div></div>
+            <div class="progress"><i style="transform: scaleX(0);"></i></div>
+          </div>
         </div>
-        <div class="deck">
-          <div class="deck-track" id="deck"><div class="still cur" data-i="0"><h3>Model the data</h3><p>Schemas that keep every customer's data apart and still make sense two years from now.</p><div class="card"><div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="file">schema.sql</span></div><div class="in"><pre class="code"><span class="kw">create table </span>documents (
-  id          <span class="kw">uuid primary key</span>,
-  tenant_id   <span class="kw">uuid not null references </span>tenants,
-  title       <span class="kw">text not null</span>,
-  body        <span class="kw">text not null</span>,
-  updated_at  <span class="kw">timestamptz default </span>now()
-);
-
-<span class="kw">create index on </span>documents (tenant_id);</pre></div></div></div><div class="still" data-i="1"><h3>Retrieve the right context</h3><p>Hybrid search and reranking, so the model answers from the right passages.</p><div class="card"><div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="file">POST /api/search</span></div><div class="in"><pre class="code"><span class="kw">POST </span>/api/search
-{ <span class="str">"query"</span>: <span class="str">"Can I get a refund on an annual plan?"</span>, <span class="str">"top_k"</span>: <span class="nm">3</span> }
-
-<span class="dim">200 OK · bm25 + dense · reranked
-</span>[
-  { <span class="str">"score"</span>: <span class="nm">0.92</span>, <span class="str">"text"</span>: <span class="str">"Annual plans are refundable within 30 days…"</span> },
-  { <span class="str">"score"</span>: <span class="nm">0.81</span>, <span class="str">"text"</span>: <span class="str">"Refunds go back to the original card…"</span> },
-  { <span class="str">"score"</span>: <span class="nm">0.64</span>, <span class="str">"text"</span>: <span class="str">"Monthly plans renew on the same day…"</span> }
-]</pre></div></div></div><div class="still" data-i="2"><h3>Let agents check the work</h3><p>A planner, researcher and critic catch unsupported answers before users see them.</p><div class="card"><div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="file">Agent run</span></div><div class="in">
-  <div class="run">
-    <div class="run-head"><div><h4>Agent run</h4><span class="muted" style="font-size:14px">4 agents · 5.7 s</span></div><div class="run-score num">8.6<small> / 10</small></div></div>
-    <div class="agent" data-row=""><b>Planner</b><span class="t">Split the question into 3 sub-questions</span><span class="muted num" style="font-size:14px">0.8 s</span></div><div class="agent" data-row=""><b>Researcher</b><span class="t">Searched 214 passages, kept 9</span><span class="muted num" style="font-size:14px">2.1 s</span></div><div class="agent" data-row=""><b>Critic</b><span class="t">One claim had no source, sent it back<span class="flag">Revised</span></span><span class="muted num" style="font-size:14px">1.2 s</span></div><div class="agent" data-row=""><b>Synthesizer</b><span class="t">Wrote the answer with 6 citations</span><span class="muted num" style="font-size:14px">1.6 s</span></div>
-  </div></div></div></div><div class="still" data-i="3"><h3>Ship it</h3><p>Deployed on a real server, tested, and handed over with docs.</p><div class="card"><div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="file">production</span></div><div class="in">
-  <div class="ship">
-    <div class="ship-url"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3 3 7-7"></path></svg> help.yourcompany.com/ask</div>
-    <div class="log"><span class="dim">$</span> git push origin main<br><span class="dim">Pipeline passed · 48 tests</span><br><span class="dim">gunicorn restarted · nginx reloaded</span><br><span class="ok">Live in production</span></div>
-    <div class="mini-app"><div class="ask"><span>Can I get a refund on an annual plan?</span><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"></path></svg></div>
-      <p class="ans">Yes, within 30 days of purchase<sup>1</sup>. The money goes back to the original card<sup>2</sup>.</p></div>
-  </div></div></div></div></div>
-          <div class="deck-nav"><div class="pips" id="pips"><button type="button" data-pip="0" aria-label="Step 1: Model the data" aria-current="true"><i></i></button><button type="button" data-pip="1" aria-label="Step 2: Retrieve the right context" aria-current="false"><i></i></button><button type="button" data-pip="2" aria-label="Step 3: Let agents check the work" aria-current="false"><i></i></button><button type="button" data-pip="3" aria-label="Step 4: Ship it" aria-current="false"><i></i></button></div><span class="counter num" id="counter">1 / 4 · Sample data</span></div>
-        </div>
-        <div class="progress"><i id="bar" style="transform: scaleX(0);"></i></div>
-      </div>
-    </div>
-  </section>
-      <section>
-        <div class="sh"><h2>Selected projects</h2><a href="/projects/">All projects</a></div>
-        <div class="plist">
-  <a class="prow" href="/projects/schools-analytics-dashboard/">
-    <div><h3>Analytics dashboard for hundreds of schools</h3><span class="meta">Nodos Hub · 2025 to now</span></div>
-    <p>A React and FastAPI dashboard in production, following attendance, performance and risk across hundreds of schools.</p>
-    <span class="go"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"></path></svg></span>
-  </a>
-  <a class="prow" href="/projects/research-agent/">
-    <div><h3>Research agent with its own benchmark</h3><span class="meta">Personal project · 2026</span></div>
-    <p>A RAG service, a four-agent research loop and a benchmark that tests whether the loop beats a single LLM call.</p>
-    <span class="go"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"></path></svg></span>
-  </a>
-  <a class="prow" href="/projects/chatbots-and-outreach/">
-    <div><h3>Chatbots and an outreach pipeline</h3><span class="meta">Nodos Hub · 2025</span></div>
-    <p>LLM chatbots that answer from client content, and a pipeline that finds leads and contacts them on WhatsApp.</p>
-    <span class="go"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"></path></svg></span>
-  </a></div>
       </section>
-      <section><div class="sh"><h2>Recent writing</h2><a href="/writing/">All articles, interviews and notes</a></div><div class="posts"><a class="post" href="/writing/how-rag-works/"><span class="d num">6 steps</span><h3>How RAG works</h3><span class="tag explainer">Explainer</span><p>Retrieval-augmented generation, step by step: from splitting documents to an answer with sources.</p></a><a class="post" href="/writing/how-ai-agents-work/"><span class="d num">5 steps</span><h3>How AI agents work</h3><span class="tag explainer">Explainer</span><p>An agent is a language model in a loop: plan, call a tool, read the result, decide again.</p></a><a class="post" href="/writing/how-transformers-work/"><span class="d num">5 steps</span><h3>How transformers and attention work</h3><span class="tag explainer">Explainer</span><p>What happens inside a large language model: tokens, embeddings, attention and next-token prediction.</p></a></div></section>
+      <section class="cv">
+        <h2>In short</h2><div><ul class="plain"><li>A cache is the cheapest speedup. Keeping it from serving stale data is the hard part.</li><li>Stateless servers are easy to scale out. Keep sessions and data in shared stores.</li><li>The latencies in the animation are illustrative. Measure your own percentiles.</li></ul></div>
+      </section>
       
   <section class="cta">
     <h2>Have an AI feature to build? Let's talk for 15 minutes.</h2>
