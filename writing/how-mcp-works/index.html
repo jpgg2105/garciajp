@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Stack · Juan Pablo García</title>
-<meta name="description" content="The languages, frameworks and AI tools I work with.">
-<link rel="canonical" href="https://garciajp.com/stack/">
+<title>How MCP connects AI apps to tools · Juan Pablo García</title>
+<meta name="description" content="The Model Context Protocol, step by step: discovery, tool calls, and why one server works in every app.">
+<link rel="canonical" href="https://garciajp.com/writing/how-mcp-works/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Juan Pablo García">
-<meta property="og:url" content="https://garciajp.com/stack/">
-<meta property="og:title" content="Stack · Juan Pablo García">
-<meta property="og:description" content="The languages, frameworks and AI tools I work with.">
+<meta property="og:url" content="https://garciajp.com/writing/how-mcp-works/">
+<meta property="og:title" content="How MCP connects AI apps to tools · Juan Pablo García">
+<meta property="og:description" content="The Model Context Protocol, step by step: discovery, tool calls, and why one server works in every app.">
 <meta property="og:image" content="https://garciajp.com/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -18,7 +18,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://garciajp.com/og.png">
 <meta name="author" content="Juan Pablo García">
-<script type="application/ld+json" id="ld">{"@context": "https://schema.org", "@graph": [{"@type": "WebPage", "url": "https://garciajp.com/stack/", "name": "Stack", "author": {"@type": "Person", "@id": "https://garciajp.com/#person", "name": "Juan Pablo García", "url": "https://garciajp.com/", "image": "https://garciajp.com/og.png", "jobTitle": "AI Developer", "description": "Juan Pablo García, AI developer in Argentina. RAG pipelines, multi-agent systems and the full-stack products around them.", "email": "mailto:jpgarcia2154@gmail.com", "address": {"@type": "PostalAddress", "addressLocality": "San Juan", "addressRegion": "San Juan", "addressCountry": "AR"}, "alumniOf": [{"@type": "CollegeOrUniversity", "name": "University of Pennsylvania"}, {"@type": "CollegeOrUniversity", "name": "Universidad de Palermo"}], "worksFor": {"@type": "Organization", "name": "Nodos Hub"}, "knowsAbout": ["Retrieval-augmented generation", "Multi-agent systems", "LLM evaluation", "Python", "FastAPI", "React", "PostgreSQL", "Vector search"], "sameAs": ["https://github.com/jpgg2105", "https://www.linkedin.com/in/juan-pablo-garc%C3%ADa-ba3496360"]}}]}</script>
+<script type="application/ld+json" id="ld">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "url": "https://garciajp.com/writing/how-mcp-works/", "headline": "How MCP connects AI apps to tools", "description": "The Model Context Protocol, step by step: discovery, tool calls, and why one server works in every app.", "datePublished": "2026-10-09", "author": {"@type": "Person", "@id": "https://garciajp.com/#person", "name": "Juan Pablo García", "url": "https://garciajp.com/", "image": "https://garciajp.com/og.png", "jobTitle": "AI Developer", "description": "Juan Pablo García, AI developer in Argentina. RAG pipelines, multi-agent systems and the full-stack products around them.", "email": "mailto:jpgarcia2154@gmail.com", "address": {"@type": "PostalAddress", "addressLocality": "San Juan", "addressRegion": "San Juan", "addressCountry": "AR"}, "alumniOf": [{"@type": "CollegeOrUniversity", "name": "University of Pennsylvania"}, {"@type": "CollegeOrUniversity", "name": "Universidad de Palermo"}], "worksFor": {"@type": "Organization", "name": "Nodos Hub"}, "knowsAbout": ["Retrieval-augmented generation", "Multi-agent systems", "LLM evaluation", "Python", "FastAPI", "React", "PostgreSQL", "Vector search"], "sameAs": ["https://github.com/jpgg2105", "https://www.linkedin.com/in/juan-pablo-garc%C3%ADa-ba3496360"]}, "genre": "Explainers"}]}</script>
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#0E0F12">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231D6B70'/%3E%3Ctext x='32' y='42' font-family='Helvetica,Arial,sans-serif' font-size='28' font-weight='700' fill='%23FFFFFF' text-anchor='middle'%3EJP%3C/text%3E%3C/svg%3E">
@@ -425,16 +425,42 @@ footer a{color:var(--muted)}
 <header class="top" id="top">
   <div class="wrap">
     <a class="brand" href="/" data-nav>Juan Pablo García</a>
-    <nav class="nav" id="nav" aria-label="Main"><a href="/" data-k="home">Home</a><a href="/projects/" data-k="projects">Projects</a><a href="/services/" data-k="services">Services</a><a href="/resume/" data-k="resume">Resume</a><a href="/stack/" data-k="stack" aria-current="page">Stack</a><a href="/writing/" data-k="writing">Writing</a><a href="/book/" data-k="book" class="cta-link">Book a call</a></nav>
+    <nav class="nav" id="nav" aria-label="Main"><a href="/" data-k="home">Home</a><a href="/projects/" data-k="projects">Projects</a><a href="/services/" data-k="services">Services</a><a href="/resume/" data-k="resume">Resume</a><a href="/stack/" data-k="stack">Stack</a><a href="/writing/" data-k="writing" aria-current="page">Writing</a><a href="/book/" data-k="book" class="cta-link">Book a call</a></nav>
   </div>
 </header>
 
 <main class="wrap" id="view" tabindex="-1">
     <div class="page">
-      <section>
-        <div class="sh"><h1 class="title">Stack</h1><span class="legend"><span class="chip prod">Name</span> used in client work</span></div>
-        <div class="groups"><div class="group"><h3>AI and machine learning</h3><div class="chips"><span class="chip prod">RAG</span><span class="chip prod">Gemini</span><span class="chip prod">OpenAI</span><span class="chip">Anthropic</span><span class="chip prod">ChromaDB</span><span class="chip prod">Pinecone</span><span class="chip">Qdrant</span><span class="chip">Multi-agent systems</span><span class="chip">PyTorch</span><span class="chip">scikit-learn</span></div></div><div class="group"><h3>Backend</h3><div class="chips"><span class="chip prod">Python</span><span class="chip prod">FastAPI</span><span class="chip prod">Flask</span><span class="chip">REST APIs</span><span class="chip prod">SQLAlchemy</span><span class="chip prod">Alembic</span><span class="chip prod">JWT</span><span class="chip prod">RBAC</span><span class="chip">OAuth</span></div></div><div class="group"><h3>Frontend</h3><div class="chips"><span class="chip prod">React</span><span class="chip">TypeScript</span><span class="chip">Vite</span><span class="chip">Tailwind CSS</span></div></div><div class="group"><h3>Infrastructure</h3><div class="chips"><span class="chip prod">PostgreSQL</span><span class="chip">Docker</span><span class="chip">GitHub Actions</span><span class="chip">Git</span><span class="chip prod">Linux</span><span class="chip prod">Gunicorn</span><span class="chip prod">systemd</span><span class="chip prod">nginx</span><span class="chip">Azure</span><span class="chip">pytest</span><span class="chip">Playwright</span></div></div><div class="group"><h3>Languages</h3><div class="chips"><span class="chip prod">Python</span><span class="chip">TypeScript</span><span class="chip">JavaScript</span><span class="chip prod">SQL</span><span class="chip">Java</span><span class="chip prod">PHP</span><span class="chip">C</span></div></div></div>
+      <section class="proj-head">
+        <a class="crumb" href="/writing/"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"></path></svg> All writing</a>
+        <div class="ex-meta"><span class="tag explainer">Explainer</span><span>5 steps · scroll to play</span></div>
+        <h1>How MCP connects AI apps to tools</h1>
+        <p class="lede">The Model Context Protocol (MCP) is an open standard for connecting AI applications to tools and data. Write a server once and any MCP app can use it.</p>
       </section>
+      <section class="build explainer" id="ex" data-slug="how-mcp-works" aria-label="How MCP connects AI apps to tools, step by step">
+        <div class="build-track" style="height:450vh">
+          <div class="pin">
+            <ol class="steps"><li class="step on"><span class="n">1</span><h3>Without a standard</h3><p>Every AI app needs its own integration with every tool. Three apps and four tools means twelve pieces of custom code.</p></li><li class="step"><span class="n">2</span><h3>One protocol in the middle</h3><p>With MCP, each app includes an MCP client and each tool sits behind an MCP server. Each side implements the protocol once.</p></li><li class="step"><span class="n">3</span><h3>Discover what's available</h3><p>The client connects and the two sides exchange capabilities. Then it asks the server which tools it offers, each with a name and an input schema.</p></li><li class="step"><span class="n">4</span><h3>Call a tool</h3><p>The model picks a tool and the app, often after asking the user, sends a tools/call request. The server runs it and returns the result.</p></li><li class="step"><span class="n">5</span><h3>Same server, any app</h3><p>The GitHub server written once now works in a chat app, an IDE and an agent, with no extra integration work.</p></li></ol>
+            <div class="screen" aria-hidden="true">
+              <div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="file">How MCP connects AI apps to tools</span><span class="sample">Illustration</span></div>
+              <canvas width="532" height="476"></canvas>
+            </div>
+            <div class="ex-stills"><div class="ex-still"><h3>Without a standard</h3><p>Every AI app needs its own integration with every tool. Three apps and four tools means twelve pieces of custom code.</p><canvas aria-hidden="true"></canvas></div><div class="ex-still"><h3>One protocol in the middle</h3><p>With MCP, each app includes an MCP client and each tool sits behind an MCP server. Each side implements the protocol once.</p><canvas aria-hidden="true"></canvas></div><div class="ex-still"><h3>Discover what's available</h3><p>The client connects and the two sides exchange capabilities. Then it asks the server which tools it offers, each with a name and an input schema.</p><canvas aria-hidden="true"></canvas></div><div class="ex-still"><h3>Call a tool</h3><p>The model picks a tool and the app, often after asking the user, sends a tools/call request. The server runs it and returns the result.</p><canvas aria-hidden="true"></canvas></div><div class="ex-still"><h3>Same server, any app</h3><p>The GitHub server written once now works in a chat app, an IDE and an agent, with no extra integration work.</p><canvas aria-hidden="true"></canvas></div></div>
+            <div class="progress"><i style="transform: scaleX(0);"></i></div>
+          </div>
+        </div>
+      </section>
+      <section class="cv">
+        <h2>In short</h2><div><ul class="plain"><li>Servers can expose tools (actions), resources (data to read) and prompts (reusable templates).</li><li>Messages are JSON-RPC, sent over stdio for local servers or HTTP for remote ones.</li><li>The host app decides what the model may do. Asking before risky calls is the app's job.</li><li>Treat third-party servers like any dependency: tool descriptions and results can carry prompt injection.</li></ul></div>
+      </section>
+      
+  <section class="cta">
+    <h2>Have an AI feature to build? Let's talk for 15 minutes.</h2>
+    <div class="row" style="justify-content:space-between;gap:20px">
+      <div class="row" style="flex:1 1 320px"><a class="btn" href="/book/">Book a call <span class="arr"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"></path></svg></span></a><a class="btn line" href="/resume/">Read my resume</a></div>
+      <div class="socials"><a href="https://github.com/jpgg2105" target="_blank" rel="noopener" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.56-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.19-3.08-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.82 1.19 3.08 0 4.41-2.69 5.38-5.25 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"></path></svg></a><a href="https://www.linkedin.com/in/juan-pablo-garc%C3%ADa-ba3496360" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"></path></svg></a></div>
+    </div>
+  </section>
     </div></main>
 <footer><div class="wrap"><span id="foot">© 2026 Juan Pablo García · San Juan, Argentina (UTC−3)</span><a id="footMail" href="mailto:jpgarcia2154@gmail.com">jpgarcia2154@gmail.com</a></div></footer>
 
