@@ -190,7 +190,7 @@ pre.code{margin:0;font:14px/1.75 var(--f-code);white-space:pre;color:var(--ink);
 .prow .go{width:44px;height:44px;border-radius:50%;border:1px solid var(--line-strong);display:grid;place-items:center;transition:transform .25s var(--ease-out),background-color .2s ease,color .2s ease,border-color .2s ease}
 .prow .go svg{width:16px;height:16px}
 .prow:active .go{transform:scale(.92)}
-@media (hover:hover) and (pointer:fine){.prow:hover h3{color:var(--accent)}.prow:hover .go{background:var(--accent-fill);border-color:transparent;color:var(--on-accent);transform:translateX(4px)}}
+@media (hover:hover) and (pointer:fine){.prow:hover .go{background:var(--accent-fill);border-color:transparent;color:var(--on-accent);transform:translateX(4px)}}
 
 /* project page */
 .proj-head{display:flex;flex-direction:column;gap:18px;max-width:900px}
@@ -414,6 +414,12 @@ footer a{color:var(--muted)}
   .screen .agent{padding:8px 10px;font-size:14px}.screen .agent .t{font-size:13px}
   .mini-app{padding:12px}.mini-app .ans{font-size:13.5px}
 }
+/* Project and service titles: a slow green-to-blue gradient moving through the text, each title offset */
+.shift{background:linear-gradient(100deg,#7EE0A8 0%,#6CD3D3 25%,#8AB4F8 50%,#6CD3D3 75%,#7EE0A8 100%) 0 0/200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-box-decoration-break:clone;box-decoration-break:clone;animation:shift 12s linear infinite;animation-delay:calc(var(--i,0) * -2.4s)}
+@supports (color: oklch(0 0 0)){
+  .shift{background-image:linear-gradient(100deg,oklch(.86 .13 155) 0%,oklch(.84 .11 195) 25%,oklch(.8 .11 250) 50%,oklch(.84 .11 195) 75%,oklch(.86 .13 155) 100%)}
+}
+@keyframes shift{to{background-position:-200% 0}}
 @media (prefers-reduced-motion:reduce){
   :root{animation:none !important}
   *,*::before,*::after{transition-duration:.01ms !important;animation:none !important;scroll-behavior:auto !important}
@@ -2623,9 +2629,9 @@ function schedule(){
     ? `<div class="full"><b>${m.name}</b><span>Booked</span></div>`
     : `<a href="${url("/book/")}"><b>${m.name}</b><span>Available</span></a>`).join("")}</div>`;
 }
-const projRow = p => `
+const projRow = (p, i = 0) => `
   <a class="prow" href="${url(`/projects/${p.slug}/`)}">
-    <div><h3>${esc(p.title)}</h3><span class="meta">${esc(p.client)} · ${esc(p.when)}</span></div>
+    <div><h3 class="shift" style="--i:${i}">${esc(p.title)}</h3><span class="meta">${esc(p.client)} · ${esc(p.when)}</span></div>
     <p>${esc(p.summary)}</p>
     <span class="go">${ICONS.arrow}</span>
   </a>`;
@@ -2709,7 +2715,7 @@ const V = {
     <div class="page">
       <section class="proj-head">
         <a class="crumb" href="${url("/projects/")}">${ICONS.arrow} All projects</a>
-        <h1>${esc(p.title)}</h1>
+        <h1 class="shift">${esc(p.title)}</h1>
         <p class="lede">${esc(p.summary)}</p>
         <div class="facts"><span><b>${esc(p.client)}</b></span><span>${esc(p.role)}</span><span class="num">${esc(p.when)}</span>${!p.code && p.codeNote ? `<span>${esc(p.codeNote)}</span>` : ""}</div>
         ${links ? `<div class="row">${links}</div>` : ""}
@@ -2733,7 +2739,7 @@ const V = {
     <div class="page">
       <section>
         <div class="sh"><h1 class="title">Services</h1><p>Every project starts with a free 15-minute call. You get a written plan and a price before any work begins.</p></div>
-        <div class="offers">${SITE.offers.map(o => `<div class="offer"><div><h3>${esc(o.name)}</h3><p>${esc(o.text)}</p><ul>${o.items.map(i => `<li>${esc(i)}</li>`).join("")}</ul></div><div class="terms"><span>Scope and price agreed after a first call</span><a class="btn line" href="${url("/book/")}" data-meet="${o.meeting}">Talk about this <span class="arr">${ICONS.arrow}</span></a></div></div>`).join("")}</div>
+        <div class="offers">${SITE.offers.map((o, i) => `<div class="offer"><div><h3 class="shift" style="--i:${i}">${esc(o.name)}</h3><p>${esc(o.text)}</p><ul>${o.items.map(i => `<li>${esc(i)}</li>`).join("")}</ul></div><div class="terms"><span>Scope and price agreed after a first call</span><a class="btn line" href="${url("/book/")}" data-meet="${o.meeting}">Talk about this <span class="arr">${ICONS.arrow}</span></a></div></div>`).join("")}</div>
       </section>
       <section>
         <div class="sh"><h2>How a project runs</h2></div>
