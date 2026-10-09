@@ -385,6 +385,25 @@ footer a{color:var(--muted)}
   .seg button{padding:0 11px;font-size:14px}
   .days{gap:5px}.days .dn{font-size:20px}
 }
+
+/* explainers */
+.tag.explainer{border-color:var(--accent);color:var(--accent)}
+.ex-meta{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;color:var(--muted);font-size:15px}
+.explainer .screen canvas{position:absolute;left:0;top:42px;width:100%;height:calc(100% - 42px);display:block}
+.ex-stills{display:none}
+.build.static .ex-stills{display:flex;flex-direction:column;gap:32px}
+.ex-still{display:flex;flex-direction:column;gap:8px}
+.ex-still h3{font-size:24px;color:var(--stage-ink)}
+.ex-still p{color:var(--stage-ink);opacity:.85;max-width:60ch}
+.ex-still canvas{width:100%;max-width:720px;aspect-ratio:6/5;background:var(--surface);border-radius:16px;margin-top:8px}
+.ex-note{font-size:14.5px;color:var(--muted)}
+@media (max-width:960px){.explainer .screen canvas{top:38px;height:calc(100% - 38px)}}
+@media (max-width:720px){
+  .build.explainer{margin-inline:calc(-1 * max(var(--gut), env(safe-area-inset-left, 0px)))}
+  .explainer .pin{border-radius:0;padding-inline:10px}
+  .explainer .screen{border-radius:12px}
+  .explainer .steps{padding-inline:6px}
+}
 @media (max-width:960px) and (max-height:720px){
   .step p{display:none}
   .pin{gap:12px;padding:16px 16px 30px}
@@ -431,14 +450,30 @@ footer a{color:var(--muted)}
   "location": "San Juan, Argentina (UTC−3)",
   "person": {
     "jobTitle": "AI Developer",
-    "locality": "San Juan", "region": "San Juan", "country": "AR",
-    "alumniOf": ["University of Pennsylvania", "Universidad de Palermo"],
+    "locality": "San Juan",
+    "region": "San Juan",
+    "country": "AR",
+    "alumniOf": [
+      "University of Pennsylvania",
+      "Universidad de Palermo"
+    ],
     "worksFor": "Nodos Hub",
-    "knowsAbout": ["Retrieval-augmented generation", "Multi-agent systems", "LLM evaluation", "Python", "FastAPI", "React", "PostgreSQL", "Vector search"]
+    "knowsAbout": [
+      "Retrieval-augmented generation",
+      "Multi-agent systems",
+      "LLM evaluation",
+      "Python",
+      "FastAPI",
+      "React",
+      "PostgreSQL",
+      "Vector search"
+    ]
   },
   "calUser": "",
   "resumePdf": "",
-  "booked": ["2026-10"],
+  "booked": [
+    "2026-10"
+  ],
   "links": {
     "github": "https://github.com/jpgg2105",
     "linkedin": "https://www.linkedin.com/in/juan-pablo-garc%C3%ADa-ba3496360",
@@ -448,143 +483,667 @@ footer a{color:var(--muted)}
     {
       "slug": "schools-analytics-dashboard",
       "title": "Analytics dashboard for hundreds of schools",
-      "client": "Nodos Hub", "role": "AI developer", "when": "2025 to now",
+      "client": "Nodos Hub",
+      "role": "AI developer",
+      "when": "2025 to now",
       "summary": "A React and FastAPI dashboard in production, following attendance, performance and risk across hundreds of schools.",
       "problem": "An education-sector client needed attendance, performance and risk indicators for hundreds of schools in one place, behind their own sign-in.",
       "solution": "A FastAPI backend and a React dashboard with Excel export, signed in through the client's identity system. I own the whole path to production.",
       "flows": [
-        { "title": "How a request flows", "steps": [
-          ["Sign-in", "SSO with the client's identity system"],
-          ["API", "FastAPI"],
-          ["Dashboard", "React: attendance, performance, risk"],
-          ["Export", "Excel"]
-        ] },
-        { "title": "How it ships", "steps": [
-          ["GitLab", "Source and pipeline"],
-          ["Cloud Linux server", "Gunicorn, systemd, nginx"],
-          ["Dev and prod", "Separate environments"]
-        ] }
+        {
+          "title": "How a request flows",
+          "steps": [
+            [
+              "Sign-in",
+              "SSO with the client's identity system"
+            ],
+            [
+              "API",
+              "FastAPI"
+            ],
+            [
+              "Dashboard",
+              "React: attendance, performance, risk"
+            ],
+            [
+              "Export",
+              "Excel"
+            ]
+          ]
+        },
+        {
+          "title": "How it ships",
+          "steps": [
+            [
+              "GitLab",
+              "Source and pipeline"
+            ],
+            [
+              "Cloud Linux server",
+              "Gunicorn, systemd, nginx"
+            ],
+            [
+              "Dev and prod",
+              "Separate environments"
+            ]
+          ]
+        }
       ],
       "notes": [],
-      "stack": ["React", "FastAPI", "Python", "Linux", "Gunicorn", "systemd", "nginx", "SSO"],
+      "stack": [
+        "React",
+        "FastAPI",
+        "Python",
+        "Linux",
+        "Gunicorn",
+        "systemd",
+        "nginx",
+        "SSO"
+      ],
       "result": "In production, used to follow students across hundreds of schools.",
-      "code": "", "codeNote": "Client work, code is private.", "demo": ""
+      "code": "",
+      "codeNote": "Client work, code is private.",
+      "demo": ""
     },
     {
       "slug": "research-agent",
       "title": "Research agent with its own benchmark",
-      "client": "Personal project", "role": "Author", "when": "2026",
+      "client": "Personal project",
+      "role": "Author",
+      "when": "2026",
       "summary": "A RAG service, a four-agent research loop and a benchmark that tests whether the loop beats a single LLM call.",
       "problem": "Multi-agent systems are easy to demo. I wanted to know whether a multi-agent loop actually beats a single LLM call on the same questions.",
       "solution": "Three parts that build on each other: ai-document-analyst, a RAG service with hybrid retrieval; research-agent, a four-role agent that uses it as a tool; and agent-benchmark, a harness that runs both approaches on the same questions.",
       "flows": [
-        { "title": "The agent loop", "steps": [
-          ["Question", ""],
-          ["Planner", "Plans the research"],
-          ["Researcher", "Calls the RAG service"],
-          ["Critic", "Reviews the draft"],
-          ["Synthesizer", "Writes the final answer"]
-        ] },
-        { "title": "Inside the RAG service", "steps": [
-          ["BM25", "Keyword match"],
-          ["Dense vectors", "Semantic match"],
-          ["Cross-encoder", "Reranks the merged results"]
-        ] }
+        {
+          "title": "The agent loop",
+          "steps": [
+            [
+              "Question",
+              ""
+            ],
+            [
+              "Planner",
+              "Plans the research"
+            ],
+            [
+              "Researcher",
+              "Calls the RAG service"
+            ],
+            [
+              "Critic",
+              "Reviews the draft"
+            ],
+            [
+              "Synthesizer",
+              "Writes the final answer"
+            ]
+          ]
+        },
+        {
+          "title": "Inside the RAG service",
+          "steps": [
+            [
+              "BM25",
+              "Keyword match"
+            ],
+            [
+              "Dense vectors",
+              "Semantic match"
+            ],
+            [
+              "Cross-encoder",
+              "Reranks the merged results"
+            ]
+          ]
+        }
       ],
       "notes": [
         "The benchmark harness runs the agent loop and a single-shot baseline on the same questions.",
         "CI and tests run without API keys, so anyone can reproduce the setup."
       ],
-      "stack": ["Python", "FastAPI", "React", "Docker", "GitHub Actions", "pytest"],
+      "stack": [
+        "Python",
+        "FastAPI",
+        "React",
+        "Docker",
+        "GitHub Actions",
+        "pytest"
+      ],
       "result": "A reproducible way to compare the agent loop with a single LLM call, instead of judging it by a demo.",
-      "code": "https://github.com/jpgg2105", "codeNote": "", "demo": ""
+      "code": "https://github.com/jpgg2105",
+      "codeNote": "",
+      "demo": ""
     },
     {
       "slug": "chatbots-and-outreach",
       "title": "Chatbots and an outreach pipeline",
-      "client": "Nodos Hub", "role": "AI developer", "when": "2025",
+      "client": "Nodos Hub",
+      "role": "AI developer",
+      "when": "2025",
       "summary": "LLM chatbots that answer from client content, and a pipeline that finds leads and contacts them on WhatsApp.",
       "problem": "Clients wanted assistants that answer from their own content, and a sales team was finding and contacting leads by hand.",
       "solution": "Chatbots built on Gemini and Pinecone, in PHP and Python depending on the client's stack, and an n8n workflow that scrapes leads, stores them in Airtable, drafts messages with the OpenAI API and sends them on WhatsApp.",
       "flows": [
-        { "title": "Chatbots", "steps": [
-          ["Client content", "Indexed in Pinecone"],
-          ["Chatbot", "Gemini, PHP or Python"]
-        ] },
-        { "title": "Outreach", "steps": [
-          ["Lead scraping", ""],
-          ["Airtable", "Lead records"],
-          ["OpenAI API", "Drafts each message"],
-          ["WhatsApp", "Sent through n8n"]
-        ] }
+        {
+          "title": "Chatbots",
+          "steps": [
+            [
+              "Client content",
+              "Indexed in Pinecone"
+            ],
+            [
+              "Chatbot",
+              "Gemini, PHP or Python"
+            ]
+          ]
+        },
+        {
+          "title": "Outreach",
+          "steps": [
+            [
+              "Lead scraping",
+              ""
+            ],
+            [
+              "Airtable",
+              "Lead records"
+            ],
+            [
+              "OpenAI API",
+              "Drafts each message"
+            ],
+            [
+              "WhatsApp",
+              "Sent through n8n"
+            ]
+          ]
+        }
       ],
       "notes": [],
-      "stack": ["Gemini", "Pinecone", "PHP", "Python", "n8n", "Airtable", "OpenAI"],
+      "stack": [
+        "Gemini",
+        "Pinecone",
+        "PHP",
+        "Python",
+        "n8n",
+        "Airtable",
+        "OpenAI"
+      ],
       "result": "Answers come from the client's own documents, and lead outreach runs without manual copying.",
-      "code": "", "codeNote": "Client work, code is private.", "demo": ""
+      "code": "",
+      "codeNote": "Client work, code is private.",
+      "demo": ""
     }
   ],
   "offers": [
-    { "name": "Add AI to your product", "meeting": 1,
+    {
+      "name": "Add AI to your product",
+      "meeting": 1,
       "text": "Assistants and search that answer from your own documents and data, with a way to measure whether the answers are good.",
-      "items": ["Retrieval tuned on your content", "Answers that cite their sources", "An evaluation set, so quality is measured instead of guessed"] },
-    { "name": "Build the whole product", "meeting": 1,
+      "items": [
+        "Retrieval tuned on your content",
+        "Answers that cite their sources",
+        "An evaluation set, so quality is measured instead of guessed"
+      ]
+    },
+    {
+      "name": "Build the whole product",
+      "meeting": 1,
       "text": "For founders and teams who need one person to own the backend, the interface and the deploy.",
-      "items": ["Database, API, auth and roles", "React interface", "Deploy, monitoring and handover"] },
-    { "name": "Automate a workflow", "meeting": 0,
+      "items": [
+        "Database, API, auth and roles",
+        "React interface",
+        "Deploy, monitoring and handover"
+      ]
+    },
+    {
+      "name": "Automate a workflow",
+      "meeting": 0,
       "text": "Connect the tools you already use so repetitive work runs by itself.",
-      "items": ["Lead capture and outreach", "Reports and exports", "n8n, APIs and LLM steps where they help"] }
+      "items": [
+        "Lead capture and outreach",
+        "Reports and exports",
+        "n8n, APIs and LLM steps where they help"
+      ]
+    }
   ],
   "process": [
-    ["Intro call", "15 minutes to understand the problem and see if I'm the right fit."],
-    ["Written plan", "Scope, timeline and price in writing before any work starts."],
-    ["Weekly demos", "You see working software every week."],
-    ["Handover", "Deployed, documented and walked through with your team."]
+    [
+      "Intro call",
+      "15 minutes to understand the problem and see if I'm the right fit."
+    ],
+    [
+      "Written plan",
+      "Scope, timeline and price in writing before any work starts."
+    ],
+    [
+      "Weekly demos",
+      "You see working software every week."
+    ],
+    [
+      "Handover",
+      "Deployed, documented and walked through with your team."
+    ]
   ],
   "resume": {
     "title": "AI Analyst · RAG and multi-agent systems",
     "summary": "AI developer who builds RAG pipelines, multi-agent systems and the full-stack products around them. I've built products end to end as the only developer and run a production dashboard for hundreds of schools. Studying AI Engineering at Universidad de Palermo, after a year as an exchange student at the University of Pennsylvania.",
     "jobs": [
-      { "when": "Feb 2025 to now", "role": "AI Developer", "at": "Nodos Hub · Remote", "points": [
-        "Built a React and FastAPI analytics dashboard, now in production, tracking attendance, performance and risk across hundreds of schools for an education-sector client, with Excel export.",
-        "Own the deployment pipeline from GitLab to a cloud Linux server (Gunicorn, systemd, nginx) across separate dev and prod environments, with SSO against the client's identity system.",
-        "Built LLM chatbots (Gemini, Pinecone) in PHP and Python, plus an automated lead-scraping and WhatsApp outreach pipeline using n8n, Airtable and the OpenAI API."] },
-      { "when": "Sep 2025 to Jul 2026", "role": "AI Developer", "at": "Glow Talent · Remote", "points": [
-        "Built a SaaS platform from scratch as the sole developer, from database design to deployment (Python, Flask, PostgreSQL).",
-        "Built retrieval-augmented generation and LLM-based evaluation features."] }
+      {
+        "when": "Feb 2025 to now",
+        "role": "AI Developer",
+        "at": "Nodos Hub · Remote",
+        "points": [
+          "Built a React and FastAPI analytics dashboard, now in production, tracking attendance, performance and risk across hundreds of schools for an education-sector client, with Excel export.",
+          "Own the deployment pipeline from GitLab to a cloud Linux server (Gunicorn, systemd, nginx) across separate dev and prod environments, with SSO against the client's identity system.",
+          "Built LLM chatbots (Gemini, Pinecone) in PHP and Python, plus an automated lead-scraping and WhatsApp outreach pipeline using n8n, Airtable and the OpenAI API."
+        ]
+      },
+      {
+        "when": "Sep 2025 to Jul 2026",
+        "role": "AI Developer",
+        "at": "Glow Talent · Remote",
+        "points": [
+          "Built a SaaS platform from scratch as the sole developer, from database design to deployment (Python, Flask, PostgreSQL).",
+          "Built retrieval-augmented generation and LLM-based evaluation features."
+        ]
+      }
     ],
     "projects": [
-      { "when": "Personal", "role": "ai-document-analyst · research-agent · agent-benchmark", "at": "Python, FastAPI, React, Docker", "points": [
-        "A RAG service with hybrid retrieval (BM25, dense vectors, cross-encoder reranking), a Planner, Researcher, Critic and Synthesizer multi-agent system that uses it as a tool, and a benchmark harness that compares the agent loop with a single-shot baseline. CI and tests run without API keys."] }
+      {
+        "when": "Personal",
+        "role": "ai-document-analyst · research-agent · agent-benchmark",
+        "at": "Python, FastAPI, React, Docker",
+        "points": [
+          "A RAG service with hybrid retrieval (BM25, dense vectors, cross-encoder reranking), a Planner, Researcher, Critic and Synthesizer multi-agent system that uses it as a tool, and a benchmark harness that compares the agent loop with a single-shot baseline. CI and tests run without API keys."
+        ]
+      }
     ],
     "education": [
-      { "when": "2024 to 2029", "role": "B.Eng. in Artificial Intelligence Engineering", "at": "Universidad de Palermo · intermediate AI Analyst degree expected Dec 2026" },
-      { "when": "2023 to 2024", "role": "Full-year exchange, BSE Computer Science", "at": "University of Pennsylvania · GPA 3.88/4.0, 80% scholarship, academic honors" },
-      { "when": "2016 to 2022", "role": "Electronics Technician", "at": "Escuela Industrial D. F. Sarmiento · GPA 9.40, valedictorian (Abanderado)" }
+      {
+        "when": "2024 to 2029",
+        "role": "B.Eng. in Artificial Intelligence Engineering",
+        "at": "Universidad de Palermo · intermediate AI Analyst degree expected Dec 2026"
+      },
+      {
+        "when": "2023 to 2024",
+        "role": "Full-year exchange, BSE Computer Science",
+        "at": "University of Pennsylvania · GPA 3.88/4.0, 80% scholarship, academic honors"
+      },
+      {
+        "when": "2016 to 2022",
+        "role": "Electronics Technician",
+        "at": "Escuela Industrial D. F. Sarmiento · GPA 9.40, valedictorian (Abanderado)"
+      }
     ],
     "honors": [
       "Bronze Medal, International Junior Science Olympiad (Qatar, 2019)",
       "Gold Medal, National Junior Science Olympiad (2019)",
       "80% scholarship, University of Pennsylvania; 100% scholarship offer, ITBA"
     ],
-    "languages": [["Spanish", "native"], ["English", "C2, Duolingo English Test"], ["French", "A2"], ["Italian", "basic"]]
+    "languages": [
+      [
+        "Spanish",
+        "native"
+      ],
+      [
+        "English",
+        "C2, Duolingo English Test"
+      ],
+      [
+        "French",
+        "A2"
+      ],
+      [
+        "Italian",
+        "basic"
+      ]
+    ]
   },
   "stack": [
-    { "group": "AI and machine learning", "items": ["RAG", "Gemini", "OpenAI", "Anthropic", "ChromaDB", "Pinecone", "Qdrant", "Multi-agent systems", "PyTorch", "scikit-learn"] },
-    { "group": "Backend", "items": ["Python", "FastAPI", "Flask", "REST APIs", "SQLAlchemy", "Alembic", "JWT", "RBAC", "OAuth"] },
-    { "group": "Frontend", "items": ["React", "TypeScript", "Vite", "Tailwind CSS"] },
-    { "group": "Infrastructure", "items": ["PostgreSQL", "Docker", "GitHub Actions", "Git", "Linux", "Gunicorn", "systemd", "nginx", "Azure", "pytest", "Playwright"] },
-    { "group": "Languages", "items": ["Python", "TypeScript", "JavaScript", "SQL", "Java", "PHP", "C"] }
+    {
+      "group": "AI and machine learning",
+      "items": [
+        "RAG",
+        "Gemini",
+        "OpenAI",
+        "Anthropic",
+        "ChromaDB",
+        "Pinecone",
+        "Qdrant",
+        "Multi-agent systems",
+        "PyTorch",
+        "scikit-learn"
+      ]
+    },
+    {
+      "group": "Backend",
+      "items": [
+        "Python",
+        "FastAPI",
+        "Flask",
+        "REST APIs",
+        "SQLAlchemy",
+        "Alembic",
+        "JWT",
+        "RBAC",
+        "OAuth"
+      ]
+    },
+    {
+      "group": "Frontend",
+      "items": [
+        "React",
+        "TypeScript",
+        "Vite",
+        "Tailwind CSS"
+      ]
+    },
+    {
+      "group": "Infrastructure",
+      "items": [
+        "PostgreSQL",
+        "Docker",
+        "GitHub Actions",
+        "Git",
+        "Linux",
+        "Gunicorn",
+        "systemd",
+        "nginx",
+        "Azure",
+        "pytest",
+        "Playwright"
+      ]
+    },
+    {
+      "group": "Languages",
+      "items": [
+        "Python",
+        "TypeScript",
+        "JavaScript",
+        "SQL",
+        "Java",
+        "PHP",
+        "C"
+      ]
+    }
   ],
-  "shipped": ["RAG", "Gemini", "OpenAI", "ChromaDB", "Pinecone", "Python", "FastAPI", "Flask", "SQLAlchemy", "Alembic", "JWT", "RBAC", "React", "PostgreSQL", "Linux", "Gunicorn", "systemd", "nginx", "PHP", "SQL"],
+  "shipped": [
+    "RAG",
+    "Gemini",
+    "OpenAI",
+    "ChromaDB",
+    "Pinecone",
+    "Python",
+    "FastAPI",
+    "Flask",
+    "SQLAlchemy",
+    "Alembic",
+    "JWT",
+    "RBAC",
+    "React",
+    "PostgreSQL",
+    "Linux",
+    "Gunicorn",
+    "systemd",
+    "nginx",
+    "PHP",
+    "SQL"
+  ],
   "meetings": [
-    { "slug": "15min", "name": "Intro call", "mins": 15, "desc": "See if we're a good fit" },
-    { "slug": "30min", "name": "Project scoping", "mins": 30, "desc": "Walk through your idea and timeline" },
-    { "slug": "60min", "name": "Technical consult", "mins": 60, "desc": "RAG, agents or architecture, in depth" }
+    {
+      "slug": "15min",
+      "name": "Intro call",
+      "mins": 15,
+      "desc": "See if we're a good fit"
+    },
+    {
+      "slug": "30min",
+      "name": "Project scoping",
+      "mins": 30,
+      "desc": "Walk through your idea and timeline"
+    },
+    {
+      "slug": "60min",
+      "name": "Technical consult",
+      "mins": 60,
+      "desc": "RAG, agents or architecture, in depth"
+    }
   ],
-  "labels": { "article": "Articles", "interview": "Interviews", "note": "Notes" },
-  "labelHelp": { "article": "Longer pieces on RAG, agents and shipping AI.", "interview": "Conversations with builders and researchers.", "note": "Short things I learned this week." },
-  "posts": []
+  "labels": {
+    "explainer": "Explainers",
+    "article": "Articles",
+    "interview": "Interviews",
+    "note": "Notes"
+  },
+  "labelHelp": {
+    "article": "Longer pieces on RAG, agents and shipping AI.",
+    "interview": "Conversations with builders and researchers.",
+    "note": "Short things I learned this week.",
+    "explainer": "Scroll-driven visual guides to how AI and software techniques work."
+  },
+  "posts": [
+    {
+      "slug": "how-rag-works",
+      "kind": "explainer",
+      "scene": "rag",
+      "date": "2026-10-09",
+      "title": "How RAG works",
+      "excerpt": "Retrieval-augmented generation, step by step: from splitting documents to an answer with sources.",
+      "intro": "Retrieval-augmented generation lets a language model answer from your own documents instead of from memory. Scroll to follow a question from the documents to a cited answer.",
+      "steps": [
+        [
+          "Split the documents",
+          "Long documents are cut into short chunks, a few paragraphs each, so the system can retrieve just the part that answers a question."
+        ],
+        [
+          "Turn chunks into vectors",
+          "An embedding model turns each chunk into a list of numbers. Chunks with similar meaning land close together in this space."
+        ],
+        [
+          "Embed the question",
+          "The question goes through the same embedding model, so it lands in the same space as the chunks."
+        ],
+        [
+          "Find the nearest chunks",
+          "A vector search returns the chunks closest to the question. It's fast, but closeness is only a rough guess at relevance."
+        ],
+        [
+          "Rerank",
+          "A reranker reads the question and each candidate together and scores how well it actually answers. The order changes."
+        ],
+        [
+          "Answer with sources",
+          "The top chunks go into the prompt. The model answers from them and cites the chunk behind each claim."
+        ]
+      ],
+      "takeaways": [
+        "RAG keeps answers grounded in documents you control, and you can update them without retraining the model.",
+        "Retrieval decides answer quality: chunk size, the embedding model and reranking matter more than the prompt.",
+        "Hybrid search, keyword matching (BM25) plus vectors, catches exact terms like product codes that embeddings miss.",
+        "Keep a set of real questions with known answers, and check both what was retrieved and what was answered."
+      ]
+    },
+    {
+      "slug": "how-ai-agents-work",
+      "kind": "explainer",
+      "scene": "agents",
+      "date": "2026-10-09",
+      "title": "How AI agents work",
+      "excerpt": "An agent is a language model in a loop: plan, call a tool, read the result, decide again.",
+      "intro": "An AI agent is a language model in a loop. It plans, calls tools, reads the results and decides what to do next until the goal is met or a limit is reached.",
+      "steps": [
+        [
+          "Start from a goal",
+          "An agent gets a goal instead of a single question. A language model sits at the center and decides what to do next."
+        ],
+        [
+          "Make a plan",
+          "The model breaks the goal into steps it can act on."
+        ],
+        [
+          "Call a tool",
+          "To act, the model writes a structured tool call, like a search with parameters. Your code runs the tool and returns the result."
+        ],
+        [
+          "Observe and decide again",
+          "Each result goes back into the model's context. It picks the next action, and the loop continues."
+        ],
+        [
+          "Stop when done",
+          "The loop ends when the goal is met or a limit is hit. Limits on steps, cost and permissions keep agents safe."
+        ]
+      ],
+      "takeaways": [
+        "The model never runs anything itself. It proposes tool calls and your code executes them, which is where permissions belong.",
+        "Many failures come from unclear tools: names, descriptions and error messages matter as much as the prompt.",
+        "Cap the loop with a step and cost budget, and log every call so you can replay what happened.",
+        "For simple tasks a single call beats an agent. Use the loop when the next step depends on what the last one found."
+      ]
+    },
+    {
+      "slug": "how-transformers-work",
+      "kind": "explainer",
+      "scene": "transformer",
+      "date": "2026-10-09",
+      "title": "How transformers and attention work",
+      "excerpt": "What happens inside a large language model: tokens, embeddings, attention and next-token prediction.",
+      "intro": "Large language models are transformers. They split text into tokens, let every token look at the others through attention, and predict what comes next, one token at a time.",
+      "steps": [
+        [
+          "Split text into tokens",
+          "The model reads tokens, pieces of words with an ID each, not letters or whole sentences."
+        ],
+        [
+          "Give each token a vector",
+          "Each token ID is looked up in a table of learned vectors, its embedding. Position information is added so word order counts."
+        ],
+        [
+          "Attention: decide what to look at",
+          "For each token, attention scores every other token by relevance. Here “it” looks mostly at “cat”."
+        ],
+        [
+          "Many heads, many patterns",
+          "Attention runs in parallel heads, and each learns a different pattern: what a word refers to, the word just before, what is said about a subject."
+        ],
+        [
+          "Predict the next token",
+          "After many layers, the model gives a probability to every token in its vocabulary. One is picked, appended, and the process repeats."
+        ]
+      ],
+      "takeaways": [
+        "Everything a model reads or writes is tokens, which is why context limits and prices are counted in tokens.",
+        "Attention compares every token with every other one, so cost grows quickly with context length.",
+        "Generation is repeated next-token prediction. Temperature controls how often a less likely token gets picked.",
+        "The token IDs and percentages in the animation are illustrative."
+      ]
+    },
+    {
+      "slug": "how-neural-networks-learn",
+      "kind": "explainer",
+      "scene": "neural",
+      "date": "2026-10-09",
+      "title": "How neural networks learn",
+      "excerpt": "Forward pass, loss, backpropagation and gradient descent, drawn one step at a time.",
+      "intro": "A neural network learns by guessing, measuring how wrong the guess was, and nudging its weights to be a little less wrong next time.",
+      "steps": [
+        [
+          "Layers of neurons",
+          "A network is layers of simple units. Every connection has a weight, a number the network learns."
+        ],
+        [
+          "Forward pass",
+          "Input values flow left to right. Each neuron adds up its weighted inputs and applies a simple function."
+        ],
+        [
+          "Measure the error",
+          "The output is compared with the right answer. A loss function turns the gap into a single number."
+        ],
+        [
+          "Backpropagation",
+          "The error flows backward. For every weight, calculus gives how much it contributed to the loss: its gradient."
+        ],
+        [
+          "Gradient descent",
+          "Each weight moves a small step against its gradient. Repeated over many examples, the loss goes down."
+        ]
+      ],
+      "takeaways": [
+        "Training is a loop: forward pass, loss, backpropagation and update, repeated over many batches of examples.",
+        "The learning rate sets the step size. Too large and training diverges, too small and it crawls.",
+        "The same idea scales from this toy network to language models with billions of weights."
+      ]
+    },
+    {
+      "slug": "how-vector-search-works",
+      "kind": "explainer",
+      "scene": "vectors",
+      "date": "2026-10-09",
+      "title": "How embeddings and vector search work",
+      "excerpt": "How meaning becomes coordinates, and how a search finds the closest ones fast.",
+      "intro": "Embeddings turn meaning into numbers. Once text is a vector, finding related content becomes a question of distance.",
+      "steps": [
+        [
+          "Meaning becomes coordinates",
+          "An embedding model maps words, sentences or images to vectors. Related things end up near each other."
+        ],
+        [
+          "Close means similar",
+          "Similarity is usually the angle between two vectors, called cosine similarity. A small angle means similar meaning."
+        ],
+        [
+          "Search by meaning",
+          "Embed the query and return the closest vectors. “puppy” finds “dog” and “kitten” without sharing a letter."
+        ],
+        [
+          "Search fast at scale",
+          "With millions of vectors, comparing against every one is slow. Indexes like HNSW hop through a graph of neighbors and get close in a few steps."
+        ]
+      ],
+      "takeaways": [
+        "Real embeddings have hundreds or thousands of dimensions. The 2D picture is a simplification.",
+        "Use the same embedding model for documents and queries, or the distances mean nothing.",
+        "Approximate indexes like HNSW trade a little accuracy for a lot of speed, and the balance is tunable."
+      ]
+    },
+    {
+      "slug": "how-a-web-request-is-served",
+      "kind": "explainer",
+      "scene": "web",
+      "date": "2026-10-09",
+      "title": "How a web request is served",
+      "excerpt": "Load balancing, caching and the database: the path most web requests take.",
+      "intro": "Most web systems follow the same path: a load balancer spreads requests across servers, a cache answers the common ones fast, and a database holds the truth.",
+      "steps": [
+        [
+          "A request arrives",
+          "A browser sends a request. Before any of your code runs, it reaches a load balancer."
+        ],
+        [
+          "Spread the load",
+          "The load balancer sends each request to a different server, so no single machine gets overwhelmed."
+        ],
+        [
+          "Check the cache first",
+          "The server asks an in-memory cache for the answer. A hit comes back in a couple of milliseconds."
+        ],
+        [
+          "Fall back to the database",
+          "On a miss, the server queries the database, which is slower, then saves the result in the cache for the next request."
+        ],
+        [
+          "Scale out",
+          "When traffic grows, add servers behind the balancer. Watch the slowest requests (p99), not only the average."
+        ]
+      ],
+      "takeaways": [
+        "A cache is the cheapest speedup. Keeping it from serving stale data is the hard part.",
+        "Stateless servers are easy to scale out. Keep sessions and data in shared stores.",
+        "The latencies in the animation are illustrative. Measure your own percentiles."
+      ]
+    }
+  ]
 }
 </script>
 
@@ -770,6 +1329,592 @@ function initDeck(){
   deck.tabIndex = 0; deck.setAttribute("aria-label", "Build steps. Swipe or use the arrow keys.");
 }
 
+/* ===================== explainers: scroll-driven drawings ===================== */
+/* Each scene draws into a 120 x 100 unit space. S runs from 0 to the number of steps:
+   the integer part is the step, the fraction is how far through that step the reader is. */
+const EXF = {
+  sans: '"Funnel Sans", Inter, Helvetica, Arial, sans-serif',
+  disp: '"Funnel Display", "Inter Display", Helvetica, Arial, sans-serif',
+  mono: '"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace',
+};
+function exRng(seed){ return () => { seed = (seed * 1664525 + 1013904223) % 4294967296; return seed / 4294967296; }; }
+function exColors(){
+  const s = getComputedStyle(document.documentElement), g = n => s.getPropertyValue(n).trim();
+  return { ink:g("--ink"), muted:g("--muted"), line:g("--line"), strong:g("--line-strong"), surface:g("--surface"), raised:g("--raised"),
+           bg:g("--bg"), accent:g("--accent"), fill:g("--accent-fill"), ok:g("--ok"), warn:g("--warn"), white:"#FFFFFF" };
+}
+function exKit(ctx, C, fsc = 1){
+  const K = { C, ctx };
+  K.clamp = (v,a=0,b=1) => Math.max(a, Math.min(b, v));
+  K.seg = (S,a,b) => K.clamp((S - a) / (b - a));
+  K.ease = t => 1 - Math.pow(1 - K.clamp(t), 3);
+  K.io = t => { t = K.clamp(t); return t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2; };
+  K.lerp = (a,b,t) => a + (b - a) * t;
+  K.alpha = a => { ctx.globalAlpha = K.clamp(a); };
+  K.rect = (x,y,w,h,r=2,o={}) => {
+    ctx.beginPath();
+    if (ctx.roundRect) ctx.roundRect(x, y, w, h, Math.min(r, w/2, h/2)); else ctx.rect(x, y, w, h);
+    if (o.fill){ ctx.fillStyle = o.fill; ctx.fill(); }
+    if (o.stroke){ ctx.strokeStyle = o.stroke; ctx.lineWidth = o.lw || .3; ctx.stroke(); }
+  };
+  K.font = (o={}) => `${o.weight || 500} ${(o.size || 3.6) * fsc}px ${o.mono ? EXF.mono : o.display ? EXF.disp : EXF.sans}`;
+  K.text = (s,x,y,o={}) => {
+    ctx.font = K.font(o); ctx.fillStyle = o.color || C.ink;
+    ctx.textAlign = o.align || "left"; ctx.textBaseline = o.base || "middle"; ctx.fillText(s, x, y);
+  };
+  K.width = (s,o={}) => { ctx.font = K.font(o); return ctx.measureText(s).width; };
+  K.line = (x1,y1,x2,y2,o={}) => {
+    ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2);
+    ctx.strokeStyle = o.color || C.strong; ctx.lineWidth = o.lw || .35; ctx.setLineDash(o.dash || []); ctx.stroke(); ctx.setLineDash([]);
+  };
+  K.arrow = (x1,y1,x2,y2,o={}) => {
+    const p = o.p == null ? 1 : K.clamp(o.p); if (p <= 0) return;
+    const x = x1 + (x2 - x1) * p, y = y1 + (y2 - y1) * p;
+    K.line(x1, y1, x, y, o);
+    if (p > .97 && o.head !== false){
+      const a = Math.atan2(y2 - y1, x2 - x1), h = o.hs || 1.6;
+      ctx.beginPath(); ctx.moveTo(x2, y2);
+      ctx.lineTo(x2 - h*Math.cos(a - .45), y2 - h*Math.sin(a - .45));
+      ctx.lineTo(x2 - h*Math.cos(a + .45), y2 - h*Math.sin(a + .45));
+      ctx.closePath(); ctx.fillStyle = o.color || C.strong; ctx.fill();
+    }
+  };
+  K.dot = (x,y,r,o={}) => {
+    ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI*2);
+    if (o.fill !== false){ ctx.fillStyle = o.fill || C.accent; ctx.fill(); }
+    if (o.stroke){ ctx.strokeStyle = o.stroke; ctx.lineWidth = o.lw || .35; ctx.stroke(); }
+  };
+  K.packet = (x1,y1,x2,y2,t,o={}) => {
+    if (t <= 0 || t >= 1) return;
+    const e = K.io(t); K.dot(K.lerp(x1,x2,e), K.lerp(y1,y2,e), o.r || 1.3, { fill: o.color || C.accent });
+  };
+  K.node = (x,y,w,h,label,o={}) => {
+    K.rect(x - w/2, y - h/2, w, h, o.r || 2.4, { fill: o.fill || C.surface, stroke: o.stroke || C.strong, lw: o.lw || .35 });
+    K.text(label, x, o.sub ? y - 1.7 : y, { align:"center", size:o.size || 3.4, weight:600, color:o.color || C.ink });
+    if (o.sub) K.text(o.sub, x, y + 2.5, { align:"center", size:2.6, weight:400, color:o.subColor || C.muted });
+  };
+  K.check = (x,y,s,color) => {
+    ctx.beginPath(); ctx.moveTo(x - s*.5, y); ctx.lineTo(x - s*.1, y + s*.4); ctx.lineTo(x + s*.55, y - s*.45);
+    ctx.strokeStyle = color || C.ok; ctx.lineWidth = .55; ctx.lineCap = "round"; ctx.stroke(); ctx.lineCap = "butt";
+  };
+  K.typed = (lines, t, x, y, lh, o={}) => {
+    const total = lines.reduce((n, l) => n + l.length, 0); let left = Math.round(total * K.clamp(t));
+    lines.forEach((l, i) => { if (left <= 0) return; K.text(l.slice(0, left), x, y + i*lh, o); left -= l.length; });
+  };
+  return K;
+}
+
+const EX_DATA = (() => {
+  /* RAG: three documents, three chunks each, plus background chunks from the rest of the corpus */
+  const r = exRng(11);
+  const centers = [[70, 30], [100, 46], [80, 74]];
+  const ragChunks = [];
+  for (let d = 0; d < 3; d++) for (let c = 0; c < 3; c++)
+    ragChunks.push({ d, c, x: centers[d][0] + (r() - .5) * 13, y: centers[d][1] + (r() - .5) * 12 });
+  const q = [72, 34];
+  const ragBg = [];
+  while (ragBg.length < 16){
+    const x = 54 + r() * 60, y = 12 + r() * 76;
+    if (Math.hypot(x - q[0], y - q[1]) > 15) ragBg.push({ x, y });
+  }
+  const order = ragChunks.map((p, i) => [i, Math.hypot(p.x - q[0], p.y - q[1])]).sort((a, b) => a[1] - b[1]).map(a => a[0]);
+  /* neural network weights */
+  const r2 = exRng(5), layers = [3, 5, 5, 2], weights = [];
+  for (let l = 0; l < 3; l++){ const m = []; for (let i = 0; i < layers[l]; i++){ const row = []; for (let j = 0; j < layers[l+1]; j++) row.push({ w: r2()*2 - 1, g: r2()*2 - 1 }); m.push(row); } weights.push(m); }
+  const acts = layers.map(n => Array.from({ length: n }, () => .25 + r2() * .75));
+  /* transformer token vectors */
+  const r3 = exRng(23), vecs = Array.from({ length: 8 }, () => Array.from({ length: 8 }, () => r3()*2 - 1));
+  return { ragChunks, ragBg, q, order, layers, weights, acts, vecs };
+})();
+
+const SCENES = {
+  /* ---------- RAG ---------- */
+  rag(K, S){
+    const C = K.C, D = EX_DATA, ctx = K.ctx;
+    const docs = ["Refund policy", "Shipping", "Pricing"];
+    const texts = [["Annual: refund in 30 days", "Refund goes to your card", "Monthly: no refunds"],
+                   ["Ships in 2 business days", "Free shipping over $50", "Tracking link by email"],
+                   ["Annual plan: $96 a year", "Monthly plan: $10", "Volume discounts for teams"]];
+    const docY = i => 10 + i * 29;
+    // vector space frame
+    const space = K.seg(S, .6, 1.2) * (1 - .65 * K.seg(S, 3.9, 4.3)) * (1 - .6 * K.seg(S, 4.9, 5.2));
+    K.alpha(space);
+    K.rect(50, 8, 66, 86, 3, { stroke: C.line, lw: .3 });
+    K.text("vector space", 53, 12, { size: 2.6, color: C.muted, weight: 400 });
+    // background chunks
+    K.alpha(K.seg(S, 1.3, 1.9) * space);
+    D.ragBg.forEach(p => K.dot(p.x, p.y, 1, { fill: C.strong }));
+    // documents
+    const docA = 1 - K.seg(S, 1.5, 1.9);
+    D.ragChunks.forEach((p, i) => {
+      const y0 = docY(p.d);
+      if (p.c === 0 && docA > 0){
+        K.alpha(docA * K.seg(S, 0, .25));
+        K.rect(4, y0, 26, 23, 2, { fill: C.surface, stroke: C.strong });
+        K.text(docs[p.d], 6.5, y0 + 4, { size: 2.9, weight: 600 });
+      }
+      // chunk: inside the doc -> column beside it -> a dot in vector space
+      const split = K.ease(K.seg(S, .15, .9)), fly = K.io(K.seg(S, 1 + (i % 9) * .03, 1.75 + (i % 9) * .03));
+      const ax = K.lerp(6.5, 34, split), ay = K.lerp(y0 + 8.5 + p.c * 4.6, y0 + 1 + p.c * 7.5, split);
+      const x = K.lerp(ax, p.x - 1.2, fly), y = K.lerp(ay, p.y - 1.2, fly);
+      const w = K.lerp(K.lerp(20, 14, split), 2.4, fly), h = K.lerp(3, 2.4, fly);
+      const near = D.order.indexOf(i) < 3;
+      const lit = near && S >= 3 ? K.seg(S, 3.3, 3.8) : 0;
+      K.alpha(K.seg(S, .1, .4) * (fly > .5 ? space : 1));
+      K.rect(x, y, w, h, 1.2, { fill: lit > 0 ? C.accent : (fly > .5 ? C.muted : C.strong) });
+      if (lit > 0){ K.alpha(lit * space); K.dot(p.x, p.y, 2.2, { fill: false, stroke: C.accent, lw: .4 }); }
+    });
+    // question
+    const qa = K.seg(S, 2, 2.3) * (1 - K.seg(S, 3.8, 4.1));
+    if (qa > 0){
+      K.alpha(qa);
+      K.rect(4, 10, 40, 14, 2.4, { fill: C.raised, stroke: C.accent, lw: .4 });
+      K.text("Can I get a refund", 7, 15, { size: 3.1, weight: 600 });
+      K.text("on an annual plan?", 7, 19.5, { size: 3.1, weight: 600 });
+    }
+    K.alpha(space);
+    K.packet(44, 17, D.q[0], D.q[1], K.seg(S, 2.35, 2.9), { r: 1.4 });
+    const qd = K.seg(S, 2.85, 3);
+    if (qd > 0){
+      K.alpha(qd * space); K.dot(D.q[0], D.q[1], 1.8, { fill: C.accent });
+      K.text("question", D.q[0] + 3, D.q[1] - 3, { size: 2.6, color: C.accent, weight: 600 });
+    }
+    // nearest neighbours
+    const far = D.ragChunks[D.order[2]], r3 = Math.hypot(far.x - D.q[0], far.y - D.q[1]) + 2.5;
+    const grow = K.ease(K.seg(S, 3, 3.6));
+    if (grow > 0){
+      K.alpha(space * .9);
+      K.ctx.setLineDash([1, 1]); K.dot(D.q[0], D.q[1], r3 * grow, { fill: false, stroke: C.accent, lw: .3 }); K.ctx.setLineDash([]);
+      D.order.slice(0, 3).forEach(i => { const p = D.ragChunks[i]; K.arrow(D.q[0], D.q[1], p.x, p.y, { p: K.seg(S, 3.4, 3.9), color: C.accent, head: false, lw: .3 }); });
+    }
+    // rerank list
+    const listA = K.seg(S, 3.95, 4.3);
+    const cand = [[0, 1, .81], [0, 2, .52], [0, 0, .94], [2, 0, .33], [1, 1, .04]]; // retrieval order: [doc, chunk, rerank score]
+    const reranked = cand.map((c, i) => [i, c[2]]).sort((a, b) => b[1] - a[1]).map(a => a[0]);
+    if (listA > 0){
+      K.alpha(listA);
+      K.text("Reranked by relevance", 4, 30, { size: 2.8, color: C.muted, weight: 500 });
+      const mv = K.io(K.seg(S, 4.25, 4.9));
+      cand.forEach((c, i) => {
+        const from = 36 + i * 10.5, to = 36 + reranked.indexOf(i) * 10.5, y = K.lerp(from, to, mv);
+        const top = reranked.indexOf(i) < 2 && mv > .9;
+        K.rect(4, y - 4.2, 44, 9, 1.8, { fill: C.surface, stroke: top ? C.accent : C.line, lw: top ? .45 : .3 });
+        K.text(texts[c[0]][c[1]], 6, y - 1.1, { size: 2.6, weight: 500 });
+        K.rect(6, y + 2, 30 * c[2] * K.seg(S, 4.1, 4.5), 1, .5, { fill: top ? C.accent : C.strong });
+        K.text(c[2].toFixed(2), 46, y + 2.4, { size: 2.4, mono: true, align: "right", color: C.muted });
+      });
+    }
+    // generation
+    const gen = K.seg(S, 4.95, 5.2);
+    if (gen > 0){
+      K.alpha(gen);
+      K.rect(54, 28, 62, 46, 3, { fill: C.raised, stroke: C.strong });
+      K.text("Model", 58, 33.5, { size: 2.8, color: C.muted });
+      K.arrow(48, 36, 54, 40, { p: K.seg(S, 5, 5.25), color: C.accent, lw: .35 });
+      K.arrow(48, 46.5, 54, 44, { p: K.seg(S, 5.05, 5.3), color: C.accent, lw: .35 });
+      K.typed(["Yes, within 30 days of", "purchase [1]. The money", "goes back to the original", "card [2]."],
+        K.seg(S, 5.2, 5.9), 58, 41, 5.6, { size: 3.4, weight: 500 });
+      K.alpha(gen * K.seg(S, 5.85, 5.95));
+      K.text("[1] Refund policy · [2] Refund policy", 58, 69, { size: 2.4, color: C.accent, weight: 500 });
+    }
+    K.alpha(1);
+  },
+
+  /* ---------- Agents ---------- */
+  agents(K, S, time){
+    const C = K.C, L = [58, 52], tools = [["Flight search", 30], ["Code runner", 52], ["Calendar", 74]];
+    K.alpha(K.seg(S, 0, .3));
+    K.rect(10, 4, 96, 11, 2.4, { fill: C.raised, stroke: C.accent, lw: .4 });
+    K.text("Goal: find a flight under $400 and add it to my calendar", 58, 9.5, { size: 2.9, weight: 600, align: "center" });
+    K.arrow(58, 15, 58, 40, { p: K.seg(S, .2, .7), color: C.strong });
+    // tools
+    const ta = K.seg(S, 1.6, 2);
+    tools.forEach(([name, y]) => {
+      K.alpha(ta * .7); K.line(L[0] + 10, L[1], 86, y, { dash: [1, 1], color: C.line });
+      K.alpha(ta); K.node(101, y, 28, 10, name, { size: 3 });
+    });
+    // loop arc
+    const la = K.seg(S, 3, 3.4);
+    if (la > 0){
+      K.alpha(la); K.ctx.beginPath(); K.ctx.arc(L[0], L[1], 15, Math.PI * .65, Math.PI * .65 + Math.PI * 1.7 * la);
+      K.ctx.strokeStyle = C.accent; K.ctx.lineWidth = .4; K.ctx.setLineDash([1.2, 1]); K.ctx.stroke(); K.ctx.setLineDash([]);
+      K.text("loop until done", L[0], L[1] + 19, { size: 2.6, align: "center", color: C.accent });
+    }
+    // model
+    K.alpha(K.seg(S, .4, .8));
+    K.dot(L[0], L[1], 10.5, { fill: C.fill });
+    K.text("LLM", L[0], L[1], { size: 4, weight: 700, color: C.white, align: "center", display: true });
+    // plan
+    const plan = ["Search flights", "Pick the cheapest", "Add to calendar"];
+    const pa = K.seg(S, 1, 1.25);
+    if (pa > 0){
+      K.alpha(pa); K.rect(2, 30, 38, 30, 2.4, { fill: C.surface, stroke: C.strong });
+      K.text("Plan", 5, 35, { size: 2.8, color: C.muted });
+      K.arrow(47.5, 50, 40.5, 46, { p: K.seg(S, 1, 1.3), color: C.strong });
+      plan.forEach((s, i) => {
+        K.alpha(K.seg(S, 1.15 + i * .2, 1.35 + i * .2));
+        const done = K.seg(S, 4 + i * .15, 4.2 + i * .15), ia = K.seg(S, 1.15 + i * .2, 1.35 + i * .2);
+        K.text(s, 9.5, 41 + i * 6.5, { size: 2.9, weight: 500 });
+        K.alpha(ia * (1 - done)); K.text(String(i + 1), 5, 41 + i * 6.5, { size: 2.9, weight: 600, color: C.muted });
+        if (done > 0){ K.alpha(done); K.check(6, 41 + i * 6.5, 2.4, C.ok); }
+      });
+    }
+    // tool calls
+    const call = (y, a, b, result) => {
+      K.alpha(1);
+      K.packet(L[0] + 10, L[1], 87, y, K.seg(S, a, a + (b - a) * .45), { r: 1.3 });
+      K.packet(87, y, L[0] + 10, L[1], K.seg(S, a + (b - a) * .55, b), { r: 1.3, color: C.ok });
+      const lit = K.seg(S, a + (b - a) * .4, a + (b - a) * .5);
+      if (lit > 0){ K.alpha(lit); K.rect(87, y - 5, 28, 10, 2.4, { stroke: C.accent, lw: .5 }); K.text(result, 101, y + 8.5, { size: 2.6, align: "center", color: C.ok, weight: 500 }); }
+    };
+    call(30, 2.1, 2.9, "14 flights found");
+    call(52, 3.05, 3.5, "cheapest: $342");
+    call(74, 3.55, 3.97, "event created");
+    // budget
+    const ba = K.seg(S, 2.1, 2.4);
+    if (ba > 0){
+      const used = S < 2.95 ? 1 : S < 3.5 ? 2 : 3;
+      K.alpha(ba); K.text(`tool calls ${used} / 10`, 2, 68, { size: 2.6, mono: true, color: C.muted });
+      K.rect(2, 71, 38, 1.6, .8, { fill: C.line }); K.rect(2, 71, 3.8 * used, 1.6, .8, { fill: C.accent });
+    }
+    // answer
+    const aa = K.seg(S, 4.4, 4.7);
+    if (aa > 0){
+      K.alpha(aa); K.rect(2, 87, 114, 11, 2.4, { fill: C.raised, stroke: C.ok, lw: .45 });
+      K.check(7, 92.5, 3, C.ok);
+      K.typed(["Booked: Friday 9:40, $342. Added to your calendar."], K.seg(S, 4.5, 4.9), 11, 92.5, 0, { size: 2.9, weight: 600 });
+    }
+    K.alpha(1);
+  },
+
+  /* ---------- Transformers ---------- */
+  transformer(K, S){
+    const C = K.C, ctx = K.ctx, toks = ["The", "cat", "sat", "because", "it", "was", "tired"];
+    const ids = [464, 3797, 3332, 780, 340, 373, 10032];
+    const fs = 3.6, sp = K.ease(K.seg(S, .3, .95)), gap = K.lerp(.9, 2.2, sp), pad = K.lerp(.6, 2.4, sp);
+    const ws = toks.map(t => K.width(t, { size: fs, weight: 600 }) + pad * 2);
+    const extra = K.seg(S, 4.7, 4.9) > 0;
+    const total = ws.reduce((a, b) => a + b, 0) + gap * (toks.length - 1) + (extra ? 6 + gap : 0);
+    let x = 60 - total / 2; const xs = [];
+    ws.forEach(w => { xs.push(x + w / 2); x += w + gap; });
+    const Y = 44;
+    // chips
+    toks.forEach((t, i) => {
+      const focus = (S >= 2 && S < 3 && i === 4) || (S >= 3 && S < 4 && headQuery(Math.min(2, Math.floor((S - 3) * 3))) === i);
+      K.alpha(1);
+      K.rect(xs[i] - ws[i] / 2, Y - 4, ws[i], 8, 1.8, { fill: focus ? C.fill : (sp > .1 ? C.surface : "transparent"), stroke: sp > .1 ? (focus ? C.fill : C.strong) : "transparent" });
+      K.text(t, xs[i], Y, { size: fs, weight: 600, align: "center", color: focus ? C.white : C.ink });
+      K.alpha(K.seg(S, .6, 1) * (1 - K.seg(S, 1, 1.3)));
+      K.text(String(ids[i]), xs[i], Y + 7.5, { size: 2.3, mono: true, align: "center", color: C.muted });
+    });
+    if (extra){
+      const ex = x, a = K.seg(S, 4.7, 4.9);
+      K.alpha(a); K.rect(ex, Y - 4, 6, 8, 1.8, { fill: C.raised, stroke: C.accent, lw: .45 });
+      K.text(".", ex + 3, Y - .5, { size: fs, weight: 700, align: "center", color: C.accent });
+    }
+    // embeddings
+    const ea = K.seg(S, 1, 1.5) * (1 - K.seg(S, 1.85, 2.05));
+    if (ea > 0){
+      toks.forEach((t, i) => {
+        EX_DATA.vecs[i].forEach((v, k) => {
+          const g = K.ease(K.seg(S, 1 + i * .05, 1.45 + i * .05));
+          K.alpha(ea); const bw = Math.min(ws[i] / 8 - .25, 1.1), bx = xs[i] - 4 * (bw + .25) + k * (bw + .25);
+          const h = v * 6 * g; K.rect(bx, h > 0 ? Y + 12 - h : Y + 12, bw, Math.abs(h) || .01, .2, { fill: v > 0 ? C.accent : C.strong });
+        });
+      });
+      K.alpha(ea * (1 - K.seg(S, 1.9, 2.2)));
+      K.text("each token becomes a vector of learned numbers (8 of thousands shown)", 60, 26, { size: 2.6, align: "center", color: C.muted });
+    }
+    // attention arcs
+    function headQuery(h){ return h === 2 ? 6 : 4; }
+    const heads = [
+      { q: 4, w: [.04, .62, .06, .05, .12, .07, .04], label: "head 1: who “it” refers to" },
+      { prev: true, label: "head 2: the word just before" },
+      { q: 6, w: [.02, .1, .04, .03, .5, .27, .04], label: "head 3: what is said about “it”" },
+    ];
+    const arc = (i, j, wgt, a) => {
+      if (i === j) return;
+      const x1 = xs[i], x2 = xs[j], h = 5 + Math.abs(x1 - x2) * .42;
+      ctx.beginPath(); ctx.moveTo(x1, Y - 4.5); ctx.quadraticCurveTo((x1 + x2) / 2, Y - 4.5 - h, x2, Y - 4.5);
+      K.alpha(a * (.25 + wgt * 1.2)); ctx.strokeStyle = C.accent; ctx.lineWidth = .3 + wgt * 3.2; ctx.stroke();
+    };
+    if (S >= 2 && S < 4){
+      let head = S < 3 ? 0 : Math.min(2, Math.floor((S - 3) * 3));
+      const a = S < 3 ? K.seg(S, 2.05, 2.4) : K.seg((S - 3) * 3 - head, .05, .3);
+      const H = heads[head];
+      if (H.prev) toks.forEach((t, i) => { if (i > 0) arc(i, i - 1, .45, a); });
+      else H.w.forEach((wgt, j) => arc(H.q, j, wgt, a));
+      if (!H.prev){
+        const top = H.w.map((w, j) => [w, j]).filter(p => p[1] !== H.q).sort((p, q) => q[0] - p[0]).slice(0, 2);
+        top.forEach(([w, j]) => { K.alpha(a); K.text(Math.round(w * 100) + "%", xs[j], Y + 7, { size: 2.8, align: "center", color: C.accent, weight: 600 }); });
+      }
+      K.alpha(S < 3 ? K.seg(S, 2.1, 2.4) : a);
+      K.text(S < 3 ? "attention from “it”" : H.label, 60, 14, { size: 3, align: "center", color: C.muted, weight: 500 });
+    }
+    // next-token prediction
+    const pa = K.seg(S, 4, 4.25);
+    if (pa > 0){
+      const cands = [[".", .46], [" and", .21], [" so", .12], [",", .09], [" after", .05]];
+      K.alpha(pa); K.text("next token after “tired”", 60, 58, { size: 2.8, align: "center", color: C.muted });
+      cands.forEach(([t, p], i) => {
+        const y = 64 + i * 6, g = K.ease(K.seg(S, 4.1 + i * .05, 4.6 + i * .05));
+        K.alpha(pa);
+        K.text(t === "." ? "“.”" : t === "," ? "“,”" : `“${t.trim()}”`, 34, y, { size: 2.9, mono: true, align: "right", color: i === 0 ? C.accent : C.ink });
+        K.rect(37, y - 1.6, 60 * p * g, 3.2, .8, { fill: i === 0 ? C.accent : C.strong });
+        K.text(Math.round(p * 100 * g) + "%", 38 + 60 * p * g + 1, y, { size: 2.5, mono: true, color: C.muted });
+      });
+    }
+    K.alpha(1);
+  },
+
+  /* ---------- Neural networks ---------- */
+  neural(K, S){
+    const C = K.C, D = EX_DATA, X = [16, 44, 72, 100];
+    const ys = n => Array.from({ length: n }, (_, i) => 48 + (i - (n - 1) / 2) * 12);
+    const fade = 1 - .94 * K.seg(S, 4, 4.3);
+    const fw = S >= 1 && S < 2 ? (S - 1) * 3 : (S >= 2 ? 3 : -1);
+    const bw = S >= 3 && S < 4 ? 3 - (S - 3) * 3 : (S >= 4 ? 0 : 4);
+    // edges
+    if (fade > .1) for (let l = 0; l < 3; l++){
+      const a = ys(D.layers[l]), b = ys(D.layers[l + 1]);
+      a.forEach((y1, i) => b.forEach((y2, j) => {
+        const W = D.weights[l][i][j], upd = K.seg(S, 3.2, 3.9), w = W.w - .5 * W.g * upd;
+        K.alpha(K.seg(S, .2 + l * .15, .6 + l * .15) * fade * (.25 + Math.abs(w) * .55));
+        K.line(X[l] + 3, y1, X[l + 1] - 3, y2, { color: w >= 0 ? C.accent : C.strong, lw: .15 + Math.abs(w) * .55 });
+        if (fw > l && fw < l + 1){ K.alpha(fade); K.packet(X[l] + 3, y1, X[l + 1] - 3, y2, fw - l, { r: .7 }); }
+        if (bw < l + 1 && bw > l){ K.alpha(fade); K.packet(X[l + 1] - 3, y2, X[l] + 3, y1, (l + 1) - bw, { r: .7, color: C.warn }); }
+      }));
+    }
+    // nodes
+    if (fade > .1) D.layers.forEach((n, l) => ys(n).forEach((y, i) => {
+      const lit = fw >= l ? D.acts[l][i] : 0;
+      K.alpha(K.seg(S, l * .12, .3 + l * .12) * fade);
+      K.dot(X[l], y, 3, { fill: C.surface, stroke: C.strong, lw: .35 });
+      if (lit > 0){ K.alpha(fade * lit); K.dot(X[l], y, 3, { fill: C.accent }); }
+      if (bw <= l && S >= 3 && S < 4){ K.alpha(fade * .9); K.dot(X[l], y, 3.6, { fill: false, stroke: C.warn, lw: .4 }); }
+    }));
+    K.alpha(K.seg(S, .3, .6) * fade);
+    ["input", "hidden", "hidden", "output"].forEach((s, l) => K.text(s, X[l], 82, { size: 2.6, align: "center", color: C.muted }));
+    // output vs target
+    const oa = K.seg(S, 2, 2.3) * (1 - K.seg(S, 4, 4.2));
+    if (oa > 0){
+      const oy = ys(2);
+      K.alpha(oa);
+      [["cat", "0.71", "1"], ["dog", "0.29", "0"]].forEach(([n, v, t], i) => {
+        K.text(`${n} ${v}`, 105, oy[i], { size: 2.9, weight: 600 });
+        K.alpha(oa * K.seg(S, 2.3, 2.6)); K.text(`target ${t}`, 105, oy[i] + 3.6, { size: 2.4, color: C.muted });
+        K.alpha(oa);
+      });
+      K.alpha(oa * K.seg(S, 2.5, 2.8));
+      K.rect(80, 88, 30, 8, 2, { fill: C.raised, stroke: C.warn, lw: .4 });
+      K.text("loss 0.34", 95, 92, { size: 3, mono: true, align: "center", color: C.warn, weight: 600 });
+    }
+    if (S >= 3 && S < 4){ K.alpha(K.seg(S, 3.05, 3.3)); K.text("gradients flow backward and adjust every weight", 60, 12, { size: 2.8, align: "center", color: C.warn }); }
+    // gradient descent plot
+    const pa = K.seg(S, 4.1, 4.4);
+    if (pa > 0){
+      const f = x => .012 * (x - 72) * (x - 72), Y = x => 80 - (25.9 - f(x)) * 2;
+      K.alpha(pa);
+      K.line(20, 82, 106, 82, { color: C.strong }); K.line(20, 82, 20, 18, { color: C.strong });
+      K.text("loss", 22, 20, { size: 2.6, color: C.muted }); K.text("weight value", 104, 86, { size: 2.6, color: C.muted, align: "right" });
+      K.ctx.beginPath(); for (let x = 25; x <= 104; x += 1){ const y = 82 - f(x) * 2.3; x === 25 ? K.ctx.moveTo(x, y) : K.ctx.lineTo(x, y); }
+      K.ctx.strokeStyle = C.strong; K.ctx.lineWidth = .45; K.ctx.stroke();
+      const xs = [27, 45, 57, 64, 68, 70.5], losses = [2.43, 0.87, 0.27, 0.08, 0.02, 0.01];
+      const k = K.seg(S, 4.4, 4.95) * (xs.length - 1), i = Math.floor(k), fr = K.ease(k - i);
+      for (let j = 0; j < Math.min(i, xs.length - 1); j++){
+        K.alpha(pa * .8); K.arrow(xs[j], 82 - f(xs[j]) * 2.3, xs[j + 1], 82 - f(xs[j + 1]) * 2.3, { color: C.accent, lw: .3, hs: 1.2 });
+      }
+      const cx = i >= xs.length - 1 ? xs[xs.length - 1] : K.lerp(xs[i], xs[i + 1], fr);
+      K.alpha(pa); K.dot(cx, 82 - f(cx) * 2.3 - 1.6, 1.6, { fill: C.accent });
+      const li = Math.min(xs.length - 1, Math.round(k));
+      K.text(`step ${li + 1} · loss ${losses[li].toFixed(2)}`, 60, 12, { size: 3, mono: true, align: "center", color: C.accent, weight: 600 });
+    }
+    K.alpha(1);
+  },
+
+  /* ---------- Embeddings & vector search ---------- */
+  vectors(K, S){
+    const C = K.C, O = [62, 52];
+    const P = { dog: [34, 30], cat: [44, 22], kitten: [48, 31], horse: [26, 42],
+                pizza: [84, 24], pasta: [94, 31], bread: [80, 36], cheese: [92, 43],
+                car: [72, 74], truck: [84, 82], bus: [64, 86], bike: [54, 72] };
+    const names = Object.keys(P), Q = [40, 35];
+    const groups = [["animals", [36, 31], 15], ["food", [87, 33], 14], ["vehicles", [69, 79], 15]];
+    const ga = K.seg(S, .7, 1);
+    groups.forEach(([n, c, r]) => {
+      K.alpha(ga * .5 * (1 - .6 * K.seg(S, 3, 3.3))); K.dot(c[0], c[1], r, { fill: false, stroke: C.line, lw: .3 });
+      K.alpha(ga); K.text(n, c[0], c[1] - r - 2, { size: 2.6, align: "center", color: C.muted });
+    });
+    // HNSW graph
+    const gr = K.seg(S, 3, 3.3);
+    if (gr > 0){
+      const near = n => names.filter(m => m !== n).sort((a, b) => Math.hypot(P[a][0] - P[n][0], P[a][1] - P[n][1]) - Math.hypot(P[b][0] - P[n][0], P[b][1] - P[n][1])).slice(0, 2);
+      K.alpha(gr * .55);
+      names.forEach(n => near(n).forEach(m => K.line(P[n][0], P[n][1], P[m][0], P[m][1], { color: C.strong, lw: .25 })));
+      K.line(P.bike[0], P.bike[1], P.horse[0], P.horse[1], { color: C.strong, lw: .25 });
+      const path = ["bus", "bike", "horse", "dog"];
+      const hp = K.seg(S, 3.3, 3.85) * (path.length - 1);
+      for (let i = 0; i < path.length - 1; i++){
+        const p = K.clamp(hp - i); if (p <= 0) break;
+        K.alpha(1); K.arrow(P[path[i]][0], P[path[i]][1], P[path[i + 1]][0], P[path[i + 1]][1], { p, color: C.accent, lw: .55, hs: 1.6 });
+      }
+      K.alpha(K.seg(S, 3.3, 3.45)); K.text("start", P.bus[0], P.bus[1] + 4.5, { size: 2.5, align: "center", color: C.accent });
+      K.alpha(K.seg(S, 3.85, 4)); K.text("3 hops instead of 12 comparisons", 60, 95, { size: 2.8, align: "center", color: C.accent, weight: 600 });
+    }
+    // points
+    names.forEach((n, i) => {
+      const t = K.ease(K.seg(S, .05 + i * .03, .5 + i * .03)), x = K.lerp(O[0], P[n][0], t), y = K.lerp(O[1], P[n][1], t);
+      const hit = (S >= 2 && S < 3 && ["dog", "kitten", "cat"].includes(n) && K.seg(S, 2.45, 2.6) > 0);
+      const dim = S >= 2 && S < 3 && !["dog", "kitten", "cat"].includes(n) ? 1 - .6 * K.seg(S, 2.45, 2.6) : 1;
+      K.alpha(K.seg(S, i * .03, .2 + i * .03) * dim);
+      K.dot(x, y, 1.3, { fill: hit ? C.accent : C.ink });
+      K.text(n, x + 2, y - .2, { size: 2.8, weight: hit ? 600 : 500, color: hit ? C.accent : C.ink });
+    });
+    // cosine similarity
+    if (S >= 1 && S < 2){
+      const a = K.seg(S, 1, 1.15), first = S < 1.55;
+      const pair = first ? ["dog", "cat"] : ["dog", "car"], sim = first ? "0.92" : "0.11";
+      K.alpha(1);
+      K.dot(O[0], O[1], .9, { fill: C.muted });
+      pair.forEach(n => K.arrow(O[0], O[1], P[n][0], P[n][1], { p: K.seg(S, first ? 1.05 : 1.6, first ? 1.3 : 1.85), color: C.accent, lw: .4 }));
+      const a1 = Math.atan2(P[pair[0]][1] - O[1], P[pair[0]][0] - O[0]), a2 = Math.atan2(P[pair[1]][1] - O[1], P[pair[1]][0] - O[0]);
+      K.alpha(K.seg(S, first ? 1.3 : 1.85, first ? 1.4 : 1.95));
+      let lo = Math.min(a1, a2), hi = Math.max(a1, a2); if (hi - lo > Math.PI){ const t = lo; lo = hi; hi = t + Math.PI * 2; }
+      K.ctx.beginPath(); K.ctx.arc(O[0], O[1], 7, lo, hi); K.ctx.strokeStyle = C.accent; K.ctx.lineWidth = .4; K.ctx.stroke();
+      K.text(`${pair[0]} vs ${pair[1]}: cosine ${sim}`, 60, 95, { size: 3, align: "center", color: C.accent, weight: 600 });
+      K.alpha(a); K.text("origin", O[0] + 2.5, O[1] - 2.5, { size: 2.4, color: C.muted });
+    }
+    // query
+    if (S >= 2 && S < 3){
+      const qa = K.seg(S, 2, 2.2);
+      K.alpha(qa * (1 - K.seg(S, 2.45, 2.6)) * .6);
+      names.forEach(n => K.line(Q[0], Q[1], P[n][0], P[n][1], { color: C.strong, lw: .2, dash: [.8, .8] }));
+      K.alpha(qa); K.dot(Q[0], Q[1], 1.9, { fill: C.fill, stroke: C.accent, lw: .4 });
+      K.text("puppy", Q[0] + 2.6, Q[1] + 3.6, { size: 3, weight: 700, color: C.accent });
+      const ra = K.seg(S, 2.55, 2.8);
+      if (ra > 0){
+        K.alpha(ra); K.rect(4, 64, 34, 26, 2.4, { fill: C.surface, stroke: C.strong });
+        K.text("closest to “puppy”", 7, 69, { size: 2.6, color: C.muted });
+        [["dog", "0.94"], ["kitten", "0.90"], ["cat", "0.88"]].forEach(([n, s], i) => {
+          K.text(`${i + 1}  ${n}`, 7, 75 + i * 5, { size: 2.9, weight: 600 });
+          K.text(s, 35, 75 + i * 5, { size: 2.6, mono: true, align: "right", color: C.accent });
+        });
+      }
+    }
+    if (S >= 3){ K.alpha(1); K.dot(Q[0], Q[1], 1.6, { fill: C.fill, stroke: C.accent, lw: .4 }); }
+    K.alpha(1);
+  },
+
+  /* ---------- Web request: load balancer, cache, database ---------- */
+  web(K, S, time){
+    const C = K.C, four = K.ease(K.seg(S, 4, 4.4));
+    const sy = i => four > 0 ? K.lerp([26, 50, 74, 98][i], [20, 40, 60, 80][i], four) : [26, 50, 74, 98][i];
+    const CL = [10, 50], LB = [34, 50], CA = [100, 30], DB = [100, 72];
+    const n = four > 0 ? 4 : 3;
+    // wires
+    K.alpha(.8);
+    K.line(CL[0] + 7, 50, LB[0] - 11, 50, { color: C.line });
+    for (let i = 0; i < n; i++){
+      K.alpha(i === 3 ? four * .8 : .8);
+      K.line(LB[0] + 11, 50, 58, sy(i), { color: C.line });
+      K.line(74, sy(i), CA[0] - 9, CA[1], { color: C.line, dash: [.8, .8] });
+      K.line(74, sy(i), DB[0] - 9, DB[1], { color: C.line, dash: [.8, .8] });
+    }
+    // nodes
+    K.alpha(K.seg(S, 0, .25));
+    K.node(CL[0], CL[1], 14, 10, "Client", { sub: "browser" });
+    K.node(LB[0], LB[1], 22, 11, "Load", { sub: "balancer", size: 3.2 });
+    for (let i = 0; i < n; i++){ K.alpha((i === 3 ? four : 1) * K.seg(S, .1, .35)); K.node(66, sy(i), 16, 9, `Server ${i + 1}`, { size: 2.9 }); }
+    K.alpha(K.seg(S, .2, .45));
+    const hit = K.seg(S, 2.35, 2.45) * (1 - K.seg(S, 2.95, 3));
+    K.node(CA[0], CA[1], 18, 11, "Cache", { sub: "in memory", stroke: hit > 0 ? C.ok : C.strong, lw: hit > 0 ? .55 : .35 });
+    const dbLit = K.seg(S, 3.4, 3.5) * (1 - K.seg(S, 3.75, 3.8));
+    K.node(DB[0], DB[1], 18, 11, "Database", { sub: "source of truth", stroke: dbLit > 0 ? C.warn : C.strong, lw: dbLit > 0 ? .55 : .35, size: 3 });
+    K.alpha(1);
+    // 1. request arrives
+    K.packet(CL[0] + 7, 50, LB[0] - 11, 50, K.seg(S, .3, .9));
+    K.alpha(K.seg(S, .3, .5) * (1 - K.seg(S, 1.2, 1.4))); K.text("GET /products/42", CL[0] - 6, 40, { size: 2.7, mono: true, color: C.accent });
+    // 2. round robin
+    [0, 1, 2].forEach(i => { K.alpha(1); K.packet(LB[0] + 11, 50, 58, sy(i), K.seg(S, 1.05 + i * .28, 1.4 + i * .28)); });
+    K.alpha(K.seg(S, 1.1, 1.3) * (1 - K.seg(S, 1.9, 2))); K.text("round robin: one request each", LB[0], 62, { size: 2.6, align: "center", color: C.accent });
+    // 3. cache hit
+    K.alpha(1);
+    K.packet(74, sy(0), CA[0] - 9, CA[1], K.seg(S, 2.05, 2.4));
+    K.packet(CA[0] - 9, CA[1], 74, sy(0), K.seg(S, 2.5, 2.85), { color: C.ok });
+    K.alpha(K.seg(S, 2.4, 2.5) * (1 - K.seg(S, 2.95, 3))); K.text("hit · 2 ms", CA[0], CA[1] - 9, { size: 2.9, align: "center", color: C.ok, weight: 600 });
+    // 4. miss -> database -> write back
+    K.alpha(1);
+    K.packet(74, sy(1), CA[0] - 9, CA[1], K.seg(S, 3.02, 3.2));
+    K.alpha(K.seg(S, 3.18, 3.25) * (1 - K.seg(S, 3.95, 4))); K.text("miss", CA[0], CA[1] - 9, { size: 2.9, align: "center", color: C.warn, weight: 600 });
+    K.alpha(1);
+    K.packet(74, sy(1), DB[0] - 9, DB[1], K.seg(S, 3.22, 3.45), { color: C.warn });
+    K.packet(DB[0] - 9, DB[1], 74, sy(1), K.seg(S, 3.5, 3.72), { color: C.warn });
+    K.alpha(K.seg(S, 3.45, 3.55) * (1 - K.seg(S, 3.95, 4))); K.text("38 ms", DB[0], DB[1] + 9, { size: 2.9, align: "center", color: C.warn, weight: 600 });
+    K.alpha(1);
+    K.packet(74, sy(1), CA[0] - 9, CA[1], K.seg(S, 3.75, 3.95), { color: C.ok });
+    K.alpha(K.seg(S, 3.8, 3.9) * (1 - K.seg(S, 3.97, 4))); K.text("saved for the next request", CA[0] - 2, CA[1] + 9.5, { size: 2.6, align: "center", color: C.ok });
+    // 5. scale out with live traffic
+    if (four > 0){
+      for (let k = 0; k < 8; k++){
+        const tt = ((time * .45 + k / 8) % 1), srv = k % 4;
+        K.alpha(four); K.packet(LB[0] + 11, 50, 58, sy(srv), tt, { r: 1 });
+        K.packet(CL[0] + 7, 50, LB[0] - 11, 50, (tt * 2) % 1, { r: .8 });
+      }
+      K.alpha(four);
+      K.rect(16, 84, 40, 11, 2.4, { fill: C.raised, stroke: C.strong });
+      K.text("p50 4 ms · p99 41 ms", 36, 89.5, { size: 2.9, mono: true, align: "center", color: C.ink, weight: 500 });
+    }
+    K.alpha(1);
+  },
+};
+
+/* stage controller */
+let exCleanup = null;
+function exDraw(canvas, scene, S, time, C){
+  const dpr = Math.min(devicePixelRatio || 1, 2), cw = canvas.clientWidth, ch = canvas.clientHeight;
+  if (!cw || !ch) return;
+  if (canvas.width !== Math.round(cw * dpr) || canvas.height !== Math.round(ch * dpr)){ canvas.width = Math.round(cw * dpr); canvas.height = Math.round(ch * dpr); }
+  const ctx = canvas.getContext("2d");
+  ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, canvas.width, canvas.height); ctx.globalAlpha = 1;
+  const s = Math.min(cw / 120, ch / 100), ox = (cw - 120 * s) / 2, oy = (ch - 100 * s) / 2;
+  ctx.setTransform(dpr * s, 0, 0, dpr * s, dpr * ox, dpr * oy);
+  SCENES[scene](exKit(ctx, C, cw < 560 ? 1.2 : 1), S, time);
+}
+function initExplainer(){
+  if (exCleanup){ exCleanup(); exCleanup = null; }
+  const host = $("#ex"); if (!host) return;
+  const post = SITE.posts.find(p => p.slug === host.dataset.slug); if (!post || !SCENES[post.scene]) return;
+  const N = post.steps.length, scene = post.scene;
+  let C = exColors(), lastC = 0;
+  if (reduce){
+    host.classList.add("static");
+    host.querySelectorAll(".ex-still canvas").forEach((cv, i) => exDraw(cv, scene, i + .999, 0, C));
+    return;
+  }
+  const canvas = host.querySelector(".screen canvas"), steps = [...host.querySelectorAll(".steps .step")], bar = host.querySelector(".progress i");
+  const track = host.querySelector(".build-track");
+  let P = 0, cur = -1, raf = 0, visible = true, alive = true;
+  const setP = p => { P = Math.min(.9999, Math.max(0, p)); };
+  let stopScroll;
+  if (M && M.scroll){ const st = M.scroll(p => setP(p), { target: track, offset: ["start start", "end end"] }); stopScroll = typeof st === "function" ? st : null; }
+  else { const on = () => { const r = track.getBoundingClientRect(); setP(-r.top / (r.height - innerHeight)); }; addEventListener("scroll", on, { passive: true }); on(); stopScroll = () => removeEventListener("scroll", on); }
+  const io = new IntersectionObserver(([e]) => { visible = e.isIntersecting; if (visible) loop(); }, { rootMargin: "100px" });
+  io.observe(track);
+  const t0 = performance.now();
+  function frame(now){
+    if (!alive || !visible) { raf = 0; return; }
+    if (now - lastC > 300){ C = exColors(); lastC = now; }
+    const S = P * N, idx = Math.min(N - 1, Math.floor(S));
+    if (idx !== cur){ cur = idx; steps.forEach((s, i) => s.classList.toggle("on", i === idx)); }
+    bar.style.transform = `scaleX(${P})`;
+    exDraw(canvas, scene, S, (now - t0) / 1000, C);
+    raf = requestAnimationFrame(frame);
+  }
+  function loop(){ if (!raf) raf = requestAnimationFrame(frame); }
+  loop();
+  exCleanup = () => { alive = false; cancelAnimationFrame(raf); io.disconnect(); if (stopScroll) stopScroll(); };
+}
+
 /* ===================== views ===================== */
 const monthKey = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`;
 function schedule(){
@@ -788,7 +1933,36 @@ const projRow = p => `
   </a>`;
 const tagHTML = k => `<span class="tag ${k}">${esc(SITE.labels[k].replace(/s$/,""))}</span>`;
 const sorted = () => [...SITE.posts].sort((a,b) => b.date.localeCompare(a.date));
-const postHTML = p => `<a class="post" href="${url(`/writing/${p.slug}/`)}"><span class="d num">${fmt(p.date)}</span><h3>${esc(p.title)}</h3>${tagHTML(p.kind)}<p>${esc(p.excerpt)}</p></a>`;
+const postHTML = p => `<a class="post" href="${url(`/writing/${p.slug}/`)}"><span class="d num">${p.kind === "explainer" ? `${p.steps.length} steps` : fmt(p.date)}</span><h3>${esc(p.title)}</h3>${tagHTML(p.kind)}<p>${esc(p.excerpt)}</p></a>`;
+const explainerHTML = p => {
+  const n = p.steps.length;
+  return `
+    <div class="page">
+      <section class="proj-head">
+        <a class="crumb" href="${url("/writing/")}">${ICONS.arrow} All writing</a>
+        <div class="ex-meta">${tagHTML(p.kind)}<span>${n} steps · scroll to play</span></div>
+        <h1>${esc(p.title)}</h1>
+        <p class="lede">${esc(p.intro)}</p>
+      </section>
+      <section class="build explainer" id="ex" data-slug="${esc(p.slug)}" aria-label="${esc(p.title)}, step by step">
+        <div class="build-track" style="height:${n * 90}vh">
+          <div class="pin">
+            <ol class="steps">${p.steps.map(([t, d], i) => `<li class="step${i ? "" : " on"}"><span class="n">${i + 1}</span><h3>${esc(t)}</h3><p>${esc(d)}</p></li>`).join("")}</ol>
+            <div class="screen" aria-hidden="true">
+              <div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="file">${esc(p.title)}</span><span class="sample">Illustration</span></div>
+              <canvas></canvas>
+            </div>
+            <div class="ex-stills">${p.steps.map(([t, d]) => `<div class="ex-still"><h3>${esc(t)}</h3><p>${esc(d)}</p><canvas aria-hidden="true"></canvas></div>`).join("")}</div>
+            <div class="progress"><i></i></div>
+          </div>
+        </div>
+      </section>
+      <section class="cv">
+        <h2>In short</h2><div><ul class="plain">${p.takeaways.map(t => `<li>${esc(t)}</li>`).join("")}</ul></div>
+      </section>
+      ${ctaHTML()}
+    </div>`;
+};
 const socials = () => ["github","linkedin","x"].filter(k => SITE.links[k]).map(k => `<a href="${esc(SITE.links[k])}" target="_blank" rel="noopener" aria-label="${{github:"GitHub",linkedin:"LinkedIn",x:"X (Twitter)"}[k]}">${ICONS[k]}</a>`).join("");
 const ctaHTML = () => `
   <section class="cta">
@@ -916,6 +2090,7 @@ const V = {
   post: slug => {
     const p = SITE.posts.find(x => x.slug === slug);
     if (!p) return V.notfound();
+    if (p.kind === "explainer") return explainerHTML(p);
     return `
     <div class="page"><article class="reader">
       <a class="crumb" href="${url("/writing/")}">${ICONS.arrow} All writing</a>
@@ -1006,7 +2181,7 @@ function route(scrollY){
     window.scrollTo(0, scrollY || 0);
     const active = $("#nav [aria-current]"); if (active) active.scrollIntoView({ block:"nearest", inline:"center" });
     document.title = r.title;
-    initStage(); placeSeg(false);
+    initStage(); initExplainer(); placeSeg(false);
   };
   if (document.startViewTransition && !reduce && route.ran) document.startViewTransition(paint); else paint();
   route.ran = true;
