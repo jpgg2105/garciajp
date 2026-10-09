@@ -2049,60 +2049,78 @@ const SCENES = {
   web(K, S, time){
     const C = K.C, four = K.ease(K.seg(S, 4, 4.4));
     const sy = i => four > 0 ? K.lerp([26, 50, 74, 98][i], [20, 40, 60, 80][i], four) : [26, 50, 74, 98][i];
-    const CL = [10, 50], LB = [34, 50], CA = [100, 30], DB = [100, 72];
-    const n = four > 0 ? 4 : 3;
-    // wires
-    K.alpha(.8);
-    K.line(CL[0] + 7, 50, LB[0] - 11, 50, { color: C.line });
+    const CL = [10, 50], LB = [34, 50], SX = 66, BUS = 82, CA = [104, 30], DB = [104, 72];
+    const clR = CL[0] + 7.5, lbL = LB[0] - 10.5, lbR = LB[0] + 10.5, sL = SX - 9.5, sR = SX + 9.5, dL = CA[0] - 14;
+    const n = four > 0 ? 4 : 3, top = Math.min(sy(0), CA[1]), bot = Math.max(DB[1], sy(2));
+    // a packet that follows a path of points
+    const along = (pts, t, o = {}) => {
+      if (t <= 0 || t >= 1) return;
+      const seg = pts.slice(1).map((p, i) => Math.hypot(p[0] - pts[i][0], p[1] - pts[i][1]));
+      let d = K.io(t) * seg.reduce((a, b) => a + b, 0), i = 0;
+      while (i < seg.length - 1 && d > seg[i]){ d -= seg[i]; i++; }
+      const f = seg[i] ? d / seg[i] : 0;
+      K.dot(K.lerp(pts[i][0], pts[i + 1][0], f), K.lerp(pts[i][1], pts[i + 1][1], f), o.r || 1.3, { fill: o.color || C.accent });
+    };
+    const toData = (i, y) => [[sR, sy(i)], [BUS, sy(i)], [BUS, y], [dL, y]];
+    const back = p => p.slice().reverse();
+    // wires, each fading in with the nodes it connects
+    const aIn = K.seg(S, 0, .25), aSrv = K.seg(S, .1, .35), aData = K.seg(S, .2, .45);
+    K.alpha(aIn); K.line(clR, 50, lbL, 50, { color: C.line });
     for (let i = 0; i < n; i++){
-      K.alpha(i === 3 ? four * .8 : .8);
-      K.line(LB[0] + 11, 50, 58, sy(i), { color: C.line });
-      K.line(74, sy(i), CA[0] - 9, CA[1], { color: C.line, dash: [.8, .8] });
-      K.line(74, sy(i), DB[0] - 9, DB[1], { color: C.line, dash: [.8, .8] });
+      const a = i === 3 ? four : 1;
+      K.alpha(aSrv * a); K.line(lbR, 50, sL, sy(i), { color: C.line });
+      K.alpha(aData * a); K.line(sR, sy(i), BUS, sy(i), { color: C.line });
     }
+    K.alpha(aData);
+    K.line(BUS, top, BUS, bot, { color: C.line });
+    if (four > 0){ K.alpha(aData * four); K.line(BUS, bot, BUS, sy(3), { color: C.line }); K.alpha(aData); }
+    K.line(BUS, CA[1], dL, CA[1], { color: C.line });
+    K.line(BUS, DB[1], dL, DB[1], { color: C.line });
     // nodes
-    K.alpha(K.seg(S, 0, .25));
-    K.node(CL[0], CL[1], 14, 10, "Client", { sub: "browser" });
-    K.node(LB[0], LB[1], 22, 11, "Load", { sub: "balancer", size: 3.2 });
-    for (let i = 0; i < n; i++){ K.alpha((i === 3 ? four : 1) * K.seg(S, .1, .35)); K.node(66, sy(i), 16, 9, `Server ${i + 1}`, { size: 2.9 }); }
-    K.alpha(K.seg(S, .2, .45));
+    K.alpha(aIn);
+    K.node(CL[0], CL[1], 15, 11, "Client", { sub: "browser" });
+    K.node(LB[0], LB[1], 21, 11, "Load", { sub: "balancer", size: 3.2 });
+    for (let i = 0; i < n; i++){ K.alpha((i === 3 ? four : 1) * aSrv); K.node(SX, sy(i), 19, 9, `Server ${i + 1}`, { size: 2.9 }); }
+    K.alpha(aData);
     const hit = K.seg(S, 2.35, 2.45) * (1 - K.seg(S, 2.95, 3));
-    K.node(CA[0], CA[1], 18, 11, "Cache", { sub: "in memory", stroke: hit > 0 ? C.ok : C.strong, lw: hit > 0 ? .55 : .35 });
+    K.node(CA[0], CA[1], 28, 11, "Cache", { sub: "in memory", stroke: hit > 0 ? C.ok : C.strong, lw: hit > 0 ? .55 : .35 });
     const dbLit = K.seg(S, 3.4, 3.5) * (1 - K.seg(S, 3.75, 3.8));
-    K.node(DB[0], DB[1], 18, 11, "Database", { sub: "source of truth", stroke: dbLit > 0 ? C.warn : C.strong, lw: dbLit > 0 ? .55 : .35, size: 3 });
+    K.node(DB[0], DB[1], 28, 11, "Database", { sub: "source of truth", stroke: dbLit > 0 ? C.warn : C.strong, lw: dbLit > 0 ? .55 : .35, size: 3 });
     K.alpha(1);
     // 1. request arrives
-    K.packet(CL[0] + 7, 50, LB[0] - 11, 50, K.seg(S, .3, .9));
-    K.alpha(K.seg(S, .3, .5) * (1 - K.seg(S, 1.2, 1.4))); K.text("GET /products/42", CL[0] - 6, 40, { size: 2.7, mono: true, color: C.accent });
+    K.packet(clR, 50, lbL, 50, K.seg(S, .3, .9));
+    K.alpha(K.seg(S, .3, .5) * (1 - K.seg(S, 1.2, 1.4))); K.text("GET /products/42", 2.5, 40, { size: 2.7, mono: true, color: C.accent });
     // 2. round robin
-    [0, 1, 2].forEach(i => { K.alpha(1); K.packet(LB[0] + 11, 50, 58, sy(i), K.seg(S, 1.05 + i * .28, 1.4 + i * .28)); });
-    K.alpha(K.seg(S, 1.1, 1.3) * (1 - K.seg(S, 1.9, 2))); K.text("round robin: one request each", LB[0], 62, { size: 2.6, align: "center", color: C.accent });
+    [0, 1, 2].forEach(i => { K.alpha(1); K.packet(lbR, 50, sL, sy(i), K.seg(S, 1.05 + i * .28, 1.4 + i * .28)); });
+    K.alpha(K.seg(S, 1.1, 1.3) * (1 - K.seg(S, 1.9, 2)));
+    K.text("round robin:", 2.5, 63, { size: 2.6, color: C.accent });
+    K.text("one request per server", 2.5, 67.5, { size: 2.6, color: C.accent });
     // 3. cache hit
     K.alpha(1);
-    K.packet(74, sy(0), CA[0] - 9, CA[1], K.seg(S, 2.05, 2.4));
-    K.packet(CA[0] - 9, CA[1], 74, sy(0), K.seg(S, 2.5, 2.85), { color: C.ok });
+    along(toData(0, CA[1]), K.seg(S, 2.05, 2.4));
+    along(back(toData(0, CA[1])), K.seg(S, 2.5, 2.85), { color: C.ok });
     K.alpha(K.seg(S, 2.4, 2.5) * (1 - K.seg(S, 2.95, 3))); K.text("hit · 2 ms", CA[0], CA[1] - 9, { size: 2.9, align: "center", color: C.ok, weight: 600 });
     // 4. miss -> database -> write back
     K.alpha(1);
-    K.packet(74, sy(1), CA[0] - 9, CA[1], K.seg(S, 3.02, 3.2));
+    along(toData(1, CA[1]), K.seg(S, 3.02, 3.2));
     K.alpha(K.seg(S, 3.18, 3.25) * (1 - K.seg(S, 3.95, 4))); K.text("miss", CA[0], CA[1] - 9, { size: 2.9, align: "center", color: C.warn, weight: 600 });
     K.alpha(1);
-    K.packet(74, sy(1), DB[0] - 9, DB[1], K.seg(S, 3.22, 3.45), { color: C.warn });
-    K.packet(DB[0] - 9, DB[1], 74, sy(1), K.seg(S, 3.5, 3.72), { color: C.warn });
+    along(toData(1, DB[1]), K.seg(S, 3.22, 3.45), { color: C.warn });
+    along(back(toData(1, DB[1])), K.seg(S, 3.5, 3.72), { color: C.warn });
     K.alpha(K.seg(S, 3.45, 3.55) * (1 - K.seg(S, 3.95, 4))); K.text("38 ms", DB[0], DB[1] + 9, { size: 2.9, align: "center", color: C.warn, weight: 600 });
     K.alpha(1);
-    K.packet(74, sy(1), CA[0] - 9, CA[1], K.seg(S, 3.75, 3.95), { color: C.ok });
-    K.alpha(K.seg(S, 3.8, 3.9) * (1 - K.seg(S, 3.97, 4))); K.text("saved for the next request", CA[0] - 2, CA[1] + 9.5, { size: 2.6, align: "center", color: C.ok });
+    along(toData(1, CA[1]), K.seg(S, 3.75, 3.95), { color: C.ok });
+    K.alpha(K.seg(S, 3.8, 3.9) * (1 - K.seg(S, 3.97, 4))); K.text("saved for next time", 118, CA[1] + 9.5, { size: 2.6, align: "right", color: C.ok });
     // 5. scale out with live traffic
     if (four > 0){
       for (let k = 0; k < 8; k++){
         const tt = ((time * .45 + k / 8) % 1), srv = k % 4;
-        K.alpha(four); K.packet(LB[0] + 11, 50, 58, sy(srv), tt, { r: 1 });
-        K.packet(CL[0] + 7, 50, LB[0] - 11, 50, (tt * 2) % 1, { r: .8 });
+        K.alpha(four); K.packet(lbR, 50, sL, sy(srv), tt, { r: 1 });
+        K.packet(clR, 50, lbL, 50, (tt * 2) % 1, { r: .8 });
       }
       K.alpha(four);
-      K.rect(16, 84, 40, 11, 2.4, { fill: C.raised, stroke: C.strong });
-      K.text("p50 4 ms · p99 41 ms", 36, 89.5, { size: 2.9, mono: true, align: "center", color: C.ink, weight: 500 });
+      K.rect(2.5, 80, 41, 10, 2.4, { fill: C.raised, stroke: C.strong });
+      K.text("p50 4 ms · p99 41 ms", 23, 85, { size: 2.6, mono: true, align: "center", color: C.ink, weight: 500 });
     }
     K.alpha(1);
   },
