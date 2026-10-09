@@ -1,0 +1,1067 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Resume · Juan Pablo García</title>
+<meta name="description" content="AI developer who builds RAG pipelines, multi-agent systems and the full-stack products around them. I&#x27;ve built products end to end as the only developer and run a production dashboard for hundreds of schools. Studying AI Engineering at Universidad de Palermo, after a year as an exchange student at the University of Pennsylvania.">
+<link rel="canonical" href="https://garciajp.com/resume/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Juan Pablo García">
+<meta property="og:url" content="https://garciajp.com/resume/">
+<meta property="og:title" content="Resume · Juan Pablo García">
+<meta property="og:description" content="AI developer who builds RAG pipelines, multi-agent systems and the full-stack products around them. I&#x27;ve built products end to end as the only developer and run a production dashboard for hundreds of schools. Studying AI Engineering at Universidad de Palermo, after a year as an exchange student at the University of Pennsylvania.">
+<meta property="og:image" content="https://garciajp.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Juan Pablo García, AI developer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://garciajp.com/og.png">
+<meta name="author" content="Juan Pablo García">
+<script type="application/ld+json" id="ld">{"@context": "https://schema.org", "@graph": [{"@type": "ProfilePage", "url": "https://garciajp.com/resume/", "name": "Resume", "mainEntity": {"@type": "Person", "@id": "https://garciajp.com/#person", "name": "Juan Pablo García", "url": "https://garciajp.com/", "image": "https://garciajp.com/og.png", "jobTitle": "AI Developer", "description": "Juan Pablo García, AI developer in Argentina. RAG pipelines, multi-agent systems and the full-stack products around them.", "email": "mailto:jpgarcia2154@gmail.com", "address": {"@type": "PostalAddress", "addressLocality": "San Juan", "addressRegion": "San Juan", "addressCountry": "AR"}, "alumniOf": [{"@type": "CollegeOrUniversity", "name": "University of Pennsylvania"}, {"@type": "CollegeOrUniversity", "name": "Universidad de Palermo"}], "worksFor": {"@type": "Organization", "name": "Nodos Hub"}, "knowsAbout": ["Retrieval-augmented generation", "Multi-agent systems", "LLM evaluation", "Python", "FastAPI", "React", "PostgreSQL", "Vector search"], "sameAs": ["https://github.com/jpgg2105", "https://www.linkedin.com/in/juan-pablo-garc%C3%ADa-ba3496360"]}}]}</script>
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0E0F12">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23B9B1FF'/%3E%3Ctext x='32' y='42' font-family='Helvetica,Arial,sans-serif' font-size='28' font-weight='700' fill='%230E0F12' text-anchor='middle'%3EJP%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@400;500;600;700&family=Funnel+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one quiet reading column on a near-black ground. The only loud surface is the build stage, where scrolling assembles an AI feature from schema to production. Dark only, by choice.
+   Accent: every accent color is derived from --hue, which drifts once around the color wheel every 90 s. */
+@property --hue{syntax:"<number>";inherits:true;initial-value:285}
+@keyframes hue-drift{from{--hue:285}to{--hue:645}}
+:root{
+  color-scheme:dark;
+  --bg:#0E0F12; --surface:#17181D; --raised:#1E2026; --ink:#ECEDF1; --muted:#9EA2AD; --line:#2A2C33; --line-strong:#3A3D46;
+  --stage:#221D4D; --stage-ink:#D9D4FF; --accent:#B9B1FF; --accent-hover:#CAC4FF; --accent-wash:rgba(185,177,255,.14); --on-accent:#14112E; --headline:#F3F1FF; --ok:#6FD3A5; --warn:#FDBA74;
+  --code-kw:#B9B1FF; --code-str:#7DD3A8; --code-num:#F2A46E; --code-dim:#80848F;
+  --f-display:"Funnel Display","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --f-body:"Funnel Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --f-code:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  --ease-out:cubic-bezier(.23,1,.32,1);
+  --wrap:1160px; --gut:clamp(16px,4vw,40px); --head:64px;
+}
+@supports (color: oklch(0 0 0)){
+  :root{
+    --hue:285;
+    --accent:oklch(.82 .12 var(--hue)); --accent-hover:oklch(.88 .10 var(--hue)); --accent-wash:oklch(.82 .12 var(--hue) / .14);
+    --on-accent:oklch(.2 .06 var(--hue)); --stage:oklch(.26 .09 var(--hue)); --stage-ink:oklch(.9 .05 var(--hue));
+    --headline:oklch(.96 .02 var(--hue)); --code-kw:oklch(.82 .12 var(--hue));
+    animation:hue-drift 90s steps(180) infinite;
+  }
+}
+*,*::before,*::after{box-sizing:border-box}
+html{background:var(--bg);scrollbar-color:var(--line-strong) var(--bg);-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;caret-color:var(--accent);-webkit-tap-highlight-color:transparent}
+::selection{background:var(--accent);color:var(--on-accent)}
+a{color:inherit;text-underline-offset:.22em;text-decoration-thickness:1px}
+button,a{touch-action:manipulation}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+h1,h2,h3,h4{font-family:var(--f-display);text-wrap:balance;margin:0;font-weight:600;letter-spacing:-.02em;line-height:1.05}
+p{margin:0}
+.wrap{max-width:var(--wrap);margin-inline:auto;padding-inline:max(var(--gut),env(safe-area-inset-left,0px))}
+.muted{color:var(--muted)}
+.num{font-variant-numeric:tabular-nums}
+.skip{position:absolute;left:-9999px;top:8px;z-index:50;background:var(--accent);color:var(--on-accent);padding:10px 14px;border-radius:10px}
+.skip:focus{left:16px}
+
+/* header */
+.top{position:sticky;top:0;z-index:30;padding-top:env(safe-area-inset-top,0px);background:color-mix(in srgb,var(--bg) 84%,transparent);backdrop-filter:saturate(1.3) blur(14px);-webkit-backdrop-filter:saturate(1.3) blur(14px);border-bottom:1px solid transparent;transition:border-color .2s ease}
+.top.scrolled{border-bottom-color:var(--line)}
+.top .wrap{height:var(--head);display:flex;align-items:center;gap:24px}
+.brand{flex:none;font-family:var(--f-display);font-weight:700;font-size:19px;letter-spacing:-.02em;text-decoration:none;white-space:nowrap}
+.nav{display:flex;gap:4px;flex:1;justify-content:flex-start;overflow-x:auto;scrollbar-width:none;min-width:0;scroll-snap-type:x proximity}
+.nav::-webkit-scrollbar{display:none}
+.nav a:first-child{margin-left:auto}
+.nav a{text-decoration:none;color:var(--muted);font-size:15px;font-weight:500;padding:10px 12px;border-radius:10px;white-space:nowrap;scroll-snap-align:start;transition:color .15s ease,background-color .15s ease,transform .16s var(--ease-out)}
+.nav a:active{transform:scale(.96)}
+.nav a[aria-current="page"]{color:var(--ink);background:var(--raised)}
+.nav a.cta-link{color:var(--accent)}
+@media (hover:hover) and (pointer:fine){.nav a:hover{color:var(--ink)}}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:48px;padding:0 20px;border-radius:12px;font-weight:600;font-size:16px;text-decoration:none;border:1px solid var(--accent);background:var(--accent);color:var(--on-accent);cursor:pointer;transition:transform .16s var(--ease-out),background-color .15s ease,border-color .15s ease}
+.btn:active{transform:scale(.97)}
+.btn.line{background:transparent;color:var(--ink);border-color:var(--line-strong)}
+.btn svg{width:16px;height:16px;flex:none;display:block}
+.btn .arr{display:inline-flex;align-items:center}
+@media (hover:hover) and (pointer:fine){.btn:hover{background:var(--accent-hover);border-color:var(--accent-hover)}.btn.line:hover{background:transparent;border-color:var(--ink)}.btn .arr{transition:transform .2s var(--ease-out)}.btn:hover .arr{transform:translateX(3px)}}
+
+main{padding-bottom:96px;min-height:70vh}
+.page{display:flex;flex-direction:column;gap:112px;padding-top:72px}
+.title{font-size:clamp(40px,6vw,72px);letter-spacing:-.035em}
+
+/* hero */
+.hero{display:flex;flex-direction:column;gap:28px;padding-top:24px}
+.hero h1{font-size:clamp(42px,7.4vw,96px);letter-spacing:-.035em;line-height:.98;max-width:15ch}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero .sub{font-size:clamp(18px,1.8vw,21px);max-width:48ch;color:var(--muted)}
+.hero .sub b{color:var(--ink);font-weight:500}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.sched{display:grid;grid-template-columns:repeat(3,auto);width:max-content;max-width:100%;margin-top:12px;border-top:1px solid var(--line)}
+.sched>*{display:flex;flex-direction:column;gap:2px;padding:14px 32px 0 0;text-decoration:none;white-space:nowrap}
+.sched>*+*{padding-left:24px;border-left:1px solid var(--line)}
+.sched b{font-family:var(--f-display);font-weight:600;font-size:20px;letter-spacing:-.01em}
+.sched span{font-size:14.5px;color:var(--muted)}
+.sched .full b{color:var(--muted);text-decoration:line-through;text-decoration-thickness:1.5px}
+.sched a span{color:var(--accent)}
+.sched a{transition:transform .16s var(--ease-out)}
+.sched a:active{transform:scale(.97)}
+@media (hover:hover) and (pointer:fine){.sched a:hover span{text-decoration:underline}}
+
+/* BUILD STAGE */
+.build-track{height:420vh}
+.pin{position:sticky;top:calc(var(--head) + env(safe-area-inset-top,0px) + 16px);height:calc(100vh - var(--head) - 32px);height:calc(100svh - var(--head) - env(safe-area-inset-top,0px) - 32px);min-height:560px;max-height:820px;background:var(--stage);border-radius:28px;display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:40px;padding:clamp(28px,4vw,56px);overflow:hidden}
+.steps{display:flex;flex-direction:column;justify-content:center;gap:6px;min-width:0;list-style:none;margin:0;padding:0}
+.step{display:grid;grid-template-columns:36px minmax(0,1fr);gap:4px 12px;padding:14px 0;color:color-mix(in srgb,var(--stage-ink) 45%,transparent);transition:color .3s ease}
+.step .n{font-size:15px;font-weight:600;padding-top:6px;font-variant-numeric:tabular-nums}
+.step h3{font-size:clamp(22px,2.4vw,30px);color:inherit}
+.step p{grid-column:2;font-size:15.5px;max-height:0;opacity:0;overflow:hidden;transition:max-height .45s var(--ease-out),opacity .3s ease}
+.step.on{color:var(--stage-ink)}
+.step.on p{max-height:120px;opacity:1}
+.progress{position:absolute;left:clamp(28px,4vw,56px);right:clamp(28px,4vw,56px);bottom:22px;height:3px;border-radius:3px;background:color-mix(in srgb,var(--stage-ink) 16%,transparent)}
+.progress i{position:absolute;inset:0;border-radius:inherit;background:var(--stage-ink);transform-origin:left;transform:scaleX(0)}
+.screen{position:relative;align-self:center;min-width:0;height:min(100%,520px);background:var(--surface);border:1px solid color-mix(in srgb,var(--stage-ink) 14%,transparent);border-radius:18px;box-shadow:0 30px 70px -24px rgba(0,0,0,.65);overflow:hidden}
+.screen .bar,.card .bar{height:42px;display:flex;align-items:center;gap:10px;padding:0 16px;border-bottom:1px solid var(--line);font:13px var(--f-code);color:var(--muted)}
+.dots{display:flex;gap:6px}.dots i{width:10px;height:10px;border-radius:50%;background:var(--line-strong)}
+.file{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.layer{position:absolute;inset:42px 0 0 0;padding:22px 24px;overflow:hidden;opacity:0;filter:blur(6px);transform:translateY(10px);transition:opacity .35s ease,filter .35s ease,transform .45s var(--ease-out);pointer-events:none}
+.layer.on{opacity:1;filter:none;transform:none;pointer-events:auto}
+pre.code{margin:0;font:14px/1.75 var(--f-code);white-space:pre;color:var(--ink);overflow:hidden}
+.kw{color:var(--code-kw)}.str{color:var(--code-str)}.nm{color:var(--code-num)}.dim{color:var(--code-dim)}
+.caret{display:inline-block;width:8px;height:1.1em;vertical-align:-3px;background:var(--accent);animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.sample{font:12.5px var(--f-body);color:var(--muted);white-space:nowrap}
+.run{display:flex;flex-direction:column;gap:12px}
+.run-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:4px}
+.run-head h4{font-size:17px;letter-spacing:-.01em}
+.run-score{font-family:var(--f-display);font-size:40px;font-weight:600;letter-spacing:-.03em;line-height:1}
+.run-score small{font-size:16px;color:var(--muted);letter-spacing:0}
+.agent{display:grid;grid-template-columns:104px minmax(0,1fr) auto;gap:14px;align-items:center;padding:11px 14px;border:1px solid var(--line);border-radius:12px;font-size:15px;background:var(--raised)}
+.agent b{font-weight:600}
+.agent .t{color:var(--muted);font-size:14px}
+.flag{font-size:13px;font-weight:500;padding:2px 9px;border-radius:999px;background:rgba(253,186,116,.14);color:var(--warn);margin-left:6px;white-space:nowrap}
+.ship{display:flex;flex-direction:column;gap:16px;height:100%}
+.ship-url{display:flex;align-items:center;gap:8px;font:13.5px var(--f-code);color:var(--muted);padding:8px 12px;border-radius:9px;background:var(--raised)}
+.ship-url svg{color:var(--ok)}
+.log{font:13.5px/1.9 var(--f-code)}
+.log .ok{color:var(--ok)}
+.mini-app{flex:1;min-height:120px;border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px;transform-origin:top center;background:var(--raised)}
+.mini-app .ask{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:9px 12px;border-radius:9px;border:1px solid var(--line-strong);font-size:14px;color:var(--muted)}
+.mini-app .ans{font-size:14.5px;line-height:1.5}
+.mini-app sup{color:var(--accent);font-weight:600}
+
+/* phones and tablets: the stage becomes a swipeable deck */
+.deck{display:none}
+.deck-track{display:flex;align-items:flex-start;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;scrollbar-width:none;margin-inline:calc(-1 * clamp(20px,4vw,56px));padding-inline:clamp(20px,4vw,56px);scroll-padding-inline:clamp(20px,4vw,56px)}
+.deck-track::-webkit-scrollbar{display:none}
+.deck-track:focus-visible{outline-offset:-2px}
+.still{flex:0 0 min(88%,520px);scroll-snap-align:start;display:flex;flex-direction:column;gap:12px;transition:opacity .3s ease,transform .4s var(--ease-out)}
+.still:not(.cur){opacity:.5;transform:scale(.97)}
+.still h3{font-size:24px;color:var(--stage-ink)}
+.still>p{font-size:15.5px;color:var(--stage-ink);opacity:.85;min-height:3em}
+.card{background:var(--surface);border-radius:16px;overflow:hidden;border:1px solid color-mix(in srgb,var(--stage-ink) 14%,transparent)}
+.card .in{padding:16px}
+.card pre.code{font-size:12.5px;line-height:1.7;white-space:pre-wrap;overflow-wrap:anywhere}
+.card .agent{grid-template-columns:minmax(0,1fr) auto;gap:2px 10px}
+.card .agent .t{grid-column:1/-1;grid-row:2}
+.deck-nav{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:14px}
+.pips{display:flex;gap:2px;margin-left:-14px}
+.pips button{width:44px;height:44px;border:0;background:transparent;display:grid;place-items:center;cursor:pointer;padding:0}
+.pips button i{display:block;width:8px;height:8px;border-radius:8px;background:color-mix(in srgb,var(--stage-ink) 30%,transparent);transition:width .3s var(--ease-out),background-color .2s ease}
+.pips button[aria-current="true"] i{width:24px;background:var(--stage-ink)}
+.deck-nav .counter{font-size:14px;color:var(--stage-ink);opacity:.75}
+
+/* section heads */
+.sh{display:flex;justify-content:space-between;align-items:flex-end;gap:16px 40px;flex-wrap:wrap;margin-bottom:28px}
+.sh h2{font-size:clamp(34px,4.4vw,52px)}
+.sh p{max-width:46ch;color:var(--muted)}
+.sh>a{min-height:44px;display:inline-flex;align-items:center}
+
+/* project list */
+.plist{border-top:1px solid var(--line-strong)}
+.prow{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr) auto;gap:6px 32px;align-items:center;padding:26px 0;border-bottom:1px solid var(--line);text-decoration:none;transition:background-color .2s ease}
+.prow h3{font-size:clamp(23px,2.6vw,32px);transition:color .15s ease}
+.prow .meta{display:block;color:var(--muted);font-size:15px;margin-top:8px}
+.prow p{color:var(--muted);font-size:16px}
+.prow .go{width:44px;height:44px;border-radius:50%;border:1px solid var(--line-strong);display:grid;place-items:center;transition:transform .25s var(--ease-out),background-color .2s ease,color .2s ease,border-color .2s ease}
+.prow .go svg{width:16px;height:16px}
+.prow:active .go{transform:scale(.92)}
+@media (hover:hover) and (pointer:fine){.prow:hover h3{color:var(--accent)}.prow:hover .go{background:var(--accent);border-color:var(--accent);color:var(--on-accent);transform:translateX(4px)}}
+
+/* project page */
+.proj-head{display:flex;flex-direction:column;gap:18px;max-width:900px}
+.crumb{color:var(--muted);text-decoration:none;font-size:15px;min-height:44px;display:inline-flex;align-items:center;gap:8px;align-self:flex-start}
+.crumb svg{width:14px;height:14px;transform:rotate(180deg)}
+.proj-head h1{font-size:clamp(38px,5.6vw,68px);letter-spacing:-.035em}
+.proj-head .lede{font-size:clamp(18px,1.8vw,21px);color:var(--muted);max-width:56ch}
+.facts{display:flex;flex-wrap:wrap;gap:8px 28px;color:var(--muted);font-size:15.5px}
+.facts b{color:var(--ink);font-weight:500}
+.flows{display:flex;flex-direction:column;gap:22px}
+.flow-title{font-size:15px;font-weight:600;font-family:var(--f-body);letter-spacing:0;margin-bottom:10px}
+.flow{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;align-items:stretch;gap:10px}
+.flow li{display:flex;align-items:stretch;gap:10px}
+.flow .node{padding:12px 14px;border:1px solid var(--line-strong);border-radius:12px;background:var(--surface);font-size:15.5px;font-weight:500;max-width:240px}
+.flow .node small{display:block;color:var(--muted);font-size:14px;font-weight:400;margin-top:2px;line-height:1.4}
+.flow .arrow{display:grid;place-items:center;color:var(--muted)}
+.flow .arrow svg{width:16px;height:16px}
+.notes{margin:0;padding-left:18px;color:var(--muted)}
+.notes li+li{margin-top:6px}
+.pnext{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+.pnext a{display:flex;flex-direction:column;gap:4px;padding:20px;border:1px solid var(--line);border-radius:16px;text-decoration:none;transition:border-color .15s ease,transform .16s var(--ease-out)}
+.pnext a:active{transform:scale(.98)}
+.pnext a span{color:var(--muted);font-size:14.5px}
+.pnext a b{font-family:var(--f-display);font-weight:600;font-size:20px;letter-spacing:-.015em;line-height:1.2}
+.pnext a.next{text-align:right;grid-column:2}
+@media (hover:hover) and (pointer:fine){.pnext a:hover{border-color:var(--line-strong)}}
+
+/* services */
+.offers{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:0;border-top:1px solid var(--line-strong)}
+.offer{display:contents}
+.offer>div{padding:26px 0;border-bottom:1px solid var(--line)}
+.offer h3{font-size:26px;margin-bottom:8px}
+.offer p{color:var(--muted);margin-bottom:10px;max-width:52ch}
+.offer ul{margin:0;padding-left:18px;color:var(--muted);font-size:16px}
+.offer .terms{display:flex;flex-direction:column;gap:14px;justify-content:space-between;align-items:flex-start;padding-left:56px}
+.offer .terms span{font-size:15.5px;color:var(--muted)}
+.process{list-style:none;margin:0;padding:24px 0 0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:28px;border-top:1px solid var(--line-strong);counter-reset:p}
+.process li{counter-increment:p;display:flex;flex-direction:column;gap:6px}
+.process li::before{content:counter(p);font-family:var(--f-display);font-weight:600;font-size:15px;width:32px;height:32px;border-radius:50%;border:1px solid var(--line-strong);display:grid;place-items:center;margin-bottom:6px}
+.process h3{font-size:21px}
+.process p{color:var(--muted);font-size:16px}
+
+/* writing */
+.seg{position:relative;display:inline-flex;max-width:100%;padding:4px;border-radius:12px;background:var(--surface)}
+.seg-row{display:flex;gap:2px}
+.seg button{border:0;background:transparent;min-height:40px;padding:0 14px;border-radius:9px;font-size:15px;font-weight:500;cursor:pointer;color:var(--muted);display:inline-flex;gap:7px;align-items:center;white-space:nowrap}
+.seg button span{font-size:13px;opacity:.7}
+.seg .over{position:absolute;inset:4px;pointer-events:none;clip-path:inset(0 100% 0 0 round 9px);transition:clip-path .28s var(--ease-out)}
+.seg .over .seg-row{height:100%}
+.seg .over button{background:var(--ink);color:var(--bg);border-radius:0}
+.posts{border-top:1px solid var(--line-strong)}
+.post{display:grid;grid-template-columns:120px minmax(0,1fr) auto;gap:6px 28px;padding:24px 0;border-bottom:1px solid var(--line);text-decoration:none;align-items:baseline}
+.post h3{font-size:clamp(21px,2.2vw,26px);letter-spacing:-.015em}
+.post p{grid-column:2;color:var(--muted);font-size:16px;max-width:60ch}
+.post .d{font-size:14.5px;color:var(--muted)}
+.tag{justify-self:start;font-size:13px;font-weight:500;padding:3px 10px;border-radius:999px;white-space:nowrap;border:1px solid var(--line-strong);color:var(--muted)}
+.tag.article{border-color:transparent;background:var(--accent-wash);color:var(--accent)}
+.tag.interview{border-color:transparent;background:var(--ink);color:var(--bg)}
+@media (hover:hover) and (pointer:fine){.post:hover h3{color:var(--accent)}}
+.empty{padding:48px 0;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:32px;border-bottom:1px solid var(--line)}
+.empty h3{font-size:26px;margin-bottom:8px}
+.empty p{color:var(--muted);max-width:44ch}
+.empty dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px 16px;align-content:start}
+.empty dt{justify-self:start}
+.empty dd{margin:0;color:var(--muted);font-size:16px}
+.reader{max-width:68ch;display:flex;flex-direction:column;gap:24px}
+.reader h1{font-size:clamp(36px,5vw,58px);letter-spacing:-.03em}
+.reader .body{display:flex;flex-direction:column;gap:20px;font-size:18.5px;line-height:1.7}
+.reader .q{font-family:var(--f-display);font-weight:600;font-size:21px;letter-spacing:-.01em;line-height:1.35}
+
+/* resume */
+.cv{display:grid;grid-template-columns:200px minmax(0,1fr);gap:0 48px}
+.cv h2{font-size:22px;padding-top:24px}
+.cv>div{padding:24px 0 28px;border-top:1px solid var(--line)}
+.cv>div:first-of-type{border-top-color:var(--line-strong)}
+.job{display:grid;grid-template-columns:150px minmax(0,1fr);gap:4px 24px;padding-block:10px}
+.job+.job{margin-top:14px}
+.job h3{font-size:20px;letter-spacing:-.015em}
+.job .at{color:var(--muted)}
+.job ul{margin:8px 0 0;padding-left:18px;color:var(--muted)}
+.job li+li{margin-top:4px}
+.lede{font-size:20px;line-height:1.5;max-width:58ch}
+.plain{margin:0;padding-left:18px;color:var(--muted)}
+.plain li+li{margin-top:6px}
+.plain b{color:var(--ink);font-weight:600}
+
+/* stack */
+.legend{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:15px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:7px;padding:7px 13px;border-radius:999px;border:1px solid var(--line);font-size:15.5px;color:var(--muted)}
+.chip.prod{background:var(--surface);border-color:var(--line-strong);color:var(--ink)}
+.chip.prod::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.groups{display:flex;flex-direction:column;border-top:1px solid var(--line-strong)}
+.group{display:grid;grid-template-columns:220px minmax(0,1fr);gap:16px 48px;padding:24px 0;border-bottom:1px solid var(--line)}
+.group h3{font-size:22px}
+
+/* booking */
+.book{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:48px}
+.book h3{font-size:22px;margin-bottom:14px}
+.types{display:flex;flex-direction:column;gap:8px}
+.types button{text-align:left;cursor:pointer;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 16px;padding:16px 18px;border-radius:14px;border:1px solid var(--line);background:var(--surface);transition:border-color .15s ease,transform .16s var(--ease-out),box-shadow .15s ease}
+.types button:active{transform:scale(.98)}
+.types button[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.types b{font-weight:600}
+.types small{grid-column:1;color:var(--muted);font-size:14.5px}
+.types .len{grid-row:1/3;grid-column:2;align-self:center;color:var(--muted);font-size:15px}
+.days{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.days button{cursor:pointer;border:1px solid var(--line);background:var(--surface);border-radius:12px;min-height:72px;padding:8px 2px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;transition:transform .16s var(--ease-out),border-color .15s ease,background-color .15s ease,color .15s ease}
+.days button:active{transform:scale(.95)}
+.days button[aria-pressed="true"]{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.days .dn{font-family:var(--f-display);font-weight:600;font-size:24px;line-height:1.1}
+.days small{font-size:12.5px;opacity:.75}
+.confirm{margin-top:20px;padding:20px;border-radius:16px;background:var(--surface);border:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.copyrow{margin-top:16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;color:var(--muted);font-size:15.5px}
+.copyrow code{font-family:var(--f-code);font-size:14px;color:var(--ink);user-select:all;word-break:break-all}
+.copyrow button{border:1px solid var(--line-strong);background:transparent;border-radius:10px;min-height:40px;padding:0 14px;cursor:pointer;font-size:14px;transition:transform .16s var(--ease-out)}
+.copyrow button:active{transform:scale(.95)}
+
+/* closing call to action */
+.cta{background:var(--stage);color:var(--stage-ink);border-radius:28px;padding:clamp(28px,5vw,64px);display:flex;flex-direction:column;gap:28px}
+.cta h2{font-size:clamp(34px,5.2vw,68px);letter-spacing:-.035em;max-width:16ch;color:var(--headline)}
+.cta .btn.line{color:var(--stage-ink);border-color:color-mix(in srgb,var(--stage-ink) 35%,transparent)}
+.socials{display:flex;gap:8px}
+.socials a{width:48px;height:48px;border-radius:12px;display:grid;place-items:center;border:1px solid color-mix(in srgb,var(--stage-ink) 25%,transparent);transition:transform .16s var(--ease-out),background-color .15s ease}
+.socials a:active{transform:scale(.94)}
+@media (hover:hover) and (pointer:fine){.socials a:hover{background:color-mix(in srgb,var(--stage-ink) 12%,transparent)}}
+.socials svg{width:20px;height:20px}
+footer{padding-block:28px calc(40px + env(safe-area-inset-bottom,0px));color:var(--muted);font-size:15px;border-top:1px solid var(--line)}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+footer a{color:var(--muted)}
+
+::view-transition-old(root),::view-transition-new(root){animation-duration:.22s;animation-timing-function:var(--ease-out)}
+
+/* tablets and phones */
+@media (max-width:960px){
+  /* phones and tablets: same pinned, scroll-driven build, stacked vertically */
+  .build-track{height:380vh}
+  .pin{top:max(calc(var(--hh,64px) + 10px), calc(50svh - 390px + var(--hh,64px) / 2));height:calc(100vh - var(--hh,64px) - 20px);height:calc(100svh - var(--hh,64px) - 20px);min-height:0;max-height:780px;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);gap:16px;padding:20px 20px 34px;border-radius:22px}
+  .steps{display:grid;justify-content:stretch;gap:0}
+  .step{grid-area:1/1;align-content:start;padding:0;opacity:0;transform:translateY(10px);filter:blur(4px);pointer-events:none;transition:opacity .35s ease,transform .45s var(--ease-out),filter .35s ease;grid-template-columns:auto minmax(0,1fr);gap:2px 10px}
+  .step.on{opacity:1;transform:none;filter:none;pointer-events:auto}
+  .step .n{padding-top:3px;font-size:14px}
+  .step h3{font-size:clamp(22px,5.6vw,30px)}
+  .step p{max-height:none;opacity:1;font-size:15px;line-height:1.45}
+  .screen{height:auto;align-self:stretch;border-radius:16px}
+  .screen .bar{height:38px}
+  .layer{inset:38px 0 0 0;padding:16px}
+  .screen pre.code{font-size:12px;line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere}
+  .screen .agent{grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;padding:10px 12px}
+  .screen .agent .t{grid-column:1/-1;grid-row:2;font-size:13.5px}
+  .run{gap:8px}.run-score{font-size:32px}
+  .ship{gap:12px}.log{font-size:12.5px;line-height:1.8}
+  .progress{left:20px;right:20px;bottom:16px}
+  .prow{grid-template-columns:minmax(0,1fr) auto}
+  .prow p{grid-column:1;grid-row:2}
+  .prow .go{grid-column:2;grid-row:1/3}
+  .process{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .offers{grid-template-columns:minmax(0,1fr)}
+  .offer>div:first-child{border-bottom:0;padding-bottom:12px}
+  .offer .terms{padding-top:0;padding-left:0}
+  .book{grid-template-columns:minmax(0,1fr);gap:36px}
+  .page{gap:88px;padding-top:48px}
+}
+.build.static .build-track{height:auto}
+.build.static .pin{position:relative;top:0;height:auto;min-height:0;max-height:none;display:block}
+.build.static .steps,.build.static .progress,.build.static .screen{display:none}
+.build.static .deck{display:block}
+@media (max-width:960px){
+  .top .wrap{height:auto;flex-wrap:wrap;padding-block:8px 6px;gap:2px 12px}
+  .brand{flex:1;padding-block:10px}
+  .nav{order:3;flex-basis:100%;margin-inline:-12px;padding-inline:4px}
+  .nav a:first-child{margin-left:0}
+}
+@media (max-width:720px){
+  .nav{-webkit-mask-image:linear-gradient(90deg,#000 85%,transparent);mask-image:linear-gradient(90deg,#000 85%,transparent)}
+  .post,.cv,.job,.group,.empty{grid-template-columns:minmax(0,1fr)}
+  .post p{grid-column:1}
+  .cv>div{border-top:0;padding-top:8px}
+  .process{grid-template-columns:minmax(0,1fr)}
+  .hero .row .btn,.cta .row .btn{flex:1 1 auto}
+  .flow{flex-direction:column}
+  .flow li{flex-direction:column;gap:6px}
+  .flow .node{max-width:none}
+  .flow .arrow svg{transform:rotate(90deg)}
+  .pnext{grid-template-columns:minmax(0,1fr)}
+  .pnext a.next{grid-column:1}
+}
+@media (max-width:480px){
+  .sched{grid-template-columns:repeat(3,minmax(0,1fr));width:100%}
+  .sched b{font-size:17px}.sched>*{padding-right:10px}.sched>*+*{padding-left:12px}
+  .seg{overflow-x:auto;scrollbar-width:none}
+  .seg button{padding:0 11px;font-size:14px}
+  .days{gap:5px}.days .dn{font-size:20px}
+}
+@media (max-width:960px) and (max-height:720px){
+  .step p{display:none}
+  .pin{gap:12px;padding:16px 16px 30px}
+  .progress{bottom:14px;left:16px;right:16px}
+  .layer{padding:12px 14px}
+  .screen pre.code{font-size:11.5px;line-height:1.55}
+  .run-head{margin-bottom:0}.run-score{font-size:26px}.run-head h4{font-size:15px}
+  .screen .agent{padding:8px 10px;font-size:14px}.screen .agent .t{font-size:13px}
+  .mini-app{padding:12px}.mini-app .ans{font-size:13.5px}
+}
+@media (prefers-reduced-motion:reduce){
+  :root{animation:none !important}
+  *,*::before,*::after{transition-duration:.01ms !important;animation:none !important;scroll-behavior:auto !important}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#view">Skip to content</a>
+<header class="top" id="top">
+  <div class="wrap">
+    <a class="brand" href="/" data-nav>Juan Pablo García</a>
+    <nav class="nav" id="nav" aria-label="Main"><a href="/" data-k="home">Home</a><a href="/projects/" data-k="projects">Projects</a><a href="/services/" data-k="services">Services</a><a href="/resume/" data-k="resume" aria-current="page">Resume</a><a href="/stack/" data-k="stack">Stack</a><a href="/writing/" data-k="writing">Writing</a><a href="/book/" data-k="book" class="cta-link">Book a call</a></nav>
+  </div>
+</header>
+
+<main class="wrap" id="view" tabindex="-1">
+    <div class="page">
+      <section>
+        <div class="sh"><div style="display:grid;gap:8px"><h1 class="title">Resume</h1><span class="muted">AI Analyst · RAG and multi-agent systems</span></div>
+          </div>
+        <div class="cv">
+          <h2>Summary</h2><div><p class="lede">AI developer who builds RAG pipelines, multi-agent systems and the full-stack products around them. I've built products end to end as the only developer and run a production dashboard for hundreds of schools. Studying AI Engineering at Universidad de Palermo, after a year as an exchange student at the University of Pennsylvania.</p></div>
+          <h2>Experience</h2><div><div class="job"><span class="muted num">Feb 2025 to now</span><div><h3>AI Developer</h3><span class="at">Nodos Hub · Remote</span><ul><li>Built a React and FastAPI analytics dashboard, now in production, tracking attendance, performance and risk across hundreds of schools for an education-sector client, with Excel export.</li><li>Own the deployment pipeline from GitLab to a cloud Linux server (Gunicorn, systemd, nginx) across separate dev and prod environments, with SSO against the client's identity system.</li><li>Built LLM chatbots (Gemini, Pinecone) in PHP and Python, plus an automated lead-scraping and WhatsApp outreach pipeline using n8n, Airtable and the OpenAI API.</li></ul></div></div><div class="job"><span class="muted num">Sep 2025 to Jul 2026</span><div><h3>AI Developer</h3><span class="at">Glow Talent · Remote</span><ul><li>Designed and built AI solutions as an independent contractor, working remotely with the client's team.</li></ul></div></div></div>
+          <h2>Projects</h2><div><div class="job"><span class="muted num">Personal</span><div><h3>ai-document-analyst · research-agent · agent-benchmark</h3><span class="at">Python, FastAPI, React, Docker</span><ul><li>A RAG service with hybrid retrieval (BM25, dense vectors, cross-encoder reranking), a Planner, Researcher, Critic and Synthesizer multi-agent system that uses it as a tool, and a benchmark harness that compares the agent loop with a single-shot baseline. CI and tests run without API keys.</li></ul></div></div></div>
+          <h2>Education</h2><div><div class="job"><span class="muted num">2024 to 2029</span><div><h3>B.Eng. in Artificial Intelligence Engineering</h3><span class="at">Universidad de Palermo · intermediate AI Analyst degree expected Dec 2026</span></div></div><div class="job"><span class="muted num">2023 to 2024</span><div><h3>Full-year exchange, BSE Computer Science</h3><span class="at">University of Pennsylvania · GPA 3.88/4.0, 80% scholarship, academic honors</span></div></div><div class="job"><span class="muted num">2016 to 2022</span><div><h3>Electronics Technician</h3><span class="at">Escuela Industrial D. F. Sarmiento · GPA 9.40, valedictorian (Abanderado)</span></div></div></div>
+          <h2>Honors</h2><div><ul class="plain"><li>Bronze Medal, International Junior Science Olympiad (Qatar, 2019)</li><li>Gold Medal, National Junior Science Olympiad (2019)</li><li>80% scholarship, University of Pennsylvania; 100% scholarship offer, ITBA</li></ul></div>
+          <h2>Languages</h2><div><ul class="plain"><li><b>Spanish</b>, native</li><li><b>English</b>, C2, Duolingo English Test</li><li><b>French</b>, A2</li><li><b>Italian</b>, basic</li></ul></div>
+        </div>
+      </section>
+    </div></main>
+<footer><div class="wrap"><span id="foot">© 2026 Juan Pablo García · San Juan, Argentina (UTC−3)</span><a id="footMail" href="mailto:jpgarcia2154@gmail.com">jpgarcia2154@gmail.com</a></div></footer>
+
+<!-- ===================== CONTENT =====================
+     Everything on the site comes from this JSON. Edit it, then run `python build.py`.
+     See README.md for what each field does. -->
+<script type="application/json" id="content">
+{
+  "name": "Juan Pablo García",
+  "domain": "https://garciajp.com",
+  "description": "Juan Pablo García, AI developer in Argentina. RAG pipelines, multi-agent systems and the full-stack products around them.",
+  "email": "jpgarcia2154@gmail.com",
+  "location": "San Juan, Argentina (UTC−3)",
+  "person": {
+    "jobTitle": "AI Developer",
+    "locality": "San Juan", "region": "San Juan", "country": "AR",
+    "alumniOf": ["University of Pennsylvania", "Universidad de Palermo"],
+    "worksFor": "Nodos Hub",
+    "knowsAbout": ["Retrieval-augmented generation", "Multi-agent systems", "LLM evaluation", "Python", "FastAPI", "React", "PostgreSQL", "Vector search"]
+  },
+  "calUser": "",
+  "resumePdf": "",
+  "booked": ["2026-10"],
+  "links": {
+    "github": "https://github.com/jpgg2105",
+    "linkedin": "https://www.linkedin.com/in/juan-pablo-garc%C3%ADa-ba3496360",
+    "x": ""
+  },
+  "projects": [
+    {
+      "slug": "schools-analytics-dashboard",
+      "title": "Analytics dashboard for hundreds of schools",
+      "client": "Nodos Hub", "role": "AI developer", "when": "2025 to now",
+      "summary": "A React and FastAPI dashboard in production, following attendance, performance and risk across hundreds of schools.",
+      "problem": "An education-sector client needed attendance, performance and risk indicators for hundreds of schools in one place, behind their own sign-in.",
+      "solution": "A FastAPI backend and a React dashboard with Excel export, signed in through the client's identity system. I own the whole path to production.",
+      "flows": [
+        { "title": "How a request flows", "steps": [
+          ["Sign-in", "SSO with the client's identity system"],
+          ["API", "FastAPI"],
+          ["Dashboard", "React: attendance, performance, risk"],
+          ["Export", "Excel"]
+        ] },
+        { "title": "How it ships", "steps": [
+          ["GitLab", "Source and pipeline"],
+          ["Cloud Linux server", "Gunicorn, systemd, nginx"],
+          ["Dev and prod", "Separate environments"]
+        ] }
+      ],
+      "notes": [],
+      "stack": ["React", "FastAPI", "Python", "Linux", "Gunicorn", "systemd", "nginx", "SSO"],
+      "result": "In production, used to follow students across hundreds of schools.",
+      "code": "", "codeNote": "Client work, code is private.", "demo": ""
+    },
+    {
+      "slug": "research-agent",
+      "title": "Research agent with its own benchmark",
+      "client": "Personal project", "role": "Author", "when": "2026",
+      "summary": "A RAG service, a four-agent research loop and a benchmark that tests whether the loop beats a single LLM call.",
+      "problem": "Multi-agent systems are easy to demo. I wanted to know whether a multi-agent loop actually beats a single LLM call on the same questions.",
+      "solution": "Three parts that build on each other: ai-document-analyst, a RAG service with hybrid retrieval; research-agent, a four-role agent that uses it as a tool; and agent-benchmark, a harness that runs both approaches on the same questions.",
+      "flows": [
+        { "title": "The agent loop", "steps": [
+          ["Question", ""],
+          ["Planner", "Plans the research"],
+          ["Researcher", "Calls the RAG service"],
+          ["Critic", "Reviews the draft"],
+          ["Synthesizer", "Writes the final answer"]
+        ] },
+        { "title": "Inside the RAG service", "steps": [
+          ["BM25", "Keyword match"],
+          ["Dense vectors", "Semantic match"],
+          ["Cross-encoder", "Reranks the merged results"]
+        ] }
+      ],
+      "notes": [
+        "The benchmark harness runs the agent loop and a single-shot baseline on the same questions.",
+        "CI and tests run without API keys, so anyone can reproduce the setup."
+      ],
+      "stack": ["Python", "FastAPI", "React", "Docker", "GitHub Actions", "pytest"],
+      "result": "A reproducible way to compare the agent loop with a single LLM call, instead of judging it by a demo.",
+      "code": "https://github.com/jpgg2105", "codeNote": "", "demo": ""
+    },
+    {
+      "slug": "chatbots-and-outreach",
+      "title": "Chatbots and an outreach pipeline",
+      "client": "Nodos Hub", "role": "AI developer", "when": "2025",
+      "summary": "LLM chatbots that answer from client content, and a pipeline that finds leads and contacts them on WhatsApp.",
+      "problem": "Clients wanted assistants that answer from their own content, and a sales team was finding and contacting leads by hand.",
+      "solution": "Chatbots built on Gemini and Pinecone, in PHP and Python depending on the client's stack, and an n8n workflow that scrapes leads, stores them in Airtable, drafts messages with the OpenAI API and sends them on WhatsApp.",
+      "flows": [
+        { "title": "Chatbots", "steps": [
+          ["Client content", "Indexed in Pinecone"],
+          ["Chatbot", "Gemini, PHP or Python"]
+        ] },
+        { "title": "Outreach", "steps": [
+          ["Lead scraping", ""],
+          ["Airtable", "Lead records"],
+          ["OpenAI API", "Drafts each message"],
+          ["WhatsApp", "Sent through n8n"]
+        ] }
+      ],
+      "notes": [],
+      "stack": ["Gemini", "Pinecone", "PHP", "Python", "n8n", "Airtable", "OpenAI"],
+      "result": "Answers come from the client's own documents, and lead outreach runs without manual copying.",
+      "code": "", "codeNote": "Client work, code is private.", "demo": ""
+    }
+  ],
+  "offers": [
+    { "name": "Add AI to your product", "meeting": 1,
+      "text": "Assistants and search that answer from your own documents and data, with a way to measure whether the answers are good.",
+      "items": ["Retrieval tuned on your content", "Answers that cite their sources", "An evaluation set, so quality is measured instead of guessed"] },
+    { "name": "Build the whole product", "meeting": 1,
+      "text": "For founders and teams who need one person to own the backend, the interface and the deploy.",
+      "items": ["Database, API, auth and roles", "React interface", "Deploy, monitoring and handover"] },
+    { "name": "Automate a workflow", "meeting": 0,
+      "text": "Connect the tools you already use so repetitive work runs by itself.",
+      "items": ["Lead capture and outreach", "Reports and exports", "n8n, APIs and LLM steps where they help"] }
+  ],
+  "process": [
+    ["Intro call", "15 minutes to understand the problem and see if I'm the right fit."],
+    ["Written plan", "Scope, timeline and price in writing before any work starts."],
+    ["Weekly demos", "You see working software every week."],
+    ["Handover", "Deployed, documented and walked through with your team."]
+  ],
+  "resume": {
+    "title": "AI Analyst · RAG and multi-agent systems",
+    "summary": "AI developer who builds RAG pipelines, multi-agent systems and the full-stack products around them. I've built products end to end as the only developer and run a production dashboard for hundreds of schools. Studying AI Engineering at Universidad de Palermo, after a year as an exchange student at the University of Pennsylvania.",
+    "jobs": [
+      { "when": "Feb 2025 to now", "role": "AI Developer", "at": "Nodos Hub · Remote", "points": [
+        "Built a React and FastAPI analytics dashboard, now in production, tracking attendance, performance and risk across hundreds of schools for an education-sector client, with Excel export.",
+        "Own the deployment pipeline from GitLab to a cloud Linux server (Gunicorn, systemd, nginx) across separate dev and prod environments, with SSO against the client's identity system.",
+        "Built LLM chatbots (Gemini, Pinecone) in PHP and Python, plus an automated lead-scraping and WhatsApp outreach pipeline using n8n, Airtable and the OpenAI API."] },
+      { "when": "Sep 2025 to Jul 2026", "role": "AI Developer", "at": "Glow Talent · Remote", "points": [
+        "Designed and built AI solutions as an independent contractor, working remotely with the client's team."] }
+    ],
+    "projects": [
+      { "when": "Personal", "role": "ai-document-analyst · research-agent · agent-benchmark", "at": "Python, FastAPI, React, Docker", "points": [
+        "A RAG service with hybrid retrieval (BM25, dense vectors, cross-encoder reranking), a Planner, Researcher, Critic and Synthesizer multi-agent system that uses it as a tool, and a benchmark harness that compares the agent loop with a single-shot baseline. CI and tests run without API keys."] }
+    ],
+    "education": [
+      { "when": "2024 to 2029", "role": "B.Eng. in Artificial Intelligence Engineering", "at": "Universidad de Palermo · intermediate AI Analyst degree expected Dec 2026" },
+      { "when": "2023 to 2024", "role": "Full-year exchange, BSE Computer Science", "at": "University of Pennsylvania · GPA 3.88/4.0, 80% scholarship, academic honors" },
+      { "when": "2016 to 2022", "role": "Electronics Technician", "at": "Escuela Industrial D. F. Sarmiento · GPA 9.40, valedictorian (Abanderado)" }
+    ],
+    "honors": [
+      "Bronze Medal, International Junior Science Olympiad (Qatar, 2019)",
+      "Gold Medal, National Junior Science Olympiad (2019)",
+      "80% scholarship, University of Pennsylvania; 100% scholarship offer, ITBA"
+    ],
+    "languages": [["Spanish", "native"], ["English", "C2, Duolingo English Test"], ["French", "A2"], ["Italian", "basic"]]
+  },
+  "stack": [
+    { "group": "AI and machine learning", "items": ["RAG", "Gemini", "OpenAI", "Anthropic", "ChromaDB", "Pinecone", "Qdrant", "Multi-agent systems", "PyTorch", "scikit-learn"] },
+    { "group": "Backend", "items": ["Python", "FastAPI", "Flask", "REST APIs", "SQLAlchemy", "Alembic", "JWT", "RBAC", "OAuth"] },
+    { "group": "Frontend", "items": ["React", "TypeScript", "Vite", "Tailwind CSS"] },
+    { "group": "Infrastructure", "items": ["PostgreSQL", "Docker", "GitHub Actions", "Git", "Linux", "Gunicorn", "systemd", "nginx", "Azure", "pytest", "Playwright"] },
+    { "group": "Languages", "items": ["Python", "TypeScript", "JavaScript", "SQL", "Java", "PHP", "C"] }
+  ],
+  "shipped": ["RAG", "Gemini", "OpenAI", "ChromaDB", "Pinecone", "Python", "FastAPI", "Flask", "SQLAlchemy", "Alembic", "JWT", "RBAC", "React", "PostgreSQL", "Linux", "Gunicorn", "systemd", "nginx", "PHP", "SQL"],
+  "meetings": [
+    { "slug": "15min", "name": "Intro call", "mins": 15, "desc": "See if we're a good fit" },
+    { "slug": "30min", "name": "Project scoping", "mins": 30, "desc": "Walk through your idea and timeline" },
+    { "slug": "60min", "name": "Technical consult", "mins": 60, "desc": "RAG, agents or architecture, in depth" }
+  ],
+  "labels": { "article": "Articles", "interview": "Interviews", "note": "Notes" },
+  "labelHelp": { "article": "Longer pieces on RAG, agents and shipping AI.", "interview": "Conversations with builders and researchers.", "note": "Short things I learned this week." },
+  "posts": []
+}
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/motion@11.11.13/dist/motion.js"></script>
+<script>
+const SITE = JSON.parse(document.getElementById("content").textContent);
+const $ = (s, r=document) => r.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const fmt = iso => new Date(iso+"T12:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const M = window.Motion || null;
+
+/* Real paths on garciajp.com (garciajp.com/projects/research-agent/). Hash paths when opened as a file or in a preview. */
+const HASH = location.protocol === "file:" || document.documentElement.dataset.mode === "hash";
+const url = p => HASH ? "#" + p : p;
+const asset = p => HASH ? p : "/" + p;
+const TABS = [["/","Home","home"],["/projects/","Projects","projects"],["/services/","Services","services"],["/resume/","Resume","resume"],["/stack/","Stack","stack"],["/writing/","Writing","writing"],["/book/","Book a call","book"]];
+
+const ICONS = {
+  github: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.56-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.19-3.08-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.82 1.19 3.08 0 4.41-2.69 5.38-5.25 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg>',
+  linkedin: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"/></svg>',
+  x: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.66l-5.21-6.82-5.97 6.82H1.67l7.73-8.84L1.25 2.25h6.83l4.71 6.23 5.45-6.23Zm-1.16 17.52h1.83L7.08 4.13H5.12l11.96 15.64Z"/></svg>',
+  arrow: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>',
+  ext: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h7v7M13 3 4 12"/></svg>',
+  mail: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3.5" width="12" height="9" rx="1.5"/><path d="m2.5 4.5 5.5 4 5.5-4"/></svg>',
+  check: '<svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3 3 7-7"/></svg>',
+};
+
+$("#nav").innerHTML = TABS.map(([p,l,k]) => `<a href="${url(p)}" data-k="${k}"${k==="book"?' class="cta-link"':""}>${l}</a>`).join("");
+$(".brand").href = url("/");
+$("#foot").textContent = "© " + new Date().getFullYear() + " " + SITE.name + " · " + SITE.location;
+$("#footMail").textContent = SITE.email; $("#footMail").href = "mailto:" + SITE.email;
+addEventListener("scroll", () => $("#top").classList.toggle("scrolled", scrollY > 8), {passive:true});
+const setHead = () => document.documentElement.style.setProperty("--hh", $("#top").offsetHeight + "px");
+setHead(); addEventListener("resize", setHead);
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(setHead);
+
+/* ===================== the build stage ===================== */
+const SQL = [
+  ["kw","create table "],["","documents (\n"],
+  ["","  id          "],["kw","uuid primary key"],["",",\n"],
+  ["","  tenant_id   "],["kw","uuid not null references "],["","tenants,\n"],
+  ["","  title       "],["kw","text not null"],["",",\n"],
+  ["","  body        "],["kw","text not null"],["",",\n"],
+  ["","  updated_at  "],["kw","timestamptz default "],["","now()\n);\n\n"],
+  ["kw","create index on "],["","documents (tenant_id);"],
+];
+const API = [
+  ["kw","POST "],["","/api/search\n"],
+  ["","{ "],["str",'"query"'],["",": "],["str",'"Can I get a refund on an annual plan?"'],["",", "],["str",'"top_k"'],["",": "],["nm","3"],[""," }\n\n"],
+  ["dim","200 OK · bm25 + dense · reranked\n"],
+  ["","[\n"],
+  ["","  { "],["str",'"score"'],["",": "],["nm","0.92"],["",", "],["str",'"text"'],["",": "],["str",'"Annual plans are refundable within 30 days…"'],[""," },\n"],
+  ["","  { "],["str",'"score"'],["",": "],["nm","0.81"],["",", "],["str",'"text"'],["",": "],["str",'"Refunds go back to the original card…"'],[""," },\n"],
+  ["","  { "],["str",'"score"'],["",": "],["nm","0.64"],["",", "],["str",'"text"'],["",": "],["str",'"Monthly plans renew on the same day…"'],[""," }\n"],
+  ["","]"],
+];
+const lenOf = toks => toks.reduce((n,t) => n + t[1].length, 0);
+function typed(toks, chars, caret){
+  let out = "", left = chars;
+  for (const [c,t] of toks){
+    if (left <= 0) break;
+    const s = t.slice(0, left); left -= s.length;
+    out += c ? `<span class="${c}">${esc(s)}</span>` : esc(s);
+  }
+  return out + (caret ? '<span class="caret"></span>' : "");
+}
+const AGENTS = [
+  ["Planner", "Split the question into 3 sub-questions", "0.8 s"],
+  ["Researcher", "Searched 214 passages, kept 9", "2.1 s"],
+  ["Critic", "One claim had no source, sent it back", "1.2 s", true],
+  ["Synthesizer", "Wrote the answer with 6 citations", "1.6 s"],
+];
+const RUN = `
+  <div class="run">
+    <div class="run-head"><div><h4>Agent run</h4><span class="muted" style="font-size:14px">4 agents · 5.7 s</span></div><div class="run-score num">8.6<small> / 10</small></div></div>
+    ${AGENTS.map(([n,t,s,f]) => `<div class="agent" data-row><b>${n}</b><span class="t">${t}${f ? '<span class="flag">Revised</span>' : ""}</span><span class="muted num" style="font-size:14px">${s}</span></div>`).join("")}
+  </div>`;
+const SHIP = `
+  <div class="ship">
+    <div class="ship-url">${ICONS.check} help.yourcompany.com/ask</div>
+    <div class="log"><span class="dim">$</span> git push origin main<br><span class="dim">Pipeline passed · 48 tests</span><br><span class="dim">gunicorn restarted · nginx reloaded</span><br><span class="ok">Live in production</span></div>
+    <div class="mini-app"><div class="ask"><span>Can I get a refund on an annual plan?</span>${ICONS.arrow.replace('viewBox','width="14" height="14" viewBox')}</div>
+      <p class="ans">Yes, within 30 days of purchase<sup>1</sup>. The money goes back to the original card<sup>2</sup>.</p></div>
+  </div>`;
+const STEPS = [
+  { t:"Model the data", d:"Schemas that keep every customer's data apart and still make sense two years from now.", file:"schema.sql" },
+  { t:"Retrieve the right context", d:"Hybrid search and reranking, so the model answers from the right passages.", file:"POST /api/search" },
+  { t:"Let agents check the work", d:"A planner, researcher and critic catch unsupported answers before users see them.", file:"Agent run" },
+  { t:"Ship it", d:"Deployed on a real server, tested, and handed over with docs.", file:"production" },
+];
+
+function buildStage(){
+  const card = i => `<div class="card"><div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="file">${STEPS[i].file}</span></div><div class="in">${
+    i===0 ? `<pre class="code">${typed(SQL, 1e4)}</pre>` : i===1 ? `<pre class="code">${typed(API, 1e4)}</pre>` : i===2 ? RUN : SHIP}</div></div>`;
+  return `
+  <section class="build" aria-label="How I build an AI feature, from database to production">
+    <div class="build-track" id="track">
+      <div class="pin">
+        <ol class="steps" id="steps">${STEPS.map((s,i) => `<li class="step${i?"":" on"}"><span class="n">${i+1}</span><h3>${s.t}</h3><p>${s.d}</p></li>`).join("")}</ol>
+        <div class="screen" aria-hidden="true">
+          <div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="file" id="file">${STEPS[0].file}</span><span class="sample">Sample data</span></div>
+          <div class="layer on" data-l="0"><pre class="code" id="sql"></pre></div>
+          <div class="layer" data-l="1"><pre class="code" id="api"></pre></div>
+          <div class="layer" data-l="2">${RUN}</div>
+          <div class="layer" data-l="3">${SHIP}</div>
+        </div>
+        <div class="deck">
+          <div class="deck-track" id="deck">${STEPS.map((s,i) => `<div class="still${i?"":" cur"}" data-i="${i}"><h3>${s.t}</h3><p>${s.d}</p>${card(i)}</div>`).join("")}</div>
+          <div class="deck-nav"><div class="pips" id="pips">${STEPS.map((s,i) => `<button type="button" data-pip="${i}" aria-label="Step ${i+1}: ${s.t}" aria-current="${i===0}"><i></i></button>`).join("")}</div><span class="counter num" id="counter">1 / 4 · Sample data</span></div>
+        </div>
+        <div class="progress"><i id="bar"></i></div>
+      </div>
+    </div>
+  </section>`;
+}
+
+let stageCleanup = null;
+function initStage(){
+  if (stageCleanup) { stageCleanup(); stageCleanup = null; }
+  const track = $("#track"); if (!track) return;
+  if (reduce){ track.closest(".build").classList.add("static"); initDeck(); return; }
+  const steps = [...document.querySelectorAll("#steps .step")];
+  const layers = [...document.querySelectorAll(".screen .layer")];
+  const sqlEl = $("#sql"), apiEl = $("#api"), fileEl = $("#file"), bar = $("#bar");
+  const sqlLen = lenOf(SQL), apiLen = lenOf(API);
+  let cur = -1, rowsShown = false;
+
+  function render(p){
+    p = Math.min(1, Math.max(0, p));
+    const idx = Math.min(3, Math.floor(p * 4));
+    const local = p * 4 - idx;
+    bar.style.transform = `scaleX(${p})`;
+    if (idx === 0) sqlEl.innerHTML = typed(SQL, Math.round(sqlLen * Math.min(1, local / .85)), true);
+    if (idx === 1) apiEl.innerHTML = typed(API, Math.round(apiLen * Math.min(1, local / .8)), local < .8);
+    if (idx > 0 && cur === 0) sqlEl.innerHTML = typed(SQL, sqlLen);
+    if (idx === cur) return;
+    cur = idx;
+    steps.forEach((s,i) => s.classList.toggle("on", i === idx));
+    layers.forEach((l,i) => l.classList.toggle("on", i === idx));
+    fileEl.textContent = STEPS[idx].file;
+    if (idx === 2 && !rowsShown){
+      rowsShown = true;
+      if (M) M.animate(layers[2].querySelectorAll("[data-row]"), { opacity:[0,1], y:[14,0], scale:[.98,1] }, { delay: M.stagger(.12), type:"spring", duration:.5, bounce:.15 });
+    }
+    if (idx < 2) rowsShown = false;
+    if (idx === 3 && M){
+      M.animate(layers[3].querySelector(".mini-app"), { scale:[.94,1], opacity:[.4,1] }, { type:"spring", duration:.6, bounce:.2 });
+      M.animate(layers[3].querySelector(".log .ok"), { clipPath:["inset(0 100% 0 0)","inset(0 0% 0 0)"] }, { duration:.6, ease:[.77,0,.175,1], delay:.15 });
+    }
+  }
+  if (M && M.scroll){
+    const stop = M.scroll(p => render(p), { target: track, offset: ["start start", "end end"] });
+    stageCleanup = typeof stop === "function" ? stop : null;
+  } else {
+    const onScroll = () => { const r = track.getBoundingClientRect(); render(-r.top / (r.height - innerHeight)); };
+    addEventListener("scroll", onScroll, {passive:true});
+    stageCleanup = () => removeEventListener("scroll", onScroll);
+  }
+  render(0);
+}
+
+/* swipe deck for phones and tablets */
+function initDeck(){
+  const deck = $("#deck"); if (!deck) return;
+  const cards = [...deck.children], pips = [...document.querySelectorAll("#pips [data-pip]")], counter = $("#counter");
+  let cur = 0;
+  const go = i => cards[i].scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "nearest", inline: "start" });
+  const set = i => {
+    if (i === cur) return; cur = i;
+    cards.forEach((c,k) => c.classList.toggle("cur", k === i));
+    pips.forEach((p,k) => p.setAttribute("aria-current", k === i));
+    counter.textContent = `${i+1} / ${cards.length} · Sample data`;
+    if (M && !reduce && i === 2) M.animate(cards[2].querySelectorAll("[data-row]"), { opacity:[0,1], y:[10,0] }, { delay: M.stagger(.08), type:"spring", duration:.45, bounce:.12 });
+  };
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting && e.intersectionRatio > .6) set(+e.target.dataset.i); }), { root: deck, threshold: [.6] });
+  cards.forEach(c => io.observe(c));
+  pips.forEach(p => p.addEventListener("click", () => go(+p.dataset.pip)));
+  cards.forEach((c,i) => c.addEventListener("click", () => { if (i !== cur) go(i); }));
+  deck.addEventListener("keydown", e => {
+    if (e.key === "ArrowRight" || e.key === "ArrowLeft"){ go(Math.max(0, Math.min(cards.length-1, cur + (e.key === "ArrowRight" ? 1 : -1)))); e.preventDefault(); }
+  });
+  deck.tabIndex = 0; deck.setAttribute("aria-label", "Build steps. Swipe or use the arrow keys.");
+}
+
+/* ===================== views ===================== */
+const monthKey = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`;
+function schedule(){
+  const d = new Date(); d.setDate(1);
+  const out = [];
+  for (let i = 0; i < 3; i++){ out.push({ key: monthKey(d), name: d.toLocaleDateString("en-US",{month:"long"}) }); d.setMonth(d.getMonth()+1); }
+  return `<div class="sched" aria-label="Availability">${out.map(m => SITE.booked.includes(m.key)
+    ? `<div class="full"><b>${m.name}</b><span>Booked</span></div>`
+    : `<a href="${url("/book/")}"><b>${m.name}</b><span>Available</span></a>`).join("")}</div>`;
+}
+const projRow = p => `
+  <a class="prow" href="${url(`/projects/${p.slug}/`)}">
+    <div><h3>${esc(p.title)}</h3><span class="meta">${esc(p.client)} · ${esc(p.when)}</span></div>
+    <p>${esc(p.summary)}</p>
+    <span class="go">${ICONS.arrow}</span>
+  </a>`;
+const tagHTML = k => `<span class="tag ${k}">${esc(SITE.labels[k].replace(/s$/,""))}</span>`;
+const sorted = () => [...SITE.posts].sort((a,b) => b.date.localeCompare(a.date));
+const postHTML = p => `<a class="post" href="${url(`/writing/${p.slug}/`)}"><span class="d num">${fmt(p.date)}</span><h3>${esc(p.title)}</h3>${tagHTML(p.kind)}<p>${esc(p.excerpt)}</p></a>`;
+const socials = () => ["github","linkedin","x"].filter(k => SITE.links[k]).map(k => `<a href="${esc(SITE.links[k])}" target="_blank" rel="noopener" aria-label="${{github:"GitHub",linkedin:"LinkedIn",x:"X (Twitter)"}[k]}">${ICONS[k]}</a>`).join("");
+const ctaHTML = () => `
+  <section class="cta">
+    <h2>Have an AI feature to build? Let's talk for 15 minutes.</h2>
+    <div class="row" style="justify-content:space-between;gap:20px">
+      <div class="row" style="flex:1 1 320px"><a class="btn" href="${url("/book/")}">Book a call <span class="arr">${ICONS.arrow}</span></a><a class="btn line" href="${url("/resume/")}">Read my resume</a></div>
+      <div class="socials">${socials()}</div>
+    </div>
+  </section>`;
+
+const V = {
+  home: () => `
+    <div class="page">
+      <section class="hero">
+        <h1>I build AI products from the database <em>to the last pixel.</em></h1>
+        <p class="sub">I'm Juan Pablo, an AI developer in Argentina. I build <b>RAG pipelines, multi-agent systems</b> and the full-stack apps around them, for teams that need AI running in production.</p>
+        <div class="row"><a class="btn" href="${url("/book/")}">Book a 15-minute call <span class="arr">${ICONS.arrow}</span></a><a class="btn line" href="${url("/projects/")}">See my projects</a></div>
+        ${schedule()}
+      </section>
+      ${buildStage()}
+      <section>
+        <div class="sh"><h2>Selected projects</h2><a href="${url("/projects/")}">All projects</a></div>
+        <div class="plist">${SITE.projects.slice(0,3).map(projRow).join("")}</div>
+      </section>
+      ${SITE.posts.length ? `<section><div class="sh"><h2>Recent writing</h2><a href="${url("/writing/")}">All articles, interviews and notes</a></div><div class="posts">${sorted().slice(0,3).map(postHTML).join("")}</div></section>` : ""}
+      ${ctaHTML()}
+    </div>`,
+
+  projects: () => `
+    <div class="page">
+      <section><div class="sh"><h1 class="title">Projects</h1><p>Client work and personal projects. Each page covers the problem, how the system works and what changed.</p></div>
+        <div class="plist">${SITE.projects.map(projRow).join("")}</div></section>
+      ${ctaHTML()}
+    </div>`,
+
+  project: slug => {
+    const i = SITE.projects.findIndex(p => p.slug === slug);
+    if (i < 0) return V.notfound();
+    const p = SITE.projects[i], prev = SITE.projects[i-1], next = SITE.projects[i+1];
+    const flow = f => `<div><h3 class="flow-title">${esc(f.title)}</h3><ol class="flow">${f.steps.map(([n,d],k) => `<li>${k ? `<span class="arrow">${ICONS.arrow}</span>` : ""}<div class="node">${esc(n)}${d ? `<small>${esc(d)}</small>` : ""}</div></li>`).join("")}</ol></div>`;
+    const links = [
+      p.code ? `<a class="btn line" href="${esc(p.code)}" target="_blank" rel="noopener">${ICONS.github.replace('viewBox','width="16" height="16" viewBox')} See the code</a>` : "",
+      p.demo ? `<a class="btn" href="${esc(p.demo)}" target="_blank" rel="noopener">Try the live demo <span class="arr">${ICONS.ext}</span></a>` : "",
+    ].join("");
+    return `
+    <div class="page">
+      <section class="proj-head">
+        <a class="crumb" href="${url("/projects/")}">${ICONS.arrow} All projects</a>
+        <h1>${esc(p.title)}</h1>
+        <p class="lede">${esc(p.summary)}</p>
+        <div class="facts"><span><b>${esc(p.client)}</b></span><span>${esc(p.role)}</span><span class="num">${esc(p.when)}</span>${!p.code && p.codeNote ? `<span>${esc(p.codeNote)}</span>` : ""}</div>
+        ${links ? `<div class="row">${links}</div>` : ""}
+      </section>
+      <section class="cv">
+        <h2>Problem</h2><div><p class="lede">${esc(p.problem)}</p></div>
+        <h2>Solution</h2><div><p style="max-width:62ch">${esc(p.solution)}</p></div>
+        <h2>Architecture</h2><div><div class="flows">${p.flows.map(flow).join("")}</div>${p.notes.length ? `<ul class="notes" style="margin-top:22px">${p.notes.map(n => `<li>${esc(n)}</li>`).join("")}</ul>` : ""}</div>
+        <h2>Stack</h2><div><div class="chips">${p.stack.map(s => `<span class="chip prod">${esc(s)}</span>`).join("")}</div></div>
+        <h2>Result</h2><div><p class="lede">${esc(p.result)}</p></div>
+      </section>
+      <nav class="pnext" aria-label="More projects">
+        ${prev ? `<a href="${url(`/projects/${prev.slug}/`)}"><span>Previous</span><b>${esc(prev.title)}</b></a>` : ""}
+        ${next ? `<a class="next" href="${url(`/projects/${next.slug}/`)}"><span>Next</span><b>${esc(next.title)}</b></a>` : ""}
+      </nav>
+      ${ctaHTML()}
+    </div>`;
+  },
+
+  services: () => `
+    <div class="page">
+      <section>
+        <div class="sh"><h1 class="title">Services</h1><p>Every project starts with a free 15-minute call. You get a written plan and a price before any work begins.</p></div>
+        <div class="offers">${SITE.offers.map(o => `<div class="offer"><div><h3>${esc(o.name)}</h3><p>${esc(o.text)}</p><ul>${o.items.map(i => `<li>${esc(i)}</li>`).join("")}</ul></div><div class="terms"><span>Scope and price agreed after a first call</span><a class="btn line" href="${url("/book/")}" data-meet="${o.meeting}">Talk about this <span class="arr">${ICONS.arrow}</span></a></div></div>`).join("")}</div>
+      </section>
+      <section>
+        <div class="sh"><h2>How a project runs</h2></div>
+        <ol class="process">${SITE.process.map(([t,d]) => `<li><h3>${esc(t)}</h3><p>${esc(d)}</p></li>`).join("")}</ol>
+      </section>
+      ${ctaHTML()}
+    </div>`,
+
+  resume: () => {
+    const R = SITE.resume;
+    const job = j => `<div class="job"><span class="muted num">${esc(j.when)}</span><div><h3>${esc(j.role)}</h3><span class="at">${esc(j.at)}</span>${j.points ? `<ul>${j.points.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : ""}</div></div>`;
+    return `
+    <div class="page">
+      <section>
+        <div class="sh"><div style="display:grid;gap:8px"><h1 class="title">Resume</h1><span class="muted">${esc(R.title)}</span></div>
+          ${SITE.resumePdf ? `<a class="btn" href="${asset(SITE.resumePdf)}" target="_blank" rel="noopener">Open the PDF <span class="arr">${ICONS.ext}</span></a>` : ""}</div>
+        <div class="cv">
+          <h2>Summary</h2><div><p class="lede">${esc(R.summary)}</p></div>
+          <h2>Experience</h2><div>${R.jobs.map(job).join("")}</div>
+          <h2>Projects</h2><div>${R.projects.map(job).join("")}</div>
+          <h2>Education</h2><div>${R.education.map(job).join("")}</div>
+          <h2>Honors</h2><div><ul class="plain">${R.honors.map(h => `<li>${esc(h)}</li>`).join("")}</ul></div>
+          <h2>Languages</h2><div><ul class="plain">${R.languages.map(([l,v]) => `<li><b>${esc(l)}</b>, ${esc(v)}</li>`).join("")}</ul></div>
+        </div>
+      </section>
+    </div>`;
+  },
+
+  stack: () => `
+    <div class="page">
+      <section>
+        <div class="sh"><h1 class="title">Stack</h1><span class="legend"><span class="chip prod">Name</span> used in client work</span></div>
+        <div class="groups">${SITE.stack.map(g => `<div class="group"><h3>${esc(g.group)}</h3><div class="chips">${g.items.map(n => `<span class="chip${SITE.shipped.includes(n)?" prod":""}">${esc(n)}</span>`).join("")}</div></div>`).join("")}</div>
+      </section>
+    </div>`,
+
+  writing: () => {
+    const counts = { all: SITE.posts.length };
+    SITE.posts.forEach(p => counts[p.kind] = (counts[p.kind]||0) + 1);
+    const opts = [["all","All"], ...Object.entries(SITE.labels)];
+    const btns = tab => opts.map(([k,l]) => `<button type="button" ${tab ? `data-f="${k}" aria-pressed="${filter===k}"` : 'tabindex="-1" aria-hidden="true"'}>${l}<span class="num">${counts[k]||0}</span></button>`).join("");
+    return `
+    <div class="page">
+      <section>
+        <div class="sh"><h1 class="title">Writing</h1>
+          <div class="seg" id="seg" role="group" aria-label="Filter by label"><div class="seg-row">${btns(true)}</div><div class="over" id="segOver"><div class="seg-row">${btns(false)}</div></div></div></div>
+        <div class="posts" id="posts">${listHTML()}</div>
+      </section>
+    </div>`;
+  },
+
+  post: slug => {
+    const p = SITE.posts.find(x => x.slug === slug);
+    if (!p) return V.notfound();
+    return `
+    <div class="page"><article class="reader">
+      <a class="crumb" href="${url("/writing/")}">${ICONS.arrow} All writing</a>
+      <div class="row">${tagHTML(p.kind)}<span class="muted num">${fmt(p.date)} · ${p.read} min read</span></div>
+      <h1>${esc(p.title)}</h1>
+      ${p.guest ? `<p class="muted" style="font-size:18px">A conversation with ${esc(p.guest)}</p>` : ""}
+      <div class="body">${p.body.map(b => typeof b === "string" ? `<p>${esc(b)}</p>` : `<p class="q">${esc(b.q)}</p>`).join("")}</div>
+    </article></div>`;
+  },
+
+  book: () => {
+    const days = []; const d = new Date(); d.setHours(12,0,0,0);
+    while (days.length < 10){ d.setDate(d.getDate()+1); if (d.getDay() % 6) days.push(new Date(d)); }
+    const iso = x => `${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,"0")}-${String(x.getDate()).padStart(2,"0")}`;
+    if (!day || !days.some(x => iso(x) === day)) day = iso(days[0]);
+    const m = SITE.meetings[meet];
+    const pretty = new Date(day+"T12:00:00").toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"});
+    const subject = encodeURIComponent(`${m.name} (${m.mins} min) on ${pretty}`);
+    const bodyTxt = encodeURIComponent(`Hi Juan Pablo,\n\nI'd like a ${m.name.toLowerCase()} on ${pretty}. Times that work for me, with my time zone:\n\n\nWhat I'd like to talk about:\n\n`);
+    const action = SITE.calUser
+      ? `<a class="btn" target="_blank" rel="noopener" href="https://cal.com/${encodeURIComponent(SITE.calUser)}/${m.slug}?date=${day}">Choose a time <span class="arr">${ICONS.ext}</span></a>`
+      : `<a class="btn" href="mailto:${esc(SITE.email)}?subject=${subject}&body=${bodyTxt}">Request this day ${ICONS.mail}</a>`;
+    const tz = new Date().getTimezoneOffset() === 180 ? "" : (Intl.DateTimeFormat().resolvedOptions().timeZone || "").replace(/_/g," ");
+    return `
+    <div class="page">
+      <section>
+        <div class="sh"><h1 class="title">Book a call</h1><p>Pick a meeting and a day. ${SITE.calUser ? "You choose the exact time on the next screen." : "I'll reply with times that work for both of us."} I'm in ${esc(SITE.location)}${tz ? `, you're in ${esc(tz)}` : ""}.</p></div>
+        <div class="book">
+          <div><h3>Meeting</h3><div class="types">${SITE.meetings.map((x,i) => `<button type="button" data-m="${i}" aria-pressed="${i===meet}"><b>${esc(x.name)}</b><small>${esc(x.desc)}</small><span class="len num">${x.mins} min</span></button>`).join("")}</div></div>
+          <div><h3>Day</h3>
+            <div class="days">${days.map(x => `<button type="button" data-d="${iso(x)}" aria-pressed="${iso(x)===day}" aria-label="${x.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"})}"><small>${x.toLocaleDateString("en-US",{weekday:"short"})}</small><span class="dn num">${x.getDate()}</span><small>${x.toLocaleDateString("en-US",{month:"short"})}</small></button>`).join("")}</div>
+            <div class="confirm" id="confirm"><div><b>${esc(m.name)}, ${m.mins} minutes</b><br><span class="muted">${pretty}</span></div>${action}</div>
+            <div class="copyrow">Or write to <code id="em">${esc(SITE.email)}</code><button type="button" id="copyEm">Copy</button></div>
+          </div>
+        </div>
+      </section>
+    </div>`;
+  },
+
+  notfound: () => `
+    <div class="page"><section class="proj-head">
+      <h1 class="title">This page doesn't exist</h1>
+      <p class="lede">The link may be old or mistyped.</p>
+      <div class="row"><a class="btn" href="${url("/")}">Go to the home page <span class="arr">${ICONS.arrow}</span></a><a class="btn line" href="${url("/projects/")}">See my projects</a></div>
+    </section></div>`,
+};
+
+/* ===================== state + router ===================== */
+let filter = "all", meet = 0, day = null;
+try { filter = localStorage.getItem("filter") || "all"; } catch(e){}
+const view = $("#view");
+
+function listHTML(){
+  if (!SITE.posts.length) return `
+    <div class="empty"><div><h3>The first posts are on the way</h3><p>Articles about building with LLMs, interviews with people I learn from, and shorter notes. Each one carries a label so you can filter.</p></div>
+    <dl>${Object.keys(SITE.labels).map(k => `<dt>${tagHTML(k)}</dt><dd>${esc((SITE.labelHelp||{})[k] || "")}</dd>`).join("")}</dl></div>`;
+  const list = sorted().filter(p => filter === "all" || p.kind === filter);
+  return list.map(postHTML).join("") || `<p class="muted" style="padding:24px 0">Nothing with this label yet.</p>`;
+}
+function placeSeg(animate){
+  const seg = $("#seg"), over = $("#segOver"); if (!seg) return;
+  const btn = seg.querySelector(`.seg-row [data-f="${filter}"]`); if (!btn) return;
+  const sb = over.getBoundingClientRect(), bb = btn.getBoundingClientRect();
+  if (!animate) over.style.transition = "none";
+  over.style.clipPath = `inset(0 ${sb.right - bb.right}px 0 ${bb.left - sb.left}px round 9px)`;
+  if (!animate){ void over.offsetWidth; over.style.transition = ""; }
+}
+function rerender(html){ view.querySelector(".page").outerHTML = html; }
+
+function currentPath(){
+  if (HASH){ const h = location.hash; return h.startsWith("#/") ? decodeURIComponent(h.slice(1)) : "/"; }
+  return decodeURIComponent(location.pathname);
+}
+function resolve(path){
+  const s = path.split("/").filter(Boolean);
+  if (!s.length) return { key:"home", html:V.home(), title:`${SITE.name} · AI Developer, RAG and Multi-Agent Systems` };
+  if (s.length === 2 && s[0] === "projects"){ const p = SITE.projects.find(x => x.slug === s[1]); return { key:"projects", html:V.project(s[1]), title: p ? `${p.title} · ${SITE.name}` : `Not found · ${SITE.name}` }; }
+  if (s.length === 2 && s[0] === "writing"){ const p = SITE.posts.find(x => x.slug === s[1]); return { key:"writing", html:V.post(s[1]), title: p ? `${p.title} · ${SITE.name}` : `Not found · ${SITE.name}` }; }
+  const tab = TABS.find(t => t[2] === s[0]);
+  if (s.length === 1 && tab && V[s[0]]) return { key:s[0], html:V[s[0]](), title:`${tab[1]} · ${SITE.name}` };
+  return { key:"", html:V.notfound(), title:`Not found · ${SITE.name}` };
+}
+function route(scrollY){
+  const r = resolve(currentPath());
+  const paint = () => {
+    view.innerHTML = r.html;
+    document.querySelectorAll("#nav a").forEach(a => a.dataset.k === r.key ? a.setAttribute("aria-current","page") : a.removeAttribute("aria-current"));
+    window.scrollTo(0, scrollY || 0);
+    const active = $("#nav [aria-current]"); if (active) active.scrollIntoView({ block:"nearest", inline:"center" });
+    document.title = r.title;
+    initStage(); placeSeg(false);
+  };
+  if (document.startViewTransition && !reduce && route.ran) document.startViewTransition(paint); else paint();
+  route.ran = true;
+}
+
+/* in-site links update the address without a full reload */
+document.addEventListener("click", e => {
+  if (HASH || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+  const a = e.target.closest("a[href]"); if (!a || a.target === "_blank") return;
+  const href = a.getAttribute("href");
+  if (!href.startsWith("/") || href.startsWith("//") || /\.[a-z0-9]+$/i.test(href)) return;
+  e.preventDefault();
+  if (href === location.pathname) { window.scrollTo({ top:0, behavior: reduce ? "auto" : "smooth" }); return; }
+  history.replaceState({ y: scrollY }, "");
+  history.pushState({ y: 0 }, "", href);
+  route(0);
+});
+addEventListener("popstate", e => route((e.state && e.state.y) || 0));
+addEventListener("hashchange", () => { if (HASH && location.hash.startsWith("#/")) route(0); });
+if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+addEventListener("resize", () => placeSeg(false));
+
+view.addEventListener("click", e => {
+  const f = e.target.closest("[data-f]");
+  if (f){
+    filter = f.dataset.f; try { localStorage.setItem("filter", filter); } catch(_){}
+    document.querySelectorAll("#seg [data-f]").forEach(b => b.setAttribute("aria-pressed", b.dataset.f === filter));
+    placeSeg(true);
+    const posts = $("#posts"); posts.innerHTML = listHTML();
+    if (M && !reduce && SITE.posts.length) M.animate(posts.children, { opacity:[0,1], y:[8,0] }, { delay: M.stagger(.04), duration:.3, ease:[.23,1,.32,1] });
+    return;
+  }
+  const mt = e.target.closest("[data-meet]"); if (mt){ meet = +mt.dataset.meet; return; }
+  const mb = e.target.closest("[data-m]");
+  if (mb){ meet = +mb.dataset.m; rerender(V.book()); bump(); return; }
+  const db = e.target.closest("[data-d]");
+  if (db){ day = db.dataset.d; rerender(V.book()); bump(); return; }
+  if (e.target.id === "copyEm"){
+    const b = e.target;
+    const ok = () => { b.textContent = "Copied"; setTimeout(() => b.textContent = "Copy", 1600); };
+    const sel = () => { const r = document.createRange(); r.selectNodeContents($("#em")); const s = getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent = "Selected"; };
+    try { navigator.clipboard.writeText(SITE.email).then(ok, sel); } catch(_) { sel(); }
+  }
+});
+function bump(){
+  const c = $("#confirm"); if (!c || !M || reduce) return;
+  M.animate(c, { scale:[.985,1] }, { type:"spring", duration:.35, bounce:.3 });
+}
+
+route(0);
+</script>
+</body>
+</html>
