@@ -1377,6 +1377,228 @@ footer a{color:var(--muted)}
         "Keep adding cases from real failures in production, so the set keeps up with how people use the app.",
         "The cases and scores in the animation are illustrative."
       ]
+    },
+    {
+      "slug": "how-to-break-down-a-problem",
+      "kind": "explainer",
+      "scene": "decompose",
+      "date": "2026-10-12",
+      "title": "How to break down a big problem",
+      "excerpt": "Split a vague problem into parts that add up to the whole, until each part is small enough to check and fix.",
+      "intro": "Most problems feel hard because they're vague. Splitting one into parts that don't overlap and add back up to the whole turns 'sales are down' into one specific question you can answer.",
+      "steps": [
+        [
+          "Write the problem as one sentence",
+          "Turn the worry into a statement you can measure: what changed, by how much, since when. A clear sentence already rules out half the guesses."
+        ],
+        [
+          "Split it into parts that make up the whole",
+          "Pick a split where the parts add or multiply back to the problem and don't overlap. Revenue is customers times what each one spends."
+        ],
+        [
+          "Keep splitting until each part is measurable",
+          "Go one level deeper wherever a part is still too broad to check. Stop when each part is something you can look up or test."
+        ],
+        [
+          "Check each part with numbers",
+          "Put a number on every part. Most turn out fine, and the one that explains the change stands out."
+        ],
+        [
+          "Work on the part that moved",
+          "Follow the path down to that part and ask a specific question about it. Small, clear questions get answered; big, vague ones don't."
+        ]
+      ],
+      "takeaways": [
+        "A good split covers everything and has no overlaps, so nothing falls through the gaps and nothing is counted twice.",
+        "If one split doesn't help, try another: by step, by type of customer, by place, by time.",
+        "It works the same for a bug, a budget, a slow process or a personal goal.",
+        "The numbers in the animation are illustrative."
+      ]
+    },
+    {
+      "slug": "how-to-find-the-root-cause",
+      "kind": "explainer",
+      "scene": "whys",
+      "date": "2026-10-12",
+      "title": "How to find the root cause of a problem",
+      "excerpt": "Ask why, answer with facts, and keep going until you reach a cause you can change, so the problem doesn't come back.",
+      "intro": "Fixing what you can see makes the problem go away today and come back next week. Asking 'why' a few times in a row walks you from the symptom down to the cause that keeps producing it.",
+      "steps": [
+        [
+          "Start from what went wrong",
+          "Describe the problem as it happened, without blame or guesses: what, when, how often."
+        ],
+        [
+          "Ask why, and answer with a fact",
+          "Each answer should be something you checked, not something that sounds likely. A guess sends you down the wrong branch."
+        ],
+        [
+          "Keep asking why",
+          "Each answer becomes the next question. It often takes about five rounds, sometimes fewer, sometimes more."
+        ],
+        [
+          "Stop at a cause you can change",
+          "You're done when the answer is a process, a rule or a missing check you control, not a person or bad luck."
+        ],
+        [
+          "Fix the cause, not the symptom",
+          "Rushing one late delivery helps once. Changing how the work is ordered stops the next ones."
+        ]
+      ],
+      "takeaways": [
+        "If an answer is 'someone made a mistake', ask why the process let that mistake through.",
+        "A problem can have more than one cause. When a why has two true answers, follow both.",
+        "It works for outages, missed deadlines, recurring arguments and failed projects.",
+        "The example in the animation is illustrative."
+      ]
+    },
+    {
+      "slug": "how-to-find-what-broke-by-halving",
+      "kind": "explainer",
+      "scene": "bisect",
+      "date": "2026-10-12",
+      "title": "How to find what broke by halving",
+      "excerpt": "When something worked before and doesn't now, test the middle and throw away half the suspects each time.",
+      "intro": "Something worked last month and doesn't now, and sixteen things changed in between. Checking them one by one can take sixteen tries. Testing the middle and discarding half each time takes four.",
+      "steps": [
+        [
+          "Find one good state and one bad one",
+          "You need a point where it worked and a point where it doesn't. Everything that changed in between is a suspect."
+        ],
+        [
+          "Test the middle",
+          "Go back to the state halfway between and check it. If it works, the cause is in the second half."
+        ],
+        [
+          "Throw away the half that's fine",
+          "Each test cuts the suspects in half, whichever way it comes out. Both results are useful."
+        ],
+        [
+          "Repeat until one is left",
+          "Keep testing the middle of what's left. Sixteen suspects take four tests."
+        ],
+        [
+          "Count the tests",
+          "Halving grows slowly: a thousand suspects take about ten tests, a million about twenty."
+        ]
+      ],
+      "takeaways": [
+        "It needs a quick, reliable test that says works or doesn't. Build that test first.",
+        "It works on code history (git bisect), recipe changes, settings, long spreadsheets and wiring.",
+        "If the problem only shows up sometimes, run each test more than once before you trust it.",
+        "The changes and results in the animation are illustrative."
+      ]
+    },
+    {
+      "slug": "how-to-find-the-bottleneck",
+      "kind": "explainer",
+      "scene": "bottleneck",
+      "date": "2026-10-12",
+      "title": "How to find the bottleneck",
+      "excerpt": "A process runs only as fast as its slowest step. Find that step, improve it, then look for the next one.",
+      "intro": "Any process, from a kitchen to a hiring pipeline to a factory, finishes work at the speed of its slowest step. Improving any other step looks productive and changes nothing.",
+      "steps": [
+        [
+          "Map the steps work goes through",
+          "Write down each step and how much it can handle in an hour, a day or a week."
+        ],
+        [
+          "Look for where work piles up",
+          "Work waits in front of the slowest step. The pile is the easiest way to find it."
+        ],
+        [
+          "Improving other steps changes nothing",
+          "Here, packing gets much faster and the output stays exactly the same."
+        ],
+        [
+          "Widen the bottleneck",
+          "Add capacity where the work waits. Output rises until another step becomes the limit."
+        ],
+        [
+          "Find the next one",
+          "Once one bottleneck is fixed, another step becomes the slowest. Check again after every change."
+        ]
+      ],
+      "takeaways": [
+        "A step that's 100% busy while others wait is where your next hour or dollar should go.",
+        "Before adding capacity, make sure the bottleneck never sits idle waiting for work or redoing work that gets thrown away.",
+        "It works for teams, factories, support queues, sales funnels and your own week.",
+        "The numbers in the animation are illustrative."
+      ]
+    },
+    {
+      "slug": "how-to-decide-what-to-fix-first",
+      "kind": "explainer",
+      "scene": "pareto",
+      "date": "2026-10-12",
+      "title": "How to decide what to fix first",
+      "excerpt": "Count the problems, sort them, and you usually find a few causes behind most of the trouble.",
+      "intro": "When everything seems urgent, counting beats arguing. Sort the causes by how often they happen and a few of them usually explain most of the problem. That's the 80/20 rule, or Pareto principle.",
+      "steps": [
+        [
+          "Count the problems",
+          "Tally what's actually happening, from tickets, logs, returns or a notebook, instead of going by what feels worst."
+        ],
+        [
+          "Sort from biggest to smallest",
+          "Put the most frequent cause first. The shape of the chart already tells you a lot."
+        ],
+        [
+          "Add up the running total",
+          "The line shows how much of the problem the first causes explain together."
+        ],
+        [
+          "Fix the few at the top",
+          "Here, three of seven causes account for 80% of complaints. That's where effort pays off most."
+        ],
+        [
+          "Count again after fixing",
+          "Once the top cause shrinks, the order changes. Recount and pick the next one."
+        ]
+      ],
+      "takeaways": [
+        "80/20 is a pattern, not a law. The split might be 70/30 or 90/10, but it's rarely even.",
+        "Weigh causes by cost when their impact differs: ten small annoyances can matter less than one lost customer.",
+        "It works for bugs, expenses, customer complaints, time spent and study topics.",
+        "The numbers in the animation are illustrative."
+      ]
+    },
+    {
+      "slug": "how-to-solve-problems-with-small-experiments",
+      "kind": "explainer",
+      "scene": "experiments",
+      "date": "2026-10-12",
+      "title": "How to solve problems with small experiments",
+      "excerpt": "Guess, test small, measure and adjust. Many cheap loops find a good answer faster than one big plan.",
+      "intro": "When you can't know the answer ahead of time, don't plan harder. Make a guess, test it as cheaply as you can, and let each result decide the next test.",
+      "steps": [
+        [
+          "Turn the idea into a guess",
+          "Write down what you expect and how you'll measure it. 'Shorter pages get more signups' is testable; 'improve the page' isn't."
+        ],
+        [
+          "Test it small and fast",
+          "Use the smallest test that gives a real result: a day, a sample, a prototype. Cheap tests let you run many."
+        ],
+        [
+          "Change one thing and compare",
+          "Change one thing at a time, so you know what made the difference."
+        ],
+        [
+          "Repeat with smaller steps",
+          "When a result gets worse, you went too far. Step back and narrow in."
+        ],
+        [
+          "Let the results find the answer",
+          "Five cheap tests found the best setting without ever seeing the full curve."
+        ]
+      ],
+      "takeaways": [
+        "Decide what counts as success before you run the test, so the result can't be argued afterwards.",
+        "Keep a log of each guess and result. It stops you repeating tests and shows the trend.",
+        "It works for pricing, recipes, training plans, product features and study habits.",
+        "The curve and results in the animation are illustrative."
+      ]
     }
   ]
 }
@@ -2580,6 +2802,300 @@ const SCENES = {
         K.alpha(K.seg(S, 4.75, 4.9)); K.text("v3 is blocked before it reaches users", 60, 96.5, { size: 2.8, align: "center", color: C.warn, weight: 600 });
       }
     }
+    K.alpha(1);
+  },
+  /* ---------- Problem solving: break it down ---------- */
+  decompose(K, S, time){
+    const C = K.C, Y1 = 16, Y2 = 42, Y3 = 66;
+    const L2 = [[32, "Customers", "how many buy", "−20%"], [88, "Spend", "per customer", "+1%"]];
+    const L3 = [[17, "New", "customers", "−3%"], [45, "Returning", "customers", "−31%"], [75, "Items", "per order", "+1%"], [103, "Price", "per item", "0%"]];
+    const focus = K.seg(S, 4.05, 4.4);
+    const hl = on => on && focus > 0 ? { stroke: C.accent, lw: .5, color: C.accent } : { stroke: C.strong, lw: .35, color: C.strong };
+    const note = (t, a, b, col) => { K.alpha(K.seg(S, a, a + .2) * (1 - K.seg(S, b, b + .1))); K.text(t, 60, 91, { size: 2.6, align: "center", color: col || C.muted }); };
+    // loose guesses that settle into one statement
+    const words = [["price?", 12, 31], ["season?", 92, 31], ["ads?", 26, 52], ["competitors?", 78, 55], ["the team?", 40, 75], ["the website?", 82, 78], ["shipping?", 8, 70]];
+    const wa = K.seg(S, 0, .25) * (1 - K.seg(S, .5, .9) * .75) * (1 - K.seg(S, 1, 1.2));
+    if (wa > 0) words.forEach(([w, x, y], i) => { K.alpha(wa); K.text(w, x + Math.sin(time * .6 + i) * 1.2, y + Math.cos(time * .5 + i * 2), { size: 2.8, color: C.muted }); });
+    K.alpha(K.seg(S, .4, .75));
+    K.node(60, Y1, 64, 10, "Revenue fell 19% this quarter", { size: 3, stroke: hl(true).stroke, lw: hl(true).lw });
+    // first split
+    L2.forEach(([x, t, sub, v], i) => {
+      const on = i === 0, dim = 1 - focus * (on ? 0 : .65), h = hl(on);
+      K.alpha(K.seg(S, 1.05 + i * .1, 1.35 + i * .1) * dim);
+      K.line(60, Y1 + 5, x, Y2 - 5.5, { color: h.color, lw: h.lw });
+      K.node(x, Y2, 36, 11, t, { sub, stroke: h.stroke, lw: h.lw });
+      K.alpha(K.seg(S, 3.05 + i * .1, 3.25 + i * .1) * dim);
+      K.text(v, i ? x + 19.5 : x - 19.5, Y2, { size: 2.8, mono: true, align: i ? "left" : "right", color: on ? C.warn : C.muted, weight: 600 });
+    });
+    K.alpha(K.seg(S, 1.3, 1.5) * (1 - focus * .65)); K.text("×", 60, Y2, { size: 3.4, align: "center", color: C.muted });
+    // second split
+    L3.forEach(([x, t, sub, v], i) => {
+      const on = i === 1, dim = 1 - focus * (on ? 0 : .65), h = hl(on);
+      K.alpha(K.seg(S, 2.05 + i * .08, 2.3 + i * .08) * dim);
+      K.line(L2[i < 2 ? 0 : 1][0], Y2 + 5.5, x, Y3 - 5.5, { color: h.color, lw: h.lw });
+      K.node(x, Y3, 25, 11, t, { sub, size: 3, stroke: h.stroke, lw: h.lw });
+      K.alpha(K.seg(S, 3.15 + i * .1, 3.35 + i * .1) * dim);
+      K.text(v, x, Y3 + 10, { size: 3, mono: true, align: "center", color: on ? C.warn : C.muted, weight: 600 });
+    });
+    K.alpha(K.seg(S, 2.3, 2.5) * (1 - focus * .65));
+    K.text("+", 31, Y3, { size: 3, align: "center", color: C.muted }); K.text("×", 89, Y3, { size: 3, align: "center", color: C.muted });
+    note("the parts multiply back to the whole", 1.3, 1.95);
+    note("stop when a part is something you can measure", 2.35, 2.95);
+    note("−20% customers × +1% spend ≈ −19% revenue", 3.45, 3.95, C.ink);
+    // the specific question
+    if (focus > 0){
+      K.alpha(focus); K.arrow(45, Y3 + 12.5, 45, 83, { color: C.accent, hs: 1.2 });
+      K.alpha(K.seg(S, 4.3, 4.6)); K.rect(16, 83.5, 72, 10, 2.4, { fill: C.raised, stroke: C.accent, lw: .5 });
+      K.text("Why did returning customers stop buying?", 52, 88.5, { size: 2.7, align: "center", weight: 600 });
+    }
+    K.alpha(1);
+  },
+
+  /* ---------- Problem solving: five whys ---------- */
+  whys(K, S, time){
+    const C = K.C, X = 40, W = 66, y = i => 10 + i * 15;
+    const chain = ["The delivery arrived late", "The truck left two hours late", "It waited for a missing package", "That package was packed last", "Packing follows arrival order", "The packing list shows no deadlines"];
+    const when = [0, 1.05, 1.5, 2.05, 2.5, 3.05];
+    chain.forEach((t, i) => {
+      const a = K.seg(S, when[i], when[i] + .25);
+      if (a <= 0) return;
+      const top = i === 0, root = i === 5;
+      if (i){
+        K.alpha(a); K.arrow(X, y(i - 1) + 4.5, X, y(i) - 4.6, { color: C.strong, hs: 1 });
+        K.text("why?", X + 2, y(i) - 7.5, { size: 2.4, color: C.accent, weight: 600 });
+      }
+      K.alpha(a); K.rect(X - W / 2, y(i) - 4.5, W, 9, 2, { fill: root ? C.fill : C.surface, stroke: top ? C.warn : root ? C.fill : C.strong, lw: top || root ? .5 : .35 });
+      K.text(t, X, y(i), { size: 2.7, align: "center", weight: top || root ? 600 : 500, color: root ? C.white : C.ink });
+    });
+    K.alpha(K.seg(S, .2, .4)); K.text("symptom", X + W / 2 + 2.5, y(0), { size: 2.4, color: C.warn, weight: 600 });
+    [["what", "order 2041, 2 hours late"], ["when", "Tuesday, afternoon route"], ["how often", "third time this month"]].forEach(([k, v], i) => {
+      K.alpha(K.seg(S, .35 + i * .12, .55 + i * .12) * (1 - K.seg(S, 1, 1.2)));
+      K.text(k, 8, 26 + i * 7, { size: 2.4, color: C.muted }); K.text(v, 26, 26 + i * 7, { size: 2.6 });
+    });
+    K.alpha(K.seg(S, 3.3, 3.5)); K.text("root cause", X + W / 2 + 2.5, y(5), { size: 2.4, color: C.accent, weight: 600 });
+    // patch vs fix, over eight weeks
+    const ta = K.seg(S, 4.05, 4.3);
+    if (ta > 0){
+      [["patch: rush this order", [0, 3, 6], 30, C.warn, "late again, twice"], ["fix: show the deadlines", [0], 54, C.accent, "no repeats"]].forEach(([label, late, ry, col, after], r) => {
+        K.alpha(K.seg(S, 4.05 + r * .3, 4.3 + r * .3)); K.text(label, 78, ry - 6, { size: 2.5, weight: 600, color: col });
+        for (let w = 0; w < 8; w++){
+          K.alpha(K.seg(S, 4.1 + r * .3 + w * .04, 4.2 + r * .3 + w * .04));
+          K.dot(80 + w * 5, ry, 1.3, { fill: late.includes(w) ? C.warn : C.ok });
+        }
+        K.alpha(K.seg(S, 4.5 + r * .3, 4.65 + r * .3)); K.text(after, 78, ry + 5, { size: 2.3, color: C.muted });
+      });
+      K.alpha(ta); K.text("one dot per week", 78, 69, { size: 2.2, color: C.muted });
+    }
+    K.alpha(1);
+  },
+
+  /* ---------- Problem solving: halving ---------- */
+  bisect(K, S, time){
+    const C = K.C, N = 16, Y = 34, cx = i => 8 + (i - 1) * 6.5, bx = k => cx(k) + 6.25;
+    const tests = [[8, true, 1.05, 2], [12, false, 2.05, 3], [10, true, 3.05, 3.5], [11, false, 3.5, 4]];
+    const clearAt = i => i <= 8 ? 1.5 : i >= 13 ? 2.5 : i <= 10 ? 3.25 : i === 12 ? 3.72 : 99;
+    const table = K.io(K.seg(S, 4, 4.3)), hit = K.seg(S, 3.8, 3.95);
+    for (let i = 1; i <= N; i++){
+      const dim = K.seg(S, clearAt(i), clearAt(i) + .3), on = i === 11 && hit > 0;
+      K.alpha(K.seg(S, i * .02, .25 + i * .02) * (1 - dim * .7));
+      K.rect(cx(i), Y - 4.5, 6, 9, 1.2, { fill: on ? C.fill : C.surface, stroke: on ? C.fill : C.strong });
+      K.text(String(i), cx(i) + 3, Y, { size: 2.3, mono: true, align: "center", color: on ? C.white : C.ink });
+    }
+    K.alpha(K.seg(S, .3, .5));
+    K.text("worked", cx(1), Y + 9.5, { size: 2.4, color: C.ok, weight: 600 });
+    K.text("broken", cx(N) + 6, Y + 9.5, { size: 2.4, color: C.warn, weight: 600, align: "right" });
+    // suspects bracket
+    const lo = K.lerp(K.lerp(cx(1), cx(9), K.io(K.seg(S, 1.5, 1.8))), cx(11), K.io(K.seg(S, 3.25, 3.55)));
+    const hi = K.lerp(K.lerp(cx(16) + 6, cx(12) + 6, K.io(K.seg(S, 2.5, 2.8))), cx(11) + 6, K.io(K.seg(S, 3.72, 4)));
+    const n = S < 1.5 ? 16 : S < 2.5 ? 8 : S < 3.25 ? 4 : S < 3.72 ? 2 : 1;
+    K.alpha(K.seg(S, .3, .5));
+    K.line(lo, 25.5, hi, 25.5, { color: C.accent, lw: .4 }); K.line(lo, 25.5, lo, 27.5, { color: C.accent, lw: .4 }); K.line(hi, 25.5, hi, 27.5, { color: C.accent, lw: .4 });
+    K.text(n > 1 ? `${n} suspects` : "change 11 broke it", Math.min(Math.max((lo + hi) / 2, 20), 100), 21.5, { size: 2.6, align: "center", color: n > 1 ? C.accent : C.ink, weight: 600 });
+    // the current test
+    tests.forEach(([k, ok, t0, t1]) => {
+      const a = K.seg(S, t0, t0 + .15) * (1 - K.seg(S, t1 - .08, t1));
+      if (a <= 0) return;
+      K.alpha(a); K.line(bx(k), Y - 6.5, bx(k), Y + 6.5, { color: C.accent, lw: .55 });
+      K.text("test", bx(k), Y + 9.5, { size: 2.4, mono: true, align: "center", color: C.accent });
+    });
+    // log
+    tests.forEach(([k, ok, t0], j) => {
+      const a = K.seg(S, t0 + .25, t0 + .4) * (1 - table);
+      if (a <= 0) return;
+      const ly = 56 + j * 7;
+      K.alpha(a);
+      K.text(`test ${j + 1}`, 20, ly, { size: 2.6, mono: true, color: C.muted });
+      K.text(`as it was after change ${k}`, 36, ly, { size: 2.6 });
+      K.text(ok ? "works" : "broken", 100, ly, { size: 2.6, weight: 600, align: "right", color: ok ? C.ok : C.warn });
+    });
+    K.alpha(K.seg(S, 3.9, 4) * (1 - table)); K.text("4 tests instead of up to 16", 60, 90, { size: 2.8, align: "center", color: C.accent, weight: 600 });
+    // how it scales
+    if (table > 0){
+      const cols = [26, 62, 96];
+      K.alpha(table); K.text("tests needed in the worst case", 60, 50, { size: 2.4, align: "center", color: C.muted });
+      ["suspects", "one by one", "halving"].forEach((h, c) => K.text(h, cols[c], 57, { size: 2.5, align: "center", color: C.muted, weight: 600 }));
+      [["16", "16", "4"], ["1,000", "1,000", "10"], ["1,000,000", "1,000,000", "20"]].forEach((r, j) => {
+        K.alpha(K.seg(S, 4.25 + j * .15, 4.4 + j * .15) * table);
+        r.forEach((v, c) => K.text(v, cols[c], 64 + j * 6.5, { size: 2.8, mono: true, align: "center", color: c === 2 ? C.accent : C.ink, weight: c === 2 ? 700 : 500 }));
+      });
+      K.alpha(table * K.seg(S, 4.75, 4.9)); K.text("code, recipes, settings, wiring: anything you can test", 60, 90, { size: 2.6, align: "center", color: C.muted });
+    }
+    K.alpha(1);
+  },
+
+  /* ---------- Problem solving: bottleneck ---------- */
+  bottleneck(K, S, time){
+    const C = K.C, X = [13, 43, 73, 103], Y = 40, W = 22;
+    const prep = Math.round(K.lerp(12, 24, K.io(K.seg(S, 3.1, 3.4))));
+    const pack = Math.round(K.lerp(25, 40, K.io(K.seg(S, 2.1, 2.4))));
+    const demand = 20, deliver = 20, out = Math.min(demand, prep, pack, deliver);
+    const st = [["Orders in", demand], ["Prepare", prep], ["Pack", pack], ["Deliver", deliver]];
+    const a0 = K.seg(S, 0, .3);
+    const note = (t, a, b, col) => { K.alpha(K.seg(S, a, a + .2) * (1 - K.seg(S, b, b + .1))); K.text(t, 60, 91, { size: 2.7, align: "center", color: col || C.muted, weight: 600 }); };
+    // links with work moving through
+    [demand, out, out].forEach((rate, k) => {
+      const x1 = X[k] + W / 2, x2 = X[k + 1] - W / 2, n = Math.round(rate / 5);
+      K.alpha(a0); K.line(x1, Y, x2, Y, { color: C.line });
+      if (S >= .6) for (let j = 0; j < n; j++) K.dot(K.lerp(x1 + 1, x2 - 1, (time * .5 + j / n) % 1), Y, .75, { fill: C.accent });
+    });
+    // queue in front of Prepare
+    const q = Math.round(12 * K.seg(S, 1.1, 1.9) * (1 - K.seg(S, 3.4, 3.9)));
+    for (let j = 0; j < q; j++){ K.alpha(1); K.dot(25.6 + (j % 3) * 2.3, Y + 4.5 + Math.floor(j / 3) * 2.4, .85, { fill: C.warn }); }
+    if (q > 0){ K.alpha(K.seg(S, 1.3, 1.5) * K.clamp(q / 4)); K.text("waiting", 28, Y + 19, { size: 2.2, align: "center", color: C.warn }); }
+    // steps and how busy each one is
+    st.forEach(([name, cap], i) => {
+      const limit = (i === 1 && S >= 1.2 && S < 3.3) || (i === 3 && S >= 4.2);
+      const lit = (i === 2 && S >= 2.1 && S < 3) || (i === 1 && S >= 3.1 && S < 4);
+      K.alpha(K.seg(S, i * .08, .3 + i * .08));
+      K.node(X[i], Y, W, 13, name, { sub: `${cap} / hour`, size: 3, stroke: limit ? C.warn : lit ? C.accent : C.strong, lw: limit || lit ? .55 : .35 });
+      const ba = K.seg(S, .9, 1.2);
+      if (!i){ K.alpha(ba); K.text("demand", X[0], Y + 11.5, { size: 2.4, align: "center", color: C.muted }); return; }
+      const u = out / cap, full = u > .99;
+      K.alpha(ba); K.rect(X[i] - W / 2, Y + 10, W, 2.4, 1.2, { fill: C.raised });
+      K.rect(X[i] - W / 2, Y + 10, W * u, 2.4, 1.2, { fill: full ? C.warn : C.accent });
+      K.text(`busy ${Math.round(u * 100)}%`, X[i], Y + 16, { size: 2.4, mono: true, align: "center", color: full ? C.warn : C.muted });
+    });
+    K.alpha(K.seg(S, 1.3, 1.5) * (1 - K.seg(S, 3.2, 3.3))); K.text("slowest step", X[1], Y - 10, { size: 2.4, align: "center", color: C.warn, weight: 600 });
+    K.alpha(K.seg(S, 4.3, 4.5)); K.text("next limit", X[3], Y - 10, { size: 2.4, align: "center", color: C.warn, weight: 600 });
+    // output
+    K.alpha(K.seg(S, .6, .9));
+    K.text("finished", 60, 72, { size: 2.6, align: "center", color: C.muted });
+    K.text(`${out} orders per hour`, 60, 78.5, { size: 3.8, align: "center", weight: 700, color: C.accent });
+    note("each step handles a different amount per hour", .35, .95);
+    note("work piles up in front of the slowest step", 1.45, 1.95, C.warn);
+    note("Pack got much faster: output didn't move", 2.5, 2.95, C.warn);
+    note("Prepare doubled: output rose to 20", 3.5, 3.95, C.accent);
+    note("Deliver is now 100% busy: it's the next limit", 4.4, 9, C.warn);
+    K.alpha(1);
+  },
+
+  /* ---------- Problem solving: 80/20 ---------- */
+  pareto(K, S, time){
+    const C = K.C, X0 = 12, SL = 14, B = 74, sc = .54;
+    const data = [["Billing", "", 8], ["Late", "delivery", 46], ["Login", "", 5], ["Damaged", "", 12], ["Other", "", 3], ["Wrong", "size", 22], ["Missing", "item", 4]];
+    const after = data.map((d, i) => i === 1 ? 9 : d[2]);
+    const rank = vals => { const r = []; vals.map((v, i) => [v, i]).sort((a, b) => b[0] - a[0]).forEach(([, i], k) => { r[i] = k; }); return r; };
+    const r1 = rank(data.map(d => d[2])), r2 = rank(after);
+    const fix = K.io(K.seg(S, 4.1, 4.4)), sort1 = K.io(K.seg(S, 1.1, 1.7)), sort2 = K.io(K.seg(S, 4.5, 4.9));
+    const val = i => K.lerp(data[i][2], after[i], fix);
+    const pos = i => K.lerp(K.lerp(i, r1[i], sort1), r2[i], sort2);
+    const cx = p => X0 + SL / 2 + p * SL;
+    const top3 = K.seg(S, 3.05, 3.3) * (1 - K.seg(S, 4.05, 4.2));
+    const note = (t, a, b, col) => { K.alpha(K.seg(S, a, a + .2) * (1 - K.seg(S, b, b + .1))); K.text(t, 60, 91, { size: 2.7, align: "center", color: col || C.muted, weight: 600 }); };
+    K.alpha(K.seg(S, 0, .2)); K.line(X0, B, X0 + 7 * SL, B, { color: C.strong });
+    data.forEach(([n1, n2], i) => {
+      const x = cx(pos(i)), h = val(i) * sc * K.ease(K.seg(S, .1 + i * .06, .5 + i * .06));
+      K.alpha(1); K.rect(x - 4.5, B - h, 9, h, .8, { fill: C.strong });
+      K.alpha(1 - (r1[i] < 3 ? 0 : top3)); K.rect(x - 4.5, B - h, 9, h, .8, { fill: C.accent });
+      const moving = 1 - .85 * Math.max(Math.sin(Math.PI * sort1), Math.sin(Math.PI * sort2));
+      K.alpha(K.seg(S, .2, .5) * moving);
+      K.text(n1, x, B + 3.5, { size: 2.2, align: "center" });
+      if (n2) K.text(n2, x, B + 6.6, { size: 2.2, align: "center", color: C.muted });
+      K.alpha(K.seg(S, .5, .8) * (1 - K.seg(S, 2.05, 2.25) + K.seg(S, 4.2, 4.4)) * moving);
+      K.text(String(Math.round(val(i))), x, B - h - 2.5, { size: 2.5, mono: true, align: "center" });
+    });
+    // running total
+    const la = K.seg(S, 2.05, 2.2) * (1 - K.seg(S, 4.05, 4.2));
+    if (la > 0){
+      const order = data.map((d, i) => i).sort((a, b) => r1[a] - r1[b]);
+      let cum = 0;
+      const pts = order.map(i => { cum += data[i][2]; return [cx(r1[i]), B - cum * sc, cum]; });
+      const p = K.seg(S, 2.15, 2.8) * 6;
+      K.alpha(la);
+      for (let k = 0; k < 6; k++) if (p > k){ const t = K.clamp(p - k); K.line(pts[k][0], pts[k][1], K.lerp(pts[k][0], pts[k + 1][0], t), K.lerp(pts[k][1], pts[k + 1][1], t), { color: C.ink, lw: .4 }); }
+      pts.forEach(([x, y, c], k) => {
+        K.alpha(la * K.seg(S, 2.15 + k * .1, 2.25 + k * .1));
+        K.dot(x, y, .9, { fill: C.ink });
+        K.text(`${c}%`, x, y - 3, { size: 2.2, mono: true, align: "center", color: k < 3 && top3 > 0 ? C.accent : C.muted });
+      });
+      K.alpha(la * K.seg(S, 2.6, 2.8));
+      K.line(X0, B - 80 * sc, X0 + 7 * SL, B - 80 * sc, { color: C.warn, dash: [1.2, .8], lw: .4 });
+      K.text("80%", X0 + 7 * SL + 1, B - 80 * sc, { size: 2.3, mono: true, color: C.warn });
+    }
+    note("100 complaints, counted by cause", .5, .95);
+    note("sorted: the biggest causes come first", 1.6, 1.95);
+    note("the line adds them up from the left", 2.6, 2.95);
+    note("3 of 7 causes make up 80% of complaints", 3.3, 3.95, C.accent);
+    note("late delivery fixed: 63 complaints, a new top cause", 4.6, 9, C.accent);
+    K.alpha(1);
+  },
+
+  /* ---------- Problem solving: small experiments ---------- */
+  experiments(K, S, time){
+    const C = K.C, ctx = K.ctx;
+    const f = s => 74 - .02337 * (s - 57) ** 2;
+    const sx = s => 48 + s * .66, ry = r => 80 - (r - 30) * 1.1;
+    const tests = [[20, 1.15], [35, 2.1], [50, 3.05], [70, 3.35], [58, 3.65]];
+    const done = tests.filter(([, t]) => S >= t + .1).length;
+    const note = (t, a, b, col) => { K.alpha(K.seg(S, a, a + .2) * (1 - K.seg(S, b, b + .1))); K.text(t, 60, 92, { size: 2.7, align: "center", color: col || C.muted, weight: 600 }); };
+    // the loop
+    const LC = [22, 52], LR = 12;
+    K.alpha(K.seg(S, 0, .3));
+    ctx.beginPath(); ctx.arc(LC[0], LC[1], LR, 0, Math.PI * 2); ctx.strokeStyle = C.strong; ctx.lineWidth = .4; ctx.stroke();
+    if (S >= .8){ const an = -Math.PI / 2 + time * 1.3; K.dot(LC[0] + Math.cos(an) * LR, LC[1] + Math.sin(an) * LR, 1, { fill: C.accent }); }
+    [["guess", 0, -1], ["test", 1, 0], ["measure", 0, 1], ["learn", -1, 0]].forEach(([t, dx, dy]) => {
+      const x = LC[0] + dx * LR, y = LC[1] + dy * LR;
+      K.rect(x - 7.5, y - 3, 15, 6, 3, { fill: C.surface, stroke: C.strong });
+      K.text(t, x, y, { size: 2.4, align: "center" });
+    });
+    if (done){ K.text(`${done} ${done > 1 ? "loops" : "loop"}`, LC[0], LC[1] + LR + 8, { size: 2.5, mono: true, align: "center", color: C.accent }); }
+    // chart
+    K.alpha(K.seg(S, .1, .4));
+    K.line(48, 80, 114, 80, { color: C.strong }); K.line(48, 80, 48, 22, { color: C.strong });
+    K.text("setting", 114, 86.5, { size: 2.4, align: "right", color: C.muted });
+    K.text("result", 50, 24, { size: 2.4, color: C.muted });
+    // the hidden curve, revealed at the end
+    const cv = K.seg(S, 4.1, 4.6);
+    if (cv > 0){
+      K.alpha(cv * .8); ctx.beginPath();
+      for (let s = 14; s <= 100; s += 1){ const x = sx(s), y = ry(f(s)); s === 14 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); }
+      ctx.setLineDash([1, .8]); ctx.strokeStyle = C.muted; ctx.lineWidth = .35; ctx.stroke(); ctx.setLineDash([]);
+    }
+    // first guess, before any test
+    K.alpha(K.seg(S, .4, .7) * (1 - K.seg(S, 1.15, 1.3)));
+    K.line(sx(20), 80, sx(20), 52, { color: C.accent, dash: [1, .8], lw: .4 });
+    K.text("guess: 20", sx(20), 48.5, { size: 2.5, align: "center", color: C.accent, weight: 600 });
+    // tests
+    tests.forEach(([s, t], j) => {
+      const a = K.seg(S, t, t + .15);
+      if (a <= 0) return;
+      const r = f(s), x = sx(s), y = ry(r), worse = j > 0 && r < f(tests[j - 1][0]), best = j === 4;
+      if (j){
+        const px = sx(tests[j - 1][0]), py = ry(f(tests[j - 1][0])), d = Math.hypot(x - px, y - py);
+        K.alpha(K.seg(S, t - .05, t + .1)); K.arrow(px + (x - px) * 2 / d, py + (y - py) * 2 / d, x - (x - px) * 2.2 / d, y - (y - py) * 2.2 / d, { color: worse ? C.warn : C.strong, hs: 1, lw: .35 });
+      }
+      K.alpha(a);
+      K.line(x, 80, x, 81.5, { color: C.strong });
+      K.text(String(s), x, 84, { size: 2.2, mono: true, align: "center", color: C.muted });
+      if (best && S >= t + .2){ K.dot(x, y, 2.6, { fill: false, stroke: C.ok, lw: .4 }); }
+      K.dot(x, y, 1.4, { fill: worse ? C.warn : best ? C.ok : C.accent });
+      K.text(String(Math.round(r)), x, y - 4, { size: 2.5, mono: true, align: "center", weight: 600, color: worse ? C.warn : C.ink });
+    });
+    note("write the guess down before testing it", .5, .95);
+    note("one small test: setting 20 gives 42", 1.35, 1.95);
+    note("35 scored higher: keep going that way", 2.3, 2.95, C.accent);
+    note("70 was worse: too far, so step back to 58", 3.5, 3.95, C.warn);
+    note("5 cheap tests found the top without seeing the curve", 4.5, 9, C.ok);
     K.alpha(1);
   },
 };
