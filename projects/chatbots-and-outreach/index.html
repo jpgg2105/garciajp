@@ -25,7 +25,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@400;500;600;700&family=Funnel+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="/assets/site.css?v=f03c08d47a">
+<link rel="stylesheet" href="/assets/site.css?v=ee61ed1598">
 </head>
 <body>
 <a class="skip" href="#view">Skip to content</a>
@@ -44,6 +44,20 @@
         <p class="lede">LLM chatbots that answer from client content, and a pipeline that finds leads and contacts them on WhatsApp.</p>
         <div class="facts"><span><b>Nodos Hub</b></span><span>AI developer</span><span class="num">2025</span><span>Client work, code is private.</span></div>
         
+      </section>
+      <div class="tour-head"><h2>See it work</h2><span>5 steps · scroll to play</span></div>
+      <section class="build explainer" id="ex" data-scene="proj_bots" aria-label="Chatbots and an outreach pipeline, step by step">
+        <div class="build-track" style="height:450vh">
+          <div class="pin">
+            <ol class="steps"><li class="step on"><span class="n">1</span><h3>Index the client's content</h3><p>The client's documents are split into chunks and stored as vectors in Pinecone.</p></li><li class="step"><span class="n">2</span><h3>Answer from that content</h3><p>The chatbot finds the relevant chunks and Gemini answers from them, in PHP or Python depending on the client's stack.</p></li><li class="step"><span class="n">3</span><h3>Collect leads automatically</h3><p>An n8n workflow scrapes leads instead of a sales team finding them by hand.</p></li><li class="step"><span class="n">4</span><h3>Store and draft</h3><p>Leads go into Airtable, and the OpenAI API drafts a message for each one.</p></li><li class="step"><span class="n">5</span><h3>Send on WhatsApp</h3><p>n8n sends each message on WhatsApp and the table keeps track of who was contacted.</p></li></ol>
+            <div class="screen" aria-hidden="true">
+              <div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="file">Chatbots and an outreach pipeline</span><span class="sample">Illustration</span></div>
+              <canvas width="532" height="476"></canvas>
+            </div>
+            <div class="ex-stills"><div class="ex-still"><h3>Index the client's content</h3><p>The client's documents are split into chunks and stored as vectors in Pinecone.</p><canvas aria-hidden="true"></canvas></div><div class="ex-still"><h3>Answer from that content</h3><p>The chatbot finds the relevant chunks and Gemini answers from them, in PHP or Python depending on the client's stack.</p><canvas aria-hidden="true"></canvas></div><div class="ex-still"><h3>Collect leads automatically</h3><p>An n8n workflow scrapes leads instead of a sales team finding them by hand.</p><canvas aria-hidden="true"></canvas></div><div class="ex-still"><h3>Store and draft</h3><p>Leads go into Airtable, and the OpenAI API drafts a message for each one.</p><canvas aria-hidden="true"></canvas></div><div class="ex-still"><h3>Send on WhatsApp</h3><p>n8n sends each message on WhatsApp and the table keeps track of who was contacted.</p><canvas aria-hidden="true"></canvas></div></div>
+            <div class="progress"><i style="transform: scaleX(0);"></i></div>
+          </div>
+        </div>
       </section>
       <section class="cv">
         <h2>Problem</h2><div><p class="lede">Clients wanted assistants that answer from their own content, and a sales team was finding and contacting leads by hand.</p></div>
@@ -70,9 +84,9 @@
 <!-- ===================== CONTENT =====================
      Everything on the site comes from this JSON. Edit it, then run `python build.py`.
      See README.md for what each field does. -->
-<script src="/assets/content.js?v=d9a7d3a405"></script>
+<script src="/assets/content.js?v=840485ec0b"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/motion@11.11.13/dist/motion.js"></script>
-<script src="/assets/site.js?v=663c40a1ca"></script>
+<script src="/assets/site.js?v=66a45238ee"></script>
 </body>
 </html>

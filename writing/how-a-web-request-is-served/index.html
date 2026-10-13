@@ -25,7 +25,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@400;500;600;700&family=Funnel+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="/assets/site.css?v=f03c08d47a">
+<link rel="stylesheet" href="/assets/site.css?v=ee61ed1598">
 </head>
 <body>
 <a class="skip" href="#view">Skip to content</a>
@@ -44,7 +44,8 @@
         <h1>How a web request is served</h1>
         <p class="lede">Most web systems follow the same path: a load balancer spreads requests across servers, a cache answers the common ones fast, and a database holds the truth.</p>
       </section>
-      <section class="build explainer" id="ex" data-slug="how-a-web-request-is-served" aria-label="How a web request is served, step by step">
+      
+      <section class="build explainer" id="ex" data-scene="web" aria-label="How a web request is served, step by step">
         <div class="build-track" style="height:450vh">
           <div class="pin">
             <ol class="steps"><li class="step on"><span class="n">1</span><h3>A request arrives</h3><p>A browser sends a request. Before any of your code runs, it reaches a load balancer.</p></li><li class="step"><span class="n">2</span><h3>Spread the load</h3><p>The load balancer sends each request to a different server, so no single machine gets overwhelmed.</p></li><li class="step"><span class="n">3</span><h3>Check the cache first</h3><p>The server asks an in-memory cache for the answer. A hit comes back in a couple of milliseconds.</p></li><li class="step"><span class="n">4</span><h3>Fall back to the database</h3><p>On a miss, the server queries the database, which is slower, then saves the result in the cache for the next request.</p></li><li class="step"><span class="n">5</span><h3>Scale out</h3><p>When traffic grows, add servers behind the balancer. Watch the slowest requests (p99), not only the average.</p></li></ol>
@@ -75,9 +76,9 @@
 <!-- ===================== CONTENT =====================
      Everything on the site comes from this JSON. Edit it, then run `python build.py`.
      See README.md for what each field does. -->
-<script src="/assets/content.js?v=d9a7d3a405"></script>
+<script src="/assets/content.js?v=840485ec0b"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/motion@11.11.13/dist/motion.js"></script>
-<script src="/assets/site.js?v=663c40a1ca"></script>
+<script src="/assets/site.js?v=66a45238ee"></script>
 </body>
 </html>
