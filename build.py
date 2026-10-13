@@ -105,7 +105,8 @@ for p in site.get("posts", []):
     pages[f"/writing/{p['slug']}/"] = (f"{p['title']} · {name}", p.get("excerpt", default_desc), [
         {"@type": "BlogPosting", "url": f"{domain}/writing/{p['slug']}/", "headline": p["title"],
          "description": p.get("excerpt", ""), "datePublished": p["date"], "author": person,
-         "genre": site["labels"].get(p["kind"], p["kind"])},
+         "genre": site["labels"].get(p["kind"], p["kind"]),
+         **({"isBasedOn": p["source"]["url"]} if p.get("source") else {})},
     ])
 
 
