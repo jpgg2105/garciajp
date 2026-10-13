@@ -1,0 +1,37 @@
+{
+  "title": "Meetings Bridge, before the RFP · a sketch for Starbridge by Juan Pablo García",
+  "desc": "How I would make Meetings Bridge land closer on the first pass and keep late stage results out by default.",
+  "eyebrow": "A sketch for Starbridge",
+  "h1": "Find the pain in the meeting, not the RFP that follows it",
+  "lede": "Your help center says a Meetings Bridge usually takes <b>two or three rounds of tuning</b>, that good matches can still land in the bottom half, and that procurement already underway gets in unless someone writes a negative criterion for it. This is how I would make the first pass land closer and keep late stage results out by default.",
+  "stage": "From a board meeting to a signal a rep can use",
+  "flow": {
+    "label": "Diagram of a pipeline from public meeting recordings to ranked buying signals",
+    "nodes": [
+      {"id": "src", "c": 0, "r": 1, "t": "Board meetings", "s": "video, audio, minutes", "tag": "source"},
+      {"id": "seg", "c": 1, "r": 1, "t": "Split by item", "s": "agenda + timestamps", "tag": "code"},
+      {"id": "kw", "c": 2, "r": 0, "t": "Keyword match", "s": "BM25", "tag": "code"},
+      {"id": "sem", "c": 2, "r": 2, "t": "Meaning match", "s": "embeddings", "tag": "model"},
+      {"id": "fuse", "c": 3, "r": 1, "t": "Fuse + rerank", "s": "cross-encoder", "tag": "model"},
+      {"id": "stage", "c": 4, "r": 0, "t": "Buying stage", "s": "late stages dropped", "tag": "LLM"},
+      {"id": "buyer", "c": 4, "r": 2, "t": "Who can buy", "s": "speaker to buyer", "tag": "LLM"},
+      {"id": "out", "c": 5, "r": 1, "t": "Signal for the rep", "s": "quote, time, contact", "tag": "out"}
+    ],
+    "edges": [
+      {"a": "src", "b": "seg"}, {"a": "seg", "b": "kw"}, {"a": "seg", "b": "sem"},
+      {"a": "kw", "b": "fuse"}, {"a": "sem", "b": "fuse"},
+      {"a": "fuse", "b": "stage"}, {"a": "fuse", "b": "buyer"},
+      {"a": "stage", "b": "out"}, {"a": "buyer", "b": "out"},
+      {"a": "out", "b": "fuse", "back": true, "label": "rep feedback becomes the eval set"}
+    ],
+    "steps": [
+      {"t": "One meeting, many topics", "d": "A three hour school board video gets split at each agenda item with its timestamps. A match then points to the two minutes that matter, and the quote links straight there.", "on": ["src", "seg"], "go": ["src>seg"]},
+      {"t": "Two ways to match", "d": "Keywords catch exact terms like a product category. Embeddings catch the same problem said in an official's own words, which is exactly where phrase lists miss.", "on": ["kw", "sem"], "go": ["seg>kw", "seg>sem"]},
+      {"t": "One ranked list", "d": "Both result sets get fused and reranked against the seller's problem statement, so a strong match stops hiding in the bottom half.", "on": ["fuse"], "go": ["kw>fuse", "sem>fuse"]},
+      {"t": "Where is this deal", "d": "A model labels the buying stage in strict JSON, along with the sentence it relied on. Awarded contracts, issued RFPs and vendor pitches get dropped here, with no negative criterion to write.", "on": ["stage"], "go": ["fuse>stage"]},
+      {"t": "Speaker or buyer", "d": "The person who raised the issue is often not the one who signs. Their role gets mapped to the likely decision maker for that board or council.", "on": ["buyer"], "go": ["fuse>buyer"]},
+      {"t": "What the rep sees", "d": "An early stage signal, the exact quote, the timestamp and who to contact. Short, ranked and checked.", "on": ["out"], "go": ["stage>out", "buyer>out"]},
+      {"t": "Every click becomes a test", "d": "Each thumbs up or down goes into an eval set. Any change to phrases, prompts or the reranker gets scored on it, including recall on the matches that used to land low.", "on": ["out", "fuse"], "go": ["out>fuse"]}
+    ]
+  }
+}

@@ -1,0 +1,31 @@
+<section class="block"><div class="wrap">
+<h2>Try it on five meeting snippets</h2>
+<p class="intro">A seller's Bridge describes their problem as <b>scheduling staff training is manual and error prone</b>. Here is what a phrase match returns compared with hybrid matching plus the stage gate.</p>
+<div class="panel">
+<div class="wbar"><div class="seg" role="group" aria-label="Matching method"><button type="button" id="m-phrase" data-m="phrase" aria-pressed="true">Phrase match</button><button type="button" id="m-hybrid" data-m="hybrid" aria-pressed="false">Hybrid + stage gate</button></div><span class="example">Example snippets I wrote</span></div>
+<div class="cards" id="snips"></div>
+<p class="summary" id="snip-sum"></p>
+</div>
+</div></section>
+
+<section class="block"><div class="wrap">
+<div class="cols">
+<div>
+<h3 class="sub">How I would build it</h3>
+<ul class="steps-list">
+<li>Agenda item segmentation from timestamps and minutes, so every match has a short clip to cite.</li>
+<li>Hybrid retrieval with BM25, embeddings and a cross-encoder rerank. I built the same setup in my <a href="https://github.com/jpgg2105/ai-document-analyst">document analyst project</a>.</li>
+<li>A stage classifier with a strict JSON schema and an evidence quote. If the quote is not in the transcript, the label gets thrown out.</li>
+<li>An eval set built from rep feedback and run on every change, the same way my <a href="https://github.com/jpgg2105/agent-benchmark">agent benchmark</a> scores a change before it ships.</li>
+</ul>
+</div>
+<div>
+<h3 class="sub">What I would check first</h3>
+<ul class="steps-list">
+<li>How transcripts come in today, how good the speech to text is, and whether speakers are labeled.</li>
+<li>How much rep feedback already exists on saved Bridges. That is the fastest eval set to start from.</li>
+<li>Whether reps want fewer results or more recall. The gate can lean either way.</li>
+</ul>
+</div>
+</div>
+</div></section>

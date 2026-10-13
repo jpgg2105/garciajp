@@ -1,0 +1,34 @@
+{
+  "title": "A reorder you can trust · a sketch for Finale Inventory by Juan Pablo García",
+  "desc": "A reorder assistant that keeps the math in tested code and uses a model only to explain it and draft the PO.",
+  "eyebrow": "A sketch for Finale Inventory",
+  "h1": "A reorder suggestion a buyer can trust in ten seconds",
+  "lede": "Your site puts it plainly. Without sales velocity, lead time and margin data, buying is guesswork. Finale already has those inputs across every channel, warehouse and FBA. What is hard for a seller is <b>trusting a suggested number</b>. This sketch keeps the math in tested code and uses a model only to explain it and draft the PO.",
+  "stage": "From channel sales to an approved purchase order",
+  "flow": {
+    "label": "Diagram of a reorder pipeline where code computes the quantity and a model only writes the explanation",
+    "nodes": [
+      {"id": "sales", "c": 0, "r": 0, "t": "Channel sales", "s": "Amazon, Shopify, Walmart", "tag": "data"},
+      {"id": "stock", "c": 0, "r": 2, "t": "Stock and inbound", "s": "warehouses, FBA, open POs", "tag": "data"},
+      {"id": "vel", "c": 1, "r": 1, "t": "Clean velocity", "s": "promos, stockout days", "tag": "code"},
+      {"id": "math", "c": 2, "r": 1, "t": "Reorder math", "s": "point and quantity", "tag": "code"},
+      {"id": "llm", "c": 3, "r": 1, "t": "Explain and draft", "s": "reason + supplier note", "tag": "LLM"},
+      {"id": "check", "c": 4, "r": 1, "t": "Number check", "s": "every figure must match", "tag": "code"},
+      {"id": "out", "c": 5, "r": 1, "t": "Buyer approves", "s": "PO goes out", "tag": "out"}
+    ],
+    "edges": [
+      {"a": "sales", "b": "vel"}, {"a": "stock", "b": "vel"}, {"a": "vel", "b": "math"},
+      {"a": "math", "b": "llm"}, {"a": "llm", "b": "check"}, {"a": "check", "b": "out"},
+      {"a": "out", "b": "math", "back": true, "label": "overrides are logged"}
+    ],
+    "steps": [
+      {"t": "Everything Finale already knows", "d": "Orders per channel, stock in every location including FBA, open purchase orders and lead time per supplier.", "on": ["sales", "stock"], "go": []},
+      {"t": "Velocity that means something", "d": "A promo week on Amazon or ten days out of stock both distort the average. Those days get flagged and handled before any math runs.", "on": ["vel"], "go": ["sales>vel", "stock>vel"]},
+      {"t": "Plain, tested math", "d": "The reorder point is daily velocity times lead time plus safety days. The quantity covers the target days after arrival, minus stock on hand and inbound. No model touches this.", "on": ["math"], "go": ["vel>math"]},
+      {"t": "The model writes, it does not calculate", "d": "It gets the finished numbers and writes two things, a short reason for the buyer and the note to the supplier.", "on": ["llm"], "go": ["math>llm"]},
+      {"t": "Nothing ships with a wrong number", "d": "Every figure in the text is compared with what the engine produced. One mismatch and the draft is regenerated or replaced with a plain template.", "on": ["check"], "go": ["llm>check"]},
+      {"t": "Approve in one click", "d": "The buyer sees the quantity, the reason and the draft. They approve, edit or skip.", "on": ["out"], "go": ["check>out"]},
+      {"t": "Overrides are data", "d": "When a buyer changes a suggestion, the change is logged. It shows where safety days or spike rules are wrong for that seller.", "on": ["out", "math"], "go": ["out>math"]}
+    ]
+  }
+}
