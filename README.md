@@ -8,6 +8,7 @@ Personal site of Juan Pablo García, served by GitHub Pages from the root of `ma
 - `build.py` turns it into the published site in the repo root. For every address (`/projects/research-agent/`, `/resume/` and so on) it:
   - writes a page with its own title, description, link preview and structured data,
   - pre-renders it in a headless browser, so Google, link previews and AI crawlers see the full text without running JavaScript.
+  The shared styles, content and code are written once to `assets/` (site.css, content.js, site.js), so each page stays small and its text comes first.
   It also renders the link-preview image `og.png` from `src/og.html` and writes `404.html`, `sitemap.xml` and `robots.txt`.
 - Everything in the root except `build.py`, `README.md`, `resume.pdf` and `CNAME` is generated. Edit `src/`, never the generated pages.
 
