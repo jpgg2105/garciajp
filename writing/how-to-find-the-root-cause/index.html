@@ -274,6 +274,7 @@ pre.code{margin:0;font:14px/1.75 var(--f-code);white-space:pre;color:var(--ink);
 .job li+li{margin-top:4px}
 .lede{font-size:20px;line-height:1.5;max-width:58ch}
 .plain{margin:0;padding-left:18px;color:var(--muted)}
+.src{color:var(--muted);max-width:62ch}.src a{color:var(--accent);text-underline-offset:3px;overflow-wrap:anywhere}
 .plain li+li{margin-top:6px}
 .plain b{color:var(--ink);font-weight:600}
 
@@ -458,6 +459,7 @@ footer a{color:var(--muted)}
       </section>
       <section class="cv">
         <h2>In short</h2><div><ul class="plain"><li>If an answer is 'someone made a mistake', ask why the process let that mistake through.</li><li>A problem can have more than one cause. When a why has two true answers, follow both.</li><li>It works for outages, missed deadlines, recurring arguments and failed projects.</li><li>The example in the animation is illustrative.</li></ul></div>
+        
       </section>
       
   <section class="cta">
@@ -1617,6 +1619,52 @@ footer a{color:var(--muted)}
         "It works for pricing, recipes, training plans, product features and study habits.",
         "The curve and results in the animation are illustrative."
       ]
+    },
+    {
+      "slug": "how-ai-is-changing-software-development",
+      "kind": "explainer",
+      "scene": "aidev",
+      "date": "2026-10-12",
+      "title": "How AI is changing software development",
+      "excerpt": "From autocomplete to agents that ship whole features: specs, conducting, context and loops, how models run, and keeping agents safe.",
+      "intro": "AI isn't replacing developers, but it is changing what the job looks like. This explainer walks through the main ideas from a video on where software development is heading, from handing whole features to agents to keeping those agents safe.",
+      "steps": [
+        [
+          "From autocomplete to whole features",
+          "AI used to suggest the next line, and fixing its output often took longer than writing the code yourself. Now coding agents take a whole feature: they read the codebase, write the code, run the tests and merge the change."
+        ],
+        [
+          "Write a spec, not a chat",
+          "Different models read the same prompt differently, and arguing with an agent wastes time. A written spec with the goal, the requirements and what counts as done gives the agent something clear to build and check against."
+        ],
+        [
+          "From implementing to conducting",
+          "For decades the bottleneck was how fast and how well you could write code. Now the valuable part is deciding what to build: setting goals, making architecture decisions that matter a year from now, and splitting work into milestones agents can finish."
+        ],
+        [
+          "Engineer the context and the loop",
+          "A model only sees what fits in its context window, so you choose what goes in: relevant code, tools, skills and data from MCP servers. Then, instead of prompting back and forth, you design a loop: you set the goal and when it's done, and the agent iterates until it gets there."
+        ],
+        [
+          "Know how the model runs",
+          "The model's weights sit in GPU memory, and every token of the conversation adds to a KV cache next to them until memory runs out. Models also have no real sense of time: one may estimate weeks for a game it can prototype in minutes."
+        ],
+        [
+          "Keep agents in a sandbox",
+          "An agent with access to private data, untrusted content and a way to send data out can be tricked by hidden instructions, for example in a pull request. Running it in a disposable sandbox with no secrets inside limits what a hijacked agent can do."
+        ]
+      ],
+      "takeaways": [
+        "Skills, automations and sub-agents extend the same idea: reusable instructions, work triggered by events, and helpers that investigate a problem and report back.",
+        "The video quotes Andrew Ng's line that AI is the new electricity: like the power grid, it will need engineers who keep it reliable, safe and available.",
+        "Developers who are strong at architecture and critical thinking gain the most as coding agents improve.",
+        "The memory figures match an 8-billion-parameter model like Llama 3 8B at 16-bit precision. The other examples in the animation are illustrative."
+      ],
+      "source": {
+        "text": "Based on a video on YouTube about how AI is changing software development.",
+        "link": "Watch it on YouTube",
+        "url": "https://www.youtube.com/watch?v=hTAWHgQI4xg"
+      }
     }
   ]
 }
@@ -3121,6 +3169,170 @@ const SCENES = {
     note("5 cheap tests found the top without seeing the curve", 4.5, 9, C.ok);
     K.alpha(1);
   },
+  /* ---------- How AI is changing software development ---------- */
+  aidev(K, S, time){
+    const C = K.C;
+    const vis = (a, b) => K.seg(S, a, a + .15) * (1 - K.seg(S, b - .12, b));
+    const note = (t, a, b, col) => { K.alpha(K.seg(S, a, a + .2) * (1 - K.seg(S, b - .1, b))); K.text(t, 60, 94, { size: 2.7, align: "center", color: col || C.muted, weight: 600 }); };
+    const tick = (x, y, a) => { if (a > 0){ K.alpha(a); K.check(x, y, 2.2, C.ok); } };
+
+    // 1. autocomplete, then whole features
+    const e0 = vis(0, .55);
+    if (e0 > 0){
+      K.alpha(e0); K.rect(20, 20, 80, 40, 2.4, { fill: C.surface, stroke: C.strong });
+      K.text("report.py", 23, 24.5, { size: 2.4, mono: true, color: C.muted });
+      ["def export(rows):", "    out = []", "    for r in rows:"].forEach((l, i) => K.text(l, 24, 32 + i * 6, { size: 2.6, mono: true }));
+      const g = e0 * K.seg(S, .15, .3);
+      K.alpha(g); K.text("        out.append(r.values())", 24, 50, { size: 2.6, mono: true, color: C.muted });
+      K.rect(84, 47.5, 10, 5, 1.2, { stroke: C.strong }); K.text("tab", 89, 50, { size: 2.2, mono: true, align: "center", color: C.muted });
+    }
+    note("before: AI suggested the next line", .2, .55);
+    const f0 = vis(.55, 1.05);
+    if (f0 > 0){
+      K.alpha(f0); K.rect(4, 22, 42, 14, 2.4, { fill: C.raised, stroke: C.accent, lw: .45 });
+      K.text("feature", 7, 26.3, { size: 2.3, color: C.accent, weight: 600 });
+      K.text("Export reports as CSV", 7, 31.5, { size: 2.8, weight: 600 });
+      K.arrow(47, 29, 53.5, 29, { color: C.strong, hs: 1 });
+      K.node(62, 29, 16, 10, "agent", { size: 3, stroke: C.accent, lw: .45 });
+      K.line(70, 29, 73, 29, { color: C.strong }); K.line(73, 22, 73, 49, { color: C.strong });
+      ["read the codebase", "write the code", "write and run tests", "merge the change"].forEach((t, i) => {
+        const y = 22 + i * 9, a = K.seg(S, .65 + i * .07, .72 + i * .07);
+        K.alpha(f0 * a); K.line(73, y, 76, y, { color: C.strong });
+        K.rect(76, y - 3.5, 40, 7, 1.6, { fill: C.surface, stroke: C.strong }); K.text(t, 79, y, { size: 2.5 });
+        tick(112.5, y, f0 * K.seg(S, .74 + i * .07, .78 + i * .07));
+      });
+    }
+    note("now: a whole feature from one request", .75, 1.05, C.accent);
+
+    // 2. a spec instead of a chat
+    const sp = vis(1.02, 2.05);
+    if (sp > 0){
+      const dim = 1 - .6 * K.seg(S, 1.4, 1.55);
+      [["make the export nicer", 0], ["no, keep the old columns", 1], ["now the dates are wrong", 0]].forEach(([t, r], i) => {
+        K.alpha(sp * K.seg(S, 1.05 + i * .08, 1.15 + i * .08) * dim);
+        K.rect(4 + r * 4, 20 + i * 9, 38, 7, 3.5, { fill: C.surface, stroke: C.strong }); K.text(t, 7 + r * 4, 23.5 + i * 9, { size: 2.4 });
+      });
+      K.alpha(sp * K.seg(S, 1.3, 1.45) * dim);
+      K.text("prompts get read differently", 4, 52, { size: 2.4, color: C.warn }); K.text("and argued over", 4, 56.5, { size: 2.4, color: C.warn });
+      const sa = sp * K.seg(S, 1.4, 1.55);
+      K.alpha(sa); K.rect(52, 14, 64, 48, 2.4, { fill: C.raised, stroke: C.accent, lw: .45 });
+      K.text("spec.md", 55, 18.5, { size: 2.3, mono: true, color: C.muted });
+      const rows = [["Goal", 1], ["Export any report as CSV", 0], ["Requirements", 1], ["· keep the column order", 0], ["· handle 100,000 rows", 0], ["Done when", 1], ["· all tests pass", 0], ["· the download starts in 2 s", 0]];
+      rows.forEach(([t, h], i) => { K.alpha(sp * K.seg(S, 1.45 + i * .04, 1.52 + i * .04)); K.text(t, 55, 24.5 + i * 4.6, { size: h ? 2.4 : 2.5, weight: h ? 700 : 500, color: h ? C.accent : C.ink }); });
+      K.alpha(sp * K.seg(S, 1.75, 1.85)); K.arrow(84, 62.5, 84, 69, { color: C.strong, hs: 1 }); K.node(84, 74, 16, 9, "agent", { size: 2.9 });
+      ["code", "tests", "docs"].forEach((t, i) => {
+        const x = 64 + i * 20; K.alpha(sp * K.seg(S, 1.85 + i * .04, 1.92 + i * .04));
+        K.line(84, 78.5, x, 82.5, { color: C.line }); K.rect(x - 8, 82.5, 16, 6.5, 1.6, { fill: C.surface, stroke: C.ok }); K.text(t, x, 85.75, { size: 2.5, align: "center", color: C.ok, weight: 600 });
+      });
+    }
+
+    // 3. from implementing to conducting
+    const cd = vis(2.02, 3.05);
+    if (cd > 0){
+      K.alpha(cd * K.seg(S, 2.02, 2.15)); K.rect(20, 12, 80, 13, 2.4, { fill: C.raised, stroke: C.accent, lw: .45 });
+      K.text("you decide", 23, 16, { size: 2.3, color: C.accent, weight: 600 });
+      K.text("Goal: any report can be exported", 60, 20.5, { size: 2.8, align: "center", weight: 600 });
+      [["1 · export API"], ["2 · export button"], ["3 · tests and docs"]].forEach(([t], i) => {
+        const x = 3.5 + i * 39.5, a = cd * K.seg(S, 2.15 + i * .06, 2.27 + i * .06), p = K.seg(S, 2.3 + i * .08, 2.6 + i * .08);
+        K.alpha(a); K.line(60, 25, x + 17, 37.5, { color: C.line });
+        K.rect(x, 37.5, 34, 14, 2, { fill: C.surface, stroke: p >= 1 ? C.ok : C.strong, lw: p >= 1 ? .45 : .35 });
+        K.text(t, x + 2.5, 42, { size: 2.6, weight: 600 });
+        K.rect(x + 2.5, 46.5, 29, 1.6, .8, { fill: C.raised }); K.rect(x + 2.5, 46.5, 29 * p, 1.6, .8, { fill: p >= 1 ? C.ok : C.accent });
+        K.dot(x + 4, 57, 1, { fill: C.accent }); K.text("agent", x + 6.5, 57, { size: 2.3, color: C.muted });
+        tick(x + 30.5, 57, a * K.seg(S, 2.62 + i * .08, 2.66 + i * .08));
+      });
+      K.alpha(cd * K.seg(S, 2.55, 2.7)); K.text("then: the bottleneck was writing code fast", 60, 71, { size: 2.6, align: "center", color: C.muted });
+      K.line(28, 71, 92, 71, { color: C.muted, lw: .3 });
+      K.alpha(cd * K.seg(S, 2.7, 2.85)); K.text("now: deciding what to build, and how", 60, 79, { size: 2.9, align: "center", color: C.accent, weight: 600 });
+    }
+
+    // 4. context engineering and loop engineering
+    const lp = vis(3.02, 4.05);
+    if (lp > 0){
+      K.alpha(lp); K.text("context window", 6, 20.5, { size: 2.5, color: C.muted, weight: 600 });
+      K.rect(8, 25, 14, 61, 1.6, { fill: C.surface, stroke: C.strong });
+      K.line(6, 26, 24, 26, { color: C.warn, dash: [1, .7], lw: .4 }); K.text("limit", 25.5, 26, { size: 2.3, color: C.warn });
+      let y = 86;
+      [["instructions", 6], ["relevant code", 22], ["tools", 8], ["skills", 6], ["MCP data", 10]].forEach(([t, h], i) => {
+        const g = K.ease(K.seg(S, 3.08 + i * .08, 3.2 + i * .08)), hh = h * g;
+        K.alpha(lp); K.rect(8.6, y - hh + .3, 12.8, Math.max(0, hh - .6), .8, { fill: i % 2 ? C.strong : C.fill });
+        K.alpha(lp * K.seg(S, 3.15 + i * .08, 3.25 + i * .08)); K.text(t, 25.5, y - h / 2, { size: 2.3, color: C.ink });
+        y -= h;
+      });
+      K.alpha(lp * K.seg(S, 3.5, 3.6)); K.text("room left", 25.5, 30.5, { size: 2.2, mono: true, color: C.muted });
+      // the loop
+      const L = [88, 52], R = 15, la = lp * K.seg(S, 3.3, 3.45);
+      K.alpha(la); K.text("goal: all tests pass", L[0], 25, { size: 2.6, align: "center", color: C.accent, weight: 600 });
+      K.ctx.beginPath(); K.ctx.arc(L[0], L[1], R, 0, Math.PI * 2); K.ctx.strokeStyle = C.strong; K.ctx.lineWidth = .4; K.ctx.stroke();
+      if (S >= 3.45 && S < 3.86){ const an = -Math.PI / 2 + K.seg(S, 3.45, 3.85) * Math.PI * 6; K.dot(L[0] + Math.cos(an) * R, L[1] + Math.sin(an) * R, 1, { fill: C.accent }); }
+      [["agent works", 0, -R], ["run checks", R * .87, R * .5], ["fix failures", -R * .87, R * .5]].forEach(([t, dx, dy]) => {
+        const x = L[0] + dx, yy = L[1] + dy;
+        K.rect(x - 11, yy - 3.25, 22, 6.5, 3.25, { fill: C.surface, stroke: C.strong }); K.text(t, x, yy, { size: 2.4, align: "center" });
+      });
+      const pass = Math.min(3, 1 + Math.floor(K.seg(S, 3.45, 3.85) * 3));
+      if (S >= 3.45){ K.text(`pass ${pass}`, L[0], L[1], { size: 2.5, mono: true, align: "center", color: C.accent }); }
+      const da = lp * K.seg(S, 3.85, 3.95), rx = L[0] + R * .87;
+      K.alpha(da); K.arrow(rx, L[1] + R * .5 + 3.5, rx, 75, { color: C.ok, hs: 1 });
+      K.rect(rx - 7, 75.5, 14, 6.5, 1.6, { fill: C.surface, stroke: C.ok }); K.text("done", rx, 78.75, { size: 2.5, align: "center", color: C.ok, weight: 600 });
+    }
+    note("you set the goal and when it's done; the agent loops", 3.55, 4.05, C.accent);
+
+    // 5. how the model runs
+    const gp = vis(4.02, 5.05);
+    if (gp > 0){
+      const W = 104, ww = W * 16 / 24, tokens = 65536 * K.seg(S, 4.3, 4.85), kv = tokens * 131072 / 2 ** 30, full = kv > 7.95;
+      K.alpha(gp); K.text("GPU memory · 24 GB", 8, 15.5, { size: 2.6, color: C.muted, weight: 600 });
+      K.rect(8, 19, W, 10, 1.6, { fill: C.surface, stroke: C.strong });
+      K.alpha(gp * K.seg(S, 4.05, 4.2)); K.rect(8.4, 19.4, ww - .8, 9.2, 1.4, { fill: C.fill });
+      K.text("model weights · 16 GB", 11, 24, { size: 2.6, color: C.white, weight: 600 });
+      K.text("loaded once, stays put", 11, 33.5, { size: 2.3, color: C.muted });
+      if (kv > 0){ K.alpha(gp); K.rect(8 + ww + .3, 19.4, Math.max(.4, W * kv / 24 - .7), 9.2, 1.2, { fill: full ? C.warn : C.accent }); }
+      const kx = 8 + ww + 1.5;
+      K.alpha(gp * K.seg(S, 4.25, 4.35)); K.text(`KV cache · ${kv.toFixed(1)} GB`, kx, 33.5, { size: 2.4, color: full ? C.warn : C.ink, weight: 600 });
+      K.text(`${Math.round(tokens / 1024)}k tokens`, kx, 38, { size: 2.3, mono: true, color: C.muted });
+      K.alpha(gp * K.seg(S, 4.85, 4.9)); K.text("memory full", kx, 42.5, { size: 2.3, color: C.warn, weight: 600 });
+      const bub = (t, x, y, w, a, me, col) => { K.alpha(gp * a); K.rect(x, y - 3.25, w, 6.5, 3.25, { fill: me ? C.raised : C.surface, stroke: col || C.strong }); K.text(t, x + 3, y, { size: 2.5, color: col ? col : C.ink }); };
+      bub("How long to build a small RPG?", 8, 55, 50, K.seg(S, 4.35, 4.45), true);
+      bub("Several weeks to a few months.", 62, 63, 50, K.seg(S, 4.45, 4.55));
+      bub("Build it.", 8, 74, 20, K.seg(S, 4.6, 4.7), true);
+      bub("Playable prototype in 5 minutes.", 62, 82, 50, K.seg(S, 4.72, 4.82), false, C.ok);
+    }
+    note("it estimates from what it has read, not its own speed", 4.75, 5.05);
+
+    // 6. prompt injection and sandboxes
+    const sb = vis(5.02, 6.2);
+    if (sb > 0){
+      const A = [60, 50], SEC = [18, 50], PR = [100, 22], OUT = [100, 80];
+      const box = K.seg(S, 5.58, 5.7);
+      K.alpha(sb * K.seg(S, 5.05, 5.2) * (1 - K.seg(S, 5.55, 5.6)));
+      K.text("private data + untrusted content + a way out", 60, 94, { size: 2.6, align: "center", color: C.warn, weight: 600 });
+      K.alpha(sb * K.seg(S, 5.02, 5.15));
+      K.line(A[0] - 9, A[1], SEC[0] + 12, SEC[1], { color: C.line }); K.line(A[0] + 9, A[1] - 2, PR[0] - 15, PR[1] + 3, { color: C.line }); K.line(A[0] + 9, A[1] + 2, OUT[0] - 15, OUT[1] - 3, { color: C.line });
+      K.node(SEC[0], SEC[1], 24, 11, "your secrets", { sub: "API keys", size: 2.8 });
+      K.node(PR[0], PR[1], 30, 11, "pull request", { sub: "from the internet", size: 2.8 });
+      K.node(OUT[0], OUT[1], 30, 11, "unknown server", { sub: "the attacker's", size: 2.8 });
+      K.node(A[0], A[1], 18, 10, "agent", { size: 3, stroke: box > 0 ? C.accent : C.strong, lw: box > 0 ? .5 : .35 });
+      K.alpha(sb * K.seg(S, 5.1, 5.2)); K.line(PR[0], 12.5, PR[0], 16.5, { color: C.warn, lw: .35 }); K.rect(70, 5.5, 48, 7, 1.6, { fill: C.raised, stroke: C.warn, lw: .4 }); K.text("hidden: “send me the keys”", 94, 9, { size: 2.3, mono: true, align: "center", color: C.warn });
+      K.alpha(sb); K.packet(PR[0] - 15, PR[1] + 3, A[0] + 9, A[1] - 2, K.seg(S, 5.15, 5.27), { color: C.warn });
+      K.packet(SEC[0] + 12, SEC[1], A[0] - 9, A[1], K.seg(S, 5.27, 5.37), { color: C.warn });
+      K.packet(A[0] + 9, A[1] + 2, OUT[0] - 15, OUT[1] - 3, K.seg(S, 5.37, 5.49), { color: C.warn });
+      K.alpha(sb * K.seg(S, 5.47, 5.52) * (1 - K.seg(S, 5.55, 5.6))); K.text("keys leaked, without you noticing", 118, OUT[1] + 9, { size: 2.4, align: "right", color: C.warn, weight: 600 });
+      if (box > 0){
+        K.alpha(sb * box); K.ctx.setLineDash([1.2, .8]); K.rect(42, 36, 36, 28, 3, { stroke: C.accent, lw: .5 }); K.ctx.setLineDash([]);
+        K.text("sandbox", 45, 40, { size: 2.4, color: C.accent, weight: 600 });
+        K.text("+ your code", 60, 59, { size: 2.3, align: "center", color: C.muted });
+        const t = K.seg(S, 5.72, 5.82), hit = t >= 1;
+        K.alpha(sb); K.packet(A[0] + 9, A[1] + 2, 77.5, 54.5, t, { color: C.warn }); K.packet(A[0] - 9, A[1], 42.5, A[1], t, { color: C.warn });
+        if (hit){
+          K.alpha(sb * K.seg(S, 5.82, 5.86));
+          [[78, 55], [42, 50]].forEach(([x, y]) => { K.line(x - 1.4, y - 1.4, x + 1.4, y + 1.4, { color: C.warn, lw: .55 }); K.line(x + 1.4, y - 1.4, x - 1.4, y + 1.4, { color: C.warn, lw: .55 }); });
+          K.text("blocked", 80, 59, { size: 2.3, color: C.warn, weight: 600 });
+        }
+      }
+    }
+    note("a disposable sandbox: no secrets inside, limited network", 5.8, 6.3, C.accent);
+    K.alpha(1);
+  },
 };
 
 /* stage controller */
@@ -3216,6 +3428,7 @@ const explainerHTML = p => {
       </section>
       <section class="cv">
         <h2>In short</h2><div><ul class="plain">${p.takeaways.map(t => `<li>${esc(t)}</li>`).join("")}</ul></div>
+        ${p.source ? `<h2>Source</h2><div><p class="src">${esc(p.source.text)} <a href="${esc(p.source.url)}" target="_blank" rel="noopener">${esc(p.source.link)}</a></p></div>` : ""}
       </section>
       ${ctaHTML()}
     </div>`;
