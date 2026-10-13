@@ -25,7 +25,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@400;500;600;700&family=Funnel+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="/assets/site.css?v=f03c08d47a">
+<link rel="stylesheet" href="/assets/site.css?v=ee61ed1598">
 </head>
 <body>
 <a class="skip" href="#view">Skip to content</a>
@@ -44,7 +44,8 @@
         <h1>How Docker containers work</h1>
         <p class="lede">Docker packages an app with everything it needs into an image, then runs that image as isolated containers on any machine with Docker.</p>
       </section>
-      <section class="build explainer" id="ex" data-slug="how-docker-containers-work" aria-label="How Docker containers work, step by step">
+      
+      <section class="build explainer" id="ex" data-scene="docker" aria-label="How Docker containers work, step by step">
         <div class="build-track" style="height:450vh">
           <div class="pin">
             <ol class="steps"><li class="step on"><span class="n">1</span><h3>Write a Dockerfile</h3><p>A Dockerfile lists the steps to build your app's environment: a base image, files to copy and commands to run.</p></li><li class="step"><span class="n">2</span><h3>Build an image in layers</h3><p>Each step that changes files becomes a read-only layer stacked on the one below. The image is that stack.</p></li><li class="step"><span class="n">3</span><h3>Layers are cached</h3><p>When you change your code, only the layers from that step up are rebuilt. Put steps that rarely change first and builds stay fast.</p></li><li class="step"><span class="n">4</span><h3>Run containers</h3><p>A container is a running instance of an image with its own writable layer. Several share one host kernel, isolated by namespaces and limited by cgroups.</p></li><li class="step"><span class="n">5</span><h3>Ship the same image anywhere</h3><p>Push the image to a registry and pull it on a laptop, in CI or on a server. It runs the same way in all of them.</p></li></ol>
@@ -75,9 +76,9 @@
 <!-- ===================== CONTENT =====================
      Everything on the site comes from this JSON. Edit it, then run `python build.py`.
      See README.md for what each field does. -->
-<script src="/assets/content.js?v=d9a7d3a405"></script>
+<script src="/assets/content.js?v=840485ec0b"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/motion@11.11.13/dist/motion.js"></script>
-<script src="/assets/site.js?v=663c40a1ca"></script>
+<script src="/assets/site.js?v=66a45238ee"></script>
 </body>
 </html>

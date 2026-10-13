@@ -25,7 +25,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@400;500;600;700&family=Funnel+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="/assets/site.css?v=f03c08d47a">
+<link rel="stylesheet" href="/assets/site.css?v=ee61ed1598">
 </head>
 <body>
 <a class="skip" href="#view">Skip to content</a>
@@ -44,7 +44,8 @@
         <h1>How database indexes work</h1>
         <p class="lede">A database index is a sorted structure, usually a B-tree, that lets a query jump to matching rows instead of reading the whole table.</p>
       </section>
-      <section class="build explainer" id="ex" data-slug="how-database-indexes-work" aria-label="How database indexes work, step by step">
+      
+      <section class="build explainer" id="ex" data-scene="btree" aria-label="How database indexes work, step by step">
         <div class="build-track" style="height:450vh">
           <div class="pin">
             <ol class="steps"><li class="step on"><span class="n">1</span><h3>Without an index, read everything</h3><p>To find one email in an unsorted table, the database has to check every row. That's fine for 12 rows and slow for millions.</p></li><li class="step"><span class="n">2</span><h3>An index is a sorted tree</h3><p>The index keeps the emails sorted in a tree. The root holds separator keys, and the leaves hold every key with a pointer to its row.</p></li><li class="step"><span class="n">3</span><h3>Search by following branches</h3><p>To find kai, compare with the root's keys and go down the one branch that can contain it. A few reads replace a full scan.</p></li><li class="step"><span class="n">4</span><h3>Ranges are cheap too</h3><p>Leaves are linked in order, so a range like kai to ned walks from leaf to leaf without going back to the root.</p></li><li class="step"><span class="n">5</span><h3>Writes pay the cost</h3><p>Every insert must also go into each index. When a leaf is full it splits and the parent gains a key. More indexes, slower writes.</p></li></ol>
@@ -75,9 +76,9 @@
 <!-- ===================== CONTENT =====================
      Everything on the site comes from this JSON. Edit it, then run `python build.py`.
      See README.md for what each field does. -->
-<script src="/assets/content.js?v=d9a7d3a405"></script>
+<script src="/assets/content.js?v=840485ec0b"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/motion@11.11.13/dist/motion.js"></script>
-<script src="/assets/site.js?v=663c40a1ca"></script>
+<script src="/assets/site.js?v=66a45238ee"></script>
 </body>
 </html>

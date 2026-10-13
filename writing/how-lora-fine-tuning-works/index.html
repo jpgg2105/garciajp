@@ -25,7 +25,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@400;500;600;700&family=Funnel+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="/assets/site.css?v=f03c08d47a">
+<link rel="stylesheet" href="/assets/site.css?v=ee61ed1598">
 </head>
 <body>
 <a class="skip" href="#view">Skip to content</a>
@@ -44,7 +44,8 @@
         <h1>How fine-tuning with LoRA works</h1>
         <p class="lede">Fine-tuning adapts a pretrained model to your task. LoRA does it by freezing the original weights and training two small matrices beside them.</p>
       </section>
-      <section class="build explainer" id="ex" data-slug="how-lora-fine-tuning-works" aria-label="How fine-tuning with LoRA works, step by step">
+      
+      <section class="build explainer" id="ex" data-scene="lora" aria-label="How fine-tuning with LoRA works, step by step">
         <div class="build-track" style="height:450vh">
           <div class="pin">
             <ol class="steps"><li class="step on"><span class="n">1</span><h3>Start from a pretrained model</h3><p>A language model is mostly large weight matrices. This one, W, has 4096 × 4096 entries, about 16.8 million numbers, and it already knows language.</p></li><li class="step"><span class="n">2</span><h3>Full fine-tuning changes everything</h3><p>Classic fine-tuning updates every weight. The optimizer also keeps extra state per weight, so memory and cost grow with the whole model.</p></li><li class="step"><span class="n">3</span><h3>Freeze W, add two thin matrices</h3><p>LoRA leaves W untouched and adds B (4096 × 8) and A (8 × 4096). Their product has W's shape but only 65,536 trainable numbers.</p></li><li class="step"><span class="n">4</span><h3>Train only A and B</h3><p>Gradients flow to A and B alone. The change B·A can only express a few directions, its rank, which is usually enough for a new task.</p></li><li class="step"><span class="n">5</span><h3>Merge or swap</h3><p>Add B·A into W for zero extra cost when serving, or keep adapters separate and swap them per task on one base model.</p></li></ol>
@@ -75,9 +76,9 @@
 <!-- ===================== CONTENT =====================
      Everything on the site comes from this JSON. Edit it, then run `python build.py`.
      See README.md for what each field does. -->
-<script src="/assets/content.js?v=d9a7d3a405"></script>
+<script src="/assets/content.js?v=840485ec0b"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/motion@11.11.13/dist/motion.js"></script>
-<script src="/assets/site.js?v=663c40a1ca"></script>
+<script src="/assets/site.js?v=66a45238ee"></script>
 </body>
 </html>

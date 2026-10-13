@@ -1659,6 +1659,366 @@ const SCENES = {
     note("a disposable sandbox: no secrets inside, limited network", 5.8, 6.3, C.accent);
     K.alpha(1);
   },
+  /* ---------- Project: research agent ---------- */
+  proj_research(K, S, time){
+    const C = K.C;
+    const vis = (a, b) => K.seg(S, a, a + .15) * (1 - K.seg(S, b - .12, b));
+    const note = (t, a, b, col) => { K.alpha(K.seg(S, a, a + .2) * (1 - K.seg(S, b - .1, b))); K.text(t, 60, 94, { size: 2.7, align: "center", color: col || C.muted, weight: 600 }); };
+    // 1. the question
+    const q = vis(0, 1.05);
+    if (q > 0){
+      K.alpha(q * K.seg(S, 0, .15)); K.rect(18, 13, 84, 11, 2.4, { fill: C.raised, stroke: C.accent, lw: .45 });
+      K.text("Does a multi-agent loop beat one LLM call?", 60, 18.5, { size: 2.9, align: "center", weight: 600 });
+      [[30, "single LLM call", "one prompt, one answer"], [90, "four-agent loop", "four roles, one loop"]].forEach(([x, t, sub], i) => {
+        const a = q * K.seg(S, .2 + i * .1, .35 + i * .1);
+        K.alpha(a); K.arrow(60, 24, x, 41.5, { color: C.strong, hs: 1 });
+        K.node(x, 48, 40, 12, t, { sub, size: 3 });
+        K.alpha(q * K.seg(S, .5 + i * .1, .62 + i * .1)); K.packet(x, 54, x, 66, K.seg(S, .45 + i * .1, .6 + i * .1));
+        K.rect(x - 14, 66, 28, 9, 2, { fill: C.surface, stroke: C.strong }); K.text(`answer ${"AB"[i]}`, x, 70.5, { size: 2.7, align: "center" });
+      });
+      K.alpha(q * K.seg(S, .7, .8)); K.text("vs", 60, 70.5, { size: 3, align: "center", color: C.muted, weight: 700 });
+    }
+    note("a demo can't tell you which one is better", .75, 1.05, C.accent);
+    // 2. inside the RAG service
+    const r = vis(1.02, 2.05);
+    if (r > 0){
+      const bm = [["d3", 34], ["d7", 41], ["d1", 48]], dn = [["d7", 56], ["d2", 63], ["d4", 70]];
+      K.alpha(r); K.node(10, 50, 14, 9, "query", { size: 2.8 });
+      K.alpha(r * K.seg(S, 1.08, 1.2)); K.line(17, 50, 22, 50, { color: C.strong }); K.line(22, 30, 22, 70, { color: C.strong });
+      K.node(36, 30, 26, 11, "BM25", { sub: "keyword match", size: 3 }); K.node(36, 70, 26, 11, "dense vectors", { sub: "semantic match", size: 2.8 });
+      K.line(22, 30, 23, 30, { color: C.strong }); K.line(22, 70, 23, 70, { color: C.strong });
+      K.alpha(r * K.seg(S, 1.25, 1.35)); K.text("candidates", 62, 26, { size: 2.3, align: "center", color: C.muted });
+      [...bm.map(c => [...c, C.accent, 30]), ...dn.map(c => [...c, C.ok, 70])].forEach(([id, y, col, fy], i) => {
+        const a = K.seg(S, 1.25 + i * .05, 1.35 + i * .05); if (a <= 0) return;
+        const yy = K.lerp(fy, y, K.io(a));
+        K.alpha(r * a); K.rect(56, yy - 2.6, 12, 5.2, 1.4, { fill: C.surface, stroke: col, lw: .4 }); K.text(id, 62, yy, { size: 2.4, mono: true, align: "center", color: col });
+      });
+      K.alpha(r * K.seg(S, 1.55, 1.65)); K.arrow(69, 52, 76, 52, { color: C.strong, hs: 1 }); K.node(88, 52, 22, 12, "cross-encoder", { sub: "reranks", size: 2.6 });
+      K.alpha(r * K.seg(S, 1.7, 1.8)); K.text("best 3", 112, 37, { size: 2.3, align: "center", color: C.muted });
+      ["d7", "d3", "d2"].forEach((id, i) => { const a = K.seg(S, 1.72 + i * .06, 1.82 + i * .06); K.alpha(r * a); K.rect(106, 41 + i * 7 - 2.6, 12, 5.2, 1.4, { fill: C.fill }); K.text(id, 112, 41 + i * 7, { size: 2.4, mono: true, align: "center", color: C.white }); });
+      K.alpha(r * K.seg(S, 1.72, 1.82)); K.arrow(99, 52, 105, 48, { color: C.strong, hs: .9 });
+    }
+    note("keyword and semantic matches, merged and reranked", 1.5, 2.05);
+    // 3. the agent loop
+    const L = vis(2.02, 3.05);
+    if (L > 0){
+      const nodes = [[16, "planner", "plans"], [44, "researcher", "finds evidence"], [72, "critic", "reviews"], [101, "synthesizer", "writes"]];
+      K.alpha(L); K.text("question", 4, 22, { size: 2.4, color: C.muted }); K.arrow(8, 25, 12, 34, { color: C.strong, hs: .9 });
+      nodes.forEach(([x, t, sub], i) => {
+        const a = K.seg(S, 2.05 + i * .06, 2.17 + i * .06), on = (S >= 2.3 + i * .13 && S < 2.43 + i * .13) || (i === 1 && S >= 2.62 && S < 2.72);
+        K.alpha(L * a); K.node(x, 40, i === 3 ? 26 : 24, 12, t, { sub, size: 2.8, stroke: on ? C.accent : C.strong, lw: on ? .55 : .35 });
+        if (i) K.arrow(nodes[i - 1][0] + 12.5, 40, x - (i === 3 ? 13.5 : 12.5), 40, { color: C.strong, hs: .9 });
+      });
+      K.alpha(L * K.seg(S, 2.3, 2.4)); K.line(44, 46, 44, 63, { color: C.line, dash: [.8, .8] }); K.node(44, 69, 32, 11, "RAG service", { sub: "used as a tool", size: 2.8 });
+      K.packet(44, 46, 44, 63.5, K.seg(S, 2.38, 2.46), { r: 1 }); K.packet(44, 63.5, 44, 46, K.seg(S, 2.46, 2.54), { r: 1, color: C.ok });
+      const fb = K.seg(S, 2.56, 2.62);
+      if (fb > 0){
+        K.alpha(L * fb); K.ctx.beginPath(); K.ctx.moveTo(72, 34); K.ctx.quadraticCurveTo(58, 22, 46, 33.5); K.ctx.strokeStyle = C.warn; K.ctx.lineWidth = .45; K.ctx.stroke();
+        K.arrow(47.5, 32, 45.5, 34, { color: C.warn, hs: 1.1 });
+        K.text("unsupported claim: research again", 58, 20, { size: 2.4, align: "center", color: C.warn, weight: 600, halo: true });
+      }
+      K.alpha(L * K.seg(S, 2.8, 2.9)); K.arrow(101, 46, 101, 63, { color: C.ok, hs: 1 });
+      K.rect(87, 63.5, 28, 10, 2, { fill: C.surface, stroke: C.ok }); K.text("final answer", 101, 68.5, { size: 2.7, align: "center", color: C.ok, weight: 600 });
+    }
+    note("the critic sends weak drafts back before anything is written", 2.7, 3.05);
+    // 4. the benchmark
+    const B = vis(3.02, 4.05);
+    if (B > 0){
+      const qs = ["q01", "q02", "q03", "q04", "q05", "q06"];
+      K.alpha(B); K.text("same questions", 4, 18, { size: 2.4, color: C.muted, weight: 600 });
+      qs.forEach((t, i) => { K.alpha(B * K.seg(S, 3.03 + i * .03, 3.1 + i * .03)); K.rect(4, 22 + i * 9, 16, 6.5, 1.4, { fill: C.surface, stroke: C.strong }); K.text(t, 12, 25.25 + i * 9, { size: 2.4, mono: true, align: "center" }); });
+      const ap = [[50, 32, "agent loop"], [50, 70, "single call"]];
+      ap.forEach(([x, y, t], i) => { K.alpha(B * K.seg(S, 3.15 + i * .05, 3.25 + i * .05)); K.node(x, y, 28, 10, t, { size: 2.9 }); K.line(20.5, 49, x - 14, y, { color: C.line }); K.line(x + 14, y, 75, 51, { color: C.line }); });
+      K.alpha(B * K.seg(S, 3.25, 3.35)); K.node(84, 51, 18, 10, "scorer", { size: 2.9, stroke: C.accent, lw: .45 });
+      for (let k = 0; k < 6; k++){
+        const t0 = 3.3 + k * .09, x = k % 2 ? ap[1] : ap[0];
+        K.alpha(B); K.packet(20.5, 25.25 + Math.floor(k / 2) * 9, x[0] - 14, x[1], K.seg(S, t0, t0 + .05), { r: .9 });
+        K.packet(x[0] + 14, x[1], 75, 51, K.seg(S, t0 + .05, t0 + .1), { r: .9, color: C.ok });
+      }
+      K.alpha(B * K.seg(S, 3.35, 3.45)); K.text("results.csv", 98, 27, { size: 2.3, mono: true, color: C.muted });
+      [["q01", "loop"], ["q01", "call"], ["q02", "loop"], ["q02", "call"], ["q03", "loop"], ["q03", "call"]].forEach(([qq, a], k) => {
+        const ra = K.seg(S, 3.42 + k * .09, 3.48 + k * .09); if (ra <= 0) return;
+        K.alpha(B * ra); K.line(93, 51, 96, 33 + k * 6, { color: C.line });
+        K.text(`${qq} ${a}`, 98, 33 + k * 6, { size: 2.3, mono: true }); K.check(116, 33 + k * 6, 1.8, C.ok);
+      });
+    }
+    note("both approaches, the same questions, scored the same way", 3.6, 4.05, C.accent);
+    // 5. anyone can rerun it
+    const R5 = vis(4.02, 5.2);
+    if (R5 > 0){
+      const st = [[14, "git push", ""], [42, "GitHub Actions", ""], [72, "pytest", "no API keys"], [102, "all tests pass", ""]];
+      st.forEach(([x, t, sub], i) => {
+        const a = K.seg(S, 4.05 + i * .12, 4.17 + i * .12), last = i === 3;
+        K.alpha(R5 * a); K.node(x, 36, last ? 28 : 26, 11, t, { sub: sub || undefined, size: 2.7, stroke: last ? C.ok : C.strong, color: last ? C.ok : C.ink, lw: last ? .5 : .35 });
+        if (i){ K.arrow(st[i - 1][0] + 13.5, 36, x - (last ? 14.5 : 13.5), 36, { color: C.strong, hs: .9 }); K.packet(st[i - 1][0] + 13.5, 36, x - 13.5, 36, K.seg(S, 4.05 + i * .12, 4.15 + i * .12), { r: .9 }); }
+      });
+      const ka = R5 * K.seg(S, 4.55, 4.7);
+      K.alpha(ka); K.rect(24, 54, 72, 12, 2.4, { fill: C.surface, stroke: C.strong });
+      K.text("API keys needed to run the tests", 60, 60, { size: 2.8, align: "center", color: C.muted });
+      K.alpha(ka * K.seg(S, 4.65, 4.75)); K.line(26, 60, 94, 60, { color: C.warn, lw: .5 });
+      K.alpha(ka * K.seg(S, 4.72, 4.82)); K.text("none: anyone can clone it and rerun the benchmark", 60, 74, { size: 2.7, align: "center", color: C.ok, weight: 600 });
+    }
+    K.alpha(1);
+  },
+
+  /* ---------- Project: schools dashboard ---------- */
+  proj_schools(K, S, time){
+    const C = K.C;
+    const vis = (a, b) => K.seg(S, a, a + .15) * (1 - K.seg(S, b - .12, b));
+    const note = (t, a, b, col) => { K.alpha(K.seg(S, a, a + .2) * (1 - K.seg(S, b - .1, b))); K.text(t, 60, 94, { size: 2.7, align: "center", color: col || C.muted, weight: 600 }); };
+    const person = (x, y, a, col) => { K.alpha(a); K.dot(x, y - 3, 2.2, { fill: col || C.ink }); K.ctx.beginPath(); K.ctx.arc(x, y + 4, 4, Math.PI, 0); K.ctx.fillStyle = col || C.ink; K.ctx.fill(); };
+    // 1. sign-in
+    const s1 = vis(0, 1.05);
+    if (s1 > 0){
+      person(14, 48, s1 * K.seg(S, 0, .15)); K.text("client staff", 14, 59, { size: 2.4, align: "center", color: C.muted });
+      K.alpha(s1 * K.seg(S, .15, .3)); K.arrow(21, 48, 33, 48, { color: C.strong, hs: 1 }); K.node(48, 48, 28, 12, "client's sign-in", { sub: "SSO", size: 2.8 });
+      K.alpha(s1 * K.seg(S, .35, .5)); K.arrow(62.5, 48, 74, 48, { color: C.strong, hs: 1 });
+      K.packet(62.5, 48, 74, 48, K.seg(S, .4, .55), { color: C.ok });
+      K.alpha(s1 * K.seg(S, .5, .62)); K.node(91, 48, 32, 12, "dashboard", { sub: "behind their sign-in", size: 3, stroke: C.accent, lw: .5 });
+      K.alpha(s1 * K.seg(S, .3, .45)); K.text("same accounts they already use", 48, 61, { size: 2.3, align: "center", color: C.muted });
+    }
+    note("one sign-in, through the client's own identity system", .65, 1.05, C.accent);
+    // 2. hundreds of schools, one API
+    const s2 = vis(1.02, 2.05);
+    if (s2 > 0){
+      const cols = 16, rows = 14, x0 = 5, y0 = 18, gap = 2.6;
+      for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++){
+        const k = r * cols + c, a = K.seg(S, 1.05 + (k / (rows * cols)) * .3, 1.15 + (k / (rows * cols)) * .3);
+        if (a <= 0) continue;
+        const pulse = .55 + .45 * Math.sin(time * 2 + k * .7);
+        K.alpha(s2 * a * pulse); K.dot(x0 + c * gap, y0 + r * gap * 1.55, .55, { fill: C.accent });
+      }
+      K.alpha(s2 * K.seg(S, 1.3, 1.45)); K.text("hundreds of schools", 24.5, 81, { size: 2.6, align: "center", color: C.muted, weight: 600 });
+      K.alpha(s2 * K.seg(S, 1.4, 1.55));
+      for (let i = 0; i < 6; i++){ const y = 22 + i * 10; K.line(45, y, 58, 50, { color: C.line }); K.packet(45, y, 58, 50, (time * .6 + i / 6) % 1, { r: .7 }); }
+      K.node(68, 50, 20, 11, "FastAPI", { sub: "one API", size: 3, stroke: C.accent, lw: .5 });
+      K.alpha(s2 * K.seg(S, 1.55, 1.7)); K.arrow(78.5, 50, 87, 50, { color: C.strong, hs: 1 }); K.node(102, 50, 28, 11, "dashboard", { size: 3 });
+    }
+    note("every school's data behind one API", 1.6, 2.05);
+    // 3. the dashboard
+    const s3 = vis(2.02, 3.05);
+    if (s3 > 0){
+      K.alpha(s3); K.rect(4, 10, 112, 78, 2.4, { fill: C.surface, stroke: C.strong });
+      K.text("Schools overview", 8, 15.5, { size: 2.9, weight: 700 });
+      ["all districts", "this term"].forEach((t, i) => { K.rect(70 + i * 23, 12.5, 21, 6, 3, { stroke: C.strong }); K.text(t, 80.5 + i * 23, 15.5, { size: 2.2, align: "center", color: C.muted }); });
+      const card = (x, y, w, h, t, a) => { K.alpha(s3 * a); K.rect(x, y, w, h, 2, { fill: C.raised, stroke: C.line }); K.text(t, x + 3, y + 4.5, { size: 2.5, color: C.muted, weight: 600 }); };
+      // attendance line
+      const a1 = K.seg(S, 2.1, 2.25); card(8, 22, 50, 30, "Attendance", a1);
+      const pts = [62, 66, 64, 70, 68, 73, 71, 76, 74, 78].map((v, i) => [12 + i * 4.7, 48 - (v - 55) * .7]);
+      const p1 = K.seg(S, 2.2, 2.5) * (pts.length - 1);
+      K.alpha(s3 * a1); K.ctx.beginPath(); pts.forEach(([x, y], i) => { if (i <= p1 + 1){ const t = K.clamp(p1 - i + 1); const px = i ? K.lerp(pts[i - 1][0], x, t) : x, py = i ? K.lerp(pts[i - 1][1], y, t) : y; i ? K.ctx.lineTo(px, py) : K.ctx.moveTo(px, py); } }); K.ctx.strokeStyle = C.accent; K.ctx.lineWidth = .6; K.ctx.stroke();
+      // performance bars
+      const a2 = K.seg(S, 2.2, 2.35); card(62, 22, 50, 30, "Performance", a2);
+      [.55, .72, .64, .8, .68].forEach((v, i) => { const h = 18 * v * K.ease(K.seg(S, 2.3 + i * .04, 2.5 + i * .04)); K.alpha(s3 * a2); K.rect(67 + i * 9, 49 - h, 6, h, .8, { fill: i === 3 ? C.accent : C.strong }); });
+      // risk list
+      const a3 = K.seg(S, 2.35, 2.5); card(8, 56, 104, 28, "Students at risk", a3);
+      ["School A", "School B", "School C"].forEach((t, i) => {
+        const ra = s3 * K.seg(S, 2.5 + i * .08, 2.6 + i * .08);
+        K.alpha(ra); K.dot(13, 66 + i * 6, 1, { fill: C.warn }); K.text(t, 16, 66 + i * 6, { size: 2.5 });
+        K.rect(84, 64.2 + i * 6, 24, 3.6, 1.8, { fill: C.raised, stroke: C.line }); K.rect(84, 64.2 + i * 6, 24 * [.7, .45, .3][i], 3.6, 1.8, { fill: C.warn });
+      });
+    }
+    note("attendance, performance and risk in one place", 2.7, 3.05, C.accent);
+    // 4. export
+    const s4 = vis(3.02, 4.05);
+    if (s4 > 0){
+      const press = K.seg(S, 3.2, 3.25) * (1 - K.seg(S, 3.3, 3.35));
+      K.alpha(s4); K.rect(10, 20, 36, 10, 2.4, { fill: press > 0 ? C.fill : C.raised, stroke: C.accent, lw: .5 });
+      K.text("Export to Excel", 28, 25, { size: 2.8, align: "center", weight: 600, color: press > 0 ? C.white : C.ink });
+      const sh = K.ease(K.seg(S, 3.35, 3.7));
+      if (sh > 0){
+        const x0 = 54, y0 = K.lerp(30, 18, sh), cw = [24, 14, 14, 12], heads = ["school", "attend.", "perf.", "risk"];
+        K.alpha(s4 * sh); K.rect(x0, y0, 62, 62, 2, { fill: C.surface, stroke: C.ok, lw: .45 });
+        K.text("report.xlsx", x0 + 3, y0 + 4, { size: 2.3, mono: true, color: C.ok });
+        let cx = x0 + 2;
+        cw.forEach((w, c) => { K.text(heads[c], cx + 1, y0 + 10, { size: 2.2, color: C.muted, weight: 600 }); cx += w; });
+        for (let r = 0; r < 7; r++){
+          const ra = K.seg(S, 3.45 + r * .05, 3.52 + r * .05); if (ra <= 0) continue;
+          const y = y0 + 16 + r * 6.2; K.alpha(s4 * sh * ra); K.line(x0 + 2, y - 3.1, x0 + 60, y - 3.1, { color: C.line, lw: .2 });
+          let xx = x0 + 3;
+          cw.forEach((w, c) => { K.rect(xx, y - 1, c ? w * .55 : w * .8, 1.6, .8, { fill: c === 3 && r % 3 === 1 ? C.warn : C.strong }); xx += w; });
+        }
+      }
+      K.alpha(s4 * K.seg(S, 3.3, 3.4)); K.arrow(46.5, 25, 53, 25, { color: C.ok, hs: 1 });
+    }
+    note("the same numbers, ready for a spreadsheet", 3.6, 4.05);
+    // 5. shipping
+    const s5 = vis(4.02, 5.2);
+    if (s5 > 0){
+      K.alpha(s5); K.node(14, 50, 20, 11, "GitLab", { sub: "pipeline", size: 3 });
+      [["dev", 30, 4.15], ["prod", 70, 4.5]].forEach(([env, y, t0]) => {
+        const a = s5 * K.seg(S, t0 - .05, t0 + .05);
+        K.alpha(a); K.ctx.setLineDash([1, .7]); K.rect(32, y - 15, 84, 30, 2.4, { stroke: env === "prod" ? C.accent : C.strong, lw: .45 }); K.ctx.setLineDash([]);
+        K.text(`${env} server`, 35, y - 11, { size: 2.4, color: env === "prod" ? C.accent : C.muted, weight: 600 });
+        [["nginx", 48], ["gunicorn", 74], ["FastAPI", 100]].forEach(([t, x], i) => { K.node(x, y + 1, 20, 9, t, { size: 2.7 }); if (i) K.arrow(x - 16, y + 1, x - 10.5, y + 1, { color: C.strong, hs: .8 }); });
+        K.text("kept running by systemd", 74, y + 10.5, { size: 2.2, align: "center", color: C.muted });
+        K.alpha(s5); K.line(24.5, 50, 31.5, y, { color: C.line }); K.packet(24.5, 50, 31.5, y, K.seg(S, t0 - .1, t0), { r: 1 });
+      });
+    }
+    note("tested in dev, then shipped to prod", 4.6, 5.2, C.accent);
+    K.alpha(1);
+  },
+
+  /* ---------- Project: chatbots and outreach ---------- */
+  proj_bots(K, S, time){
+    const C = K.C;
+    const vis = (a, b) => K.seg(S, a, a + .15) * (1 - K.seg(S, b - .12, b));
+    const note = (t, a, b, col) => { K.alpha(K.seg(S, a, a + .2) * (1 - K.seg(S, b - .1, b))); K.text(t, 60, 94, { size: 2.7, align: "center", color: col || C.muted, weight: 600 }); };
+    const doc = (x, y, a) => { K.alpha(a); K.rect(x, y, 10, 13, 1.2, { fill: C.surface, stroke: C.strong }); for (let i = 0; i < 4; i++) K.rect(x + 2, y + 3 + i * 2.4, i === 3 ? 4 : 6, .8, .4, { fill: C.strong }); };
+    const pine = (a, hl) => {
+      K.alpha(a); K.rect(76, 26, 40, 46, 2.4, { stroke: C.strong }); K.text("Pinecone", 79, 30.5, { size: 2.5, color: C.muted, weight: 600 });
+      for (let i = 0; i < 22; i++){ const x = 82 + ((i * 37) % 29), y = 38 + ((i * 53) % 29); K.alpha(a * (hl && [3, 9, 14].includes(i) ? 1 : .65)); K.dot(x, y, hl && [3, 9, 14].includes(i) ? 1.3 : .8, { fill: hl && [3, 9, 14].includes(i) ? C.accent : C.strong }); }
+    };
+    // 1. content becomes searchable
+    const s1 = vis(0, 1.05);
+    if (s1 > 0){
+      [["FAQ", 8, 28], ["catalog", 8, 46], ["policies", 8, 64]].forEach(([t, x, y], i) => { doc(x, y, s1 * K.seg(S, i * .06, .12 + i * .06)); K.text(t, x + 13, y + 6.5, { size: 2.5 }); });
+      K.alpha(s1 * K.seg(S, .2, .3)); K.text("split into chunks", 48, 40, { size: 2.4, align: "center", color: C.muted });
+      for (let i = 0; i < 9; i++){ const t = K.seg(S, .3 + i * .03, .5 + i * .03); K.alpha(s1 * (t > 0 && t < 1 ? 1 : 0)); K.rect(K.lerp(24, 70, K.io(t)) - 2, K.lerp(32 + (i % 3) * 18, 44 + (i % 3) * 4, K.io(t)) - 1.2, 4, 2.4, .6, { fill: C.accent }); }
+      pine(s1 * K.seg(S, .25, .4), false);
+    }
+    note("the client's own content, indexed as vectors", .6, 1.05, C.accent);
+    // 2. the chatbot answers from it
+    const s2 = vis(1.02, 2.05);
+    if (s2 > 0){
+      pine(s2, S >= 1.35);
+      const bub = (t, x, y, w, a, me, col) => { K.alpha(s2 * a); K.rect(x, y - 3.5, w, 7, 3.5, { fill: me ? C.raised : C.surface, stroke: col || C.strong }); K.text(t, x + 3, y, { size: 2.5, color: col || C.ink }); };
+      bub("Do you deliver on Sundays?", 4, 24, 47, K.seg(S, 1.05, 1.15), true);
+      K.alpha(s2 * K.seg(S, 1.15, 1.25)); K.node(34, 46, 22, 11, "chatbot", { sub: "Gemini", size: 3, stroke: C.accent, lw: .5 });
+      K.packet(45, 46, 76, 46, K.seg(S, 1.25, 1.35), { r: 1 }); K.packet(76, 50, 45, 50, K.seg(S, 1.4, 1.5), { r: 1, color: C.ok });
+      bub("Yes, 9 am to 1 pm. (from your FAQ)", 4, 70, 56, K.seg(S, 1.55, 1.65), false, C.ok);
+      K.alpha(s2 * K.seg(S, 1.7, 1.8)); K.text("PHP or Python, matching the client's stack", 34, 82, { size: 2.3, align: "center", color: C.muted });
+    }
+    note("answers come from the documents, not from memory", 1.75, 2.05);
+    // 3-5. the outreach workflow
+    const wf = vis(2.02, 5.2);
+    if (wf > 0){
+      const nodes = [["scrape", 14], ["Airtable", 38], ["OpenAI", 62], ["WhatsApp", 86]];
+      const act = S < 3 ? 0 : S < 4 ? 1.5 : 3;
+      K.alpha(wf); K.text("n8n workflow", 4, 12, { size: 2.4, color: C.muted, weight: 600 });
+      K.packet(20, 20, 102, 20, (time * .25) % 1, { r: .8 });
+      nodes.forEach(([t, x], i) => {
+        const on = Math.abs(i - act) < .6 || (act === 1.5 && (i === 1 || i === 2));
+        K.alpha(wf * K.seg(S, 2.05 + i * .05, 2.15 + i * .05)); K.node(x + 6, 20, 20, 9, t, { size: 2.7, stroke: on ? C.accent : C.strong, lw: on ? .55 : .35 });
+        if (i) K.arrow(nodes[i - 1][1] + 16, 20, x - 4, 20, { color: C.strong, hs: .9 });
+      });
+      const leads = [["Bakery on Main St", "new"], ["City Gym", "new"], ["Corner Café", "new"], ["Dental Studio", "new"]];
+      // step 3: leads found
+      const l3 = K.seg(S, 2.2, 2.3) * (1 - K.seg(S, 2.95, 3.05));
+      if (l3 > 0){
+        K.alpha(wf * l3); K.text("lead scraping", 6, 34, { size: 2.4, color: C.muted });
+        leads.forEach(([n], i) => { const a = K.seg(S, 2.3 + i * .1, 2.4 + i * .1); K.alpha(wf * l3 * a); K.rect(6, 38 + i * 9, 48, 7, 1.6, { fill: C.surface, stroke: C.strong }); K.text(n, 9, 41.5 + i * 9, { size: 2.5 }); K.arrow(56, 41.5 + i * 9, 64, 41.5 + i * 9, { color: C.accent, hs: .8 }); });
+        K.alpha(wf * l3 * K.seg(S, 2.6, 2.7)); K.text("found and collected", 68, 55, { size: 2.6, color: C.accent, weight: 600 });
+      }
+      // steps 4 and 5: the Airtable table
+      const tb = K.seg(S, 3.02, 3.15);
+      if (tb > 0){
+        const sent = i => K.seg(S, 4.3 + i * .12, 4.36 + i * .12);
+        K.alpha(wf * tb); K.rect(4, 30, 56, 46, 2, { fill: C.surface, stroke: C.strong });
+        K.text("lead", 7, 35, { size: 2.3, color: C.muted, weight: 600 }); K.text("status", 44, 35, { size: 2.3, color: C.muted, weight: 600 });
+        leads.forEach(([n], i) => {
+          const y = 42 + i * 8.5, s = sent(i), dr = K.seg(S, 3.3 + i * .1, 3.4 + i * .1);
+          K.alpha(wf * tb); K.line(5, y - 4.2, 59, y - 4.2, { color: C.line, lw: .2 }); K.text(n, 7, y, { size: 2.4 });
+          const st = s > 0 ? "sent" : dr > 0 ? "drafted" : "new";
+          K.text(st, 44, y, { size: 2.3, mono: true, color: st === "sent" ? C.ok : st === "drafted" ? C.accent : C.muted });
+        });
+        // drafting
+        const dA = K.seg(S, 3.25, 3.35) * (1 - K.seg(S, 3.95, 4.05));
+        if (dA > 0){
+          K.alpha(wf * dA); K.rect(64, 34, 52, 34, 2, { fill: C.raised, stroke: C.accent, lw: .45 });
+          K.text("draft for City Gym", 67, 39, { size: 2.3, color: C.accent, weight: 600 });
+          K.typed(["Hi! I saw City Gym's page", "and thought you might like", "a quick way to answer", "members on WhatsApp..."], K.seg(S, 3.35, 3.85), 67, 45, 4.6, { size: 2.4 });
+        }
+        // phone
+        const ph = K.seg(S, 4.02, 4.15);
+        if (ph > 0){
+          K.alpha(wf * ph); K.rect(78, 30, 30, 56, 4, { fill: C.surface, stroke: C.strong }); K.rect(88, 32.5, 10, 1.4, .7, { fill: C.strong });
+          K.text("WhatsApp", 93, 37.5, { size: 2.3, align: "center", color: C.muted });
+          leads.forEach(([n], i) => { const s = sent(i); if (s <= 0) return; K.alpha(wf * s); K.rect(81, 42 + i * 10, 24, 7.5, 2.2, { fill: C.fill }); K.text(n.split(" ")[0] + "…", 83, 45.75 + i * 10, { size: 2.3, color: C.white }); });
+          K.alpha(wf); leads.forEach((l, i) => K.packet(60, 42 + i * 8.5, 80, 45.75 + i * 10, K.seg(S, 4.2 + i * .12, 4.3 + i * .12), { r: .9, color: C.ok }));
+        }
+      }
+    }
+    note("leads collected automatically, no copying by hand", 2.6, 3.05);
+    note("stored in Airtable, each message drafted by the OpenAI API", 3.5, 4.05);
+    note("sent on WhatsApp, and the table keeps track", 4.75, 5.2, C.accent);
+    K.alpha(1);
+  },
+
+  /* ---------- Services ---------- */
+  services(K, S, time){
+    const C = K.C;
+    const vis = (a, b) => K.seg(S, a, a + .15) * (1 - K.seg(S, b - .12, b));
+    const note = (t, a, b, col) => { K.alpha(K.seg(S, a, a + .2) * (1 - K.seg(S, b - .1, b))); K.text(t, 60, 94, { size: 2.7, align: "center", color: col || C.muted, weight: 600 }); };
+    // 1. add AI to your product
+    const s1 = vis(0, 1.05);
+    if (s1 > 0){
+      ["handbook.pdf", "pricing.xlsx", "tickets"].forEach((t, i) => { K.alpha(s1 * K.seg(S, i * .05, .12 + i * .05)); K.rect(4, 20 + i * 10, 26, 7, 1.6, { fill: C.surface, stroke: C.strong }); K.text(t, 7, 23.5 + i * 10, { size: 2.4, mono: true }); });
+      K.alpha(s1 * K.seg(S, .12, .22)); K.text("your documents", 4, 15.5, { size: 2.4, color: C.muted, weight: 600 });
+      K.arrow(31, 33.5, 39, 33.5, { color: C.strong, hs: 1 }); K.node(50, 33.5, 20, 11, "retrieval", { sub: "tuned", size: 2.9 });
+      K.alpha(s1 * K.seg(S, .25, .35)); K.arrow(60.5, 33.5, 66, 33.5, { color: C.strong, hs: 1 });
+      K.rect(66, 18, 50, 31, 2.4, { fill: C.raised, stroke: C.accent, lw: .45 }); K.text("assistant", 69, 22.5, { size: 2.3, color: C.accent, weight: 600 });
+      K.typed(["Refunds take 5 business", "days on annual plans [1].", "Contact billing for", "exceptions [2]."], K.seg(S, .3, .55), 69, 28, 4.6, { size: 2.5 });
+      // evaluation set
+      const ev = s1 * K.seg(S, .55, .65);
+      K.alpha(ev); K.text("evaluation set", 4, 60, { size: 2.4, color: C.muted, weight: 600 });
+      for (let i = 0; i < 20; i++){
+        const a = K.seg(S, .6 + i * .015, .65 + i * .015), ok = ![6, 13].includes(i), x = 6 + (i % 10) * 7, y = 67 + Math.floor(i / 10) * 8;
+        K.alpha(ev * a); K.rect(x - 2.6, y - 2.6, 5.2, 5.2, 1, { fill: C.surface, stroke: ok ? C.ok : C.warn, lw: .35 });
+        if (ok) K.check(x, y, 1.6, C.ok); else { K.line(x - 1, y - 1, x + 1, y + 1, { color: C.warn, lw: .45 }); K.line(x + 1, y - 1, x - 1, y + 1, { color: C.warn, lw: .45 }); }
+      }
+      K.alpha(ev * K.seg(S, .9, .95)); K.text("18 / 20", 98, 71, { size: 4, align: "center", weight: 700, color: C.accent, mono: true }); K.text("measured, not guessed", 98, 77.5, { size: 2.3, align: "center", color: C.muted });
+    }
+    note("answers that cite your documents, checked against an evaluation set", .7, 1.05);
+    // 2. build the whole product
+    const s2 = vis(1.02, 2.05);
+    if (s2 > 0){
+      const layers = [["Database", C.strong], ["API", C.strong], ["Auth and roles", C.strong], ["React interface", C.fill], ["Deploy and monitoring", C.accent]];
+      layers.forEach(([t, col], i) => {
+        const a = K.ease(K.seg(S, 1.08 + i * .1, 1.22 + i * .1)); if (a <= 0) return;
+        const y = K.lerp(10, 78 - i * 13, a);
+        K.alpha(s2 * a); K.rect(6, y - 5, 52, 10, 2, { fill: i === 4 ? C.surface : col, stroke: i === 4 ? C.accent : col, lw: .45 });
+        K.text(t, 32, y, { size: 2.8, align: "center", weight: 600, color: i === 4 ? C.accent : C.white });
+      });
+      const pv = s2 * K.seg(S, 1.6, 1.75);
+      K.alpha(pv); K.rect(66, 22, 50, 50, 2.4, { fill: C.surface, stroke: C.strong });
+      [0, 1, 2].forEach(i => K.dot(70 + i * 3, 25.5, .8, { fill: C.strong }));
+      K.rect(70, 31, 20, 3, 1, { fill: C.strong }); K.rect(70, 38, 42, 12, 1.6, { fill: C.raised });
+      [0, 1, 2].forEach(i => K.rect(70 + i * 14.5, 54, 13, 13, 1.6, { fill: C.raised }));
+      K.rect(98, 30, 14, 5, 2.5, { fill: C.fill });
+      K.alpha(pv * K.seg(S, 1.75, 1.85)); K.text("one person owns all of it", 91, 80, { size: 2.6, align: "center", color: C.accent, weight: 600 });
+    }
+    note("from the database to the deploy, plus the handover", 1.7, 2.05);
+    // 3. automate a workflow
+    const s3 = vis(2.02, 3.05);
+    if (s3 > 0){
+      const ch = [["new lead", 14], ["enrich", 38], ["LLM step", 62], ["CRM + report", 90]];
+      K.alpha(s3); K.text("every morning, by itself", 6, 24, { size: 2.5, color: C.accent, weight: 600 });
+      for (let k = 0; k < 4; k++){ K.alpha(s3); K.packet(14, 40, 90, 40, ((time * .35) + k / 4) % 1, { r: .9 }); }
+      ch.forEach(([t, x], i) => { K.alpha(s3 * K.seg(S, 2.05 + i * .06, 2.15 + i * .06)); K.node(x, 40, i === 3 ? 28 : 20, 10, t, { size: 2.7 }); if (i) K.arrow(ch[i - 1][1] + 10.5, 40, x - (i === 3 ? 14.5 : 10.5), 40, { color: C.strong, hs: .9 }); });
+      const runs = Math.floor(K.seg(S, 2.3, 2.9) * 30);
+      K.alpha(s3 * K.seg(S, 2.3, 2.4));
+      K.text(`${runs}`, 60, 62, { size: 7, align: "center", weight: 700, mono: true, color: C.accent });
+      K.text("runs this month, no copy and paste", 60, 70, { size: 2.6, align: "center", color: C.muted });
+    }
+    note("the tools you already use, connected", 2.6, 3.05);
+    // 4. how a project runs
+    const s4 = vis(3.02, 4.2);
+    if (s4 > 0){
+      const stops = [["intro call", "15 min", 14], ["written plan", "scope and price", 40], ["weekly demos", "working software", 68], ["handover", "deployed, documented", 100]];
+      const prog = K.seg(S, 3.15, 3.85);
+      K.alpha(s4); K.line(14, 44, 100, 44, { color: C.strong, lw: .5 });
+      K.alpha(s4); K.line(14, 44, K.lerp(14, 100, prog), 44, { color: C.accent, lw: .7 });
+      stops.forEach(([t, sub, x], i) => {
+        const reached = prog >= (x - 14) / 86 - .001, a = s4 * K.seg(S, 3.05 + i * .05, 3.15 + i * .05);
+        K.alpha(a); K.dot(x, 44, 2.2, { fill: reached ? C.accent : C.surface, stroke: reached ? C.accent : C.strong, lw: .4 });
+        K.text(t, x, 36, { size: 2.7, align: "center", weight: 600 }); K.text(sub, x, 52, { size: 2.3, align: "center", color: C.muted });
+      });
+      ["w1", "w2", "w3", "w4"].forEach((w, i) => { const a = K.seg(S, 3.5 + i * .07, 3.56 + i * .07); K.alpha(s4 * a); K.rect(52 + i * 8.5, 58, 7, 5.5, 1.2, { fill: C.surface, stroke: C.ok }); K.text(w, 55.5 + i * 8.5, 60.75, { size: 2.1, mono: true, align: "center", color: C.ok }); });
+      K.alpha(s4 * K.seg(S, 3.85, 3.95)); K.text("you see progress every week, not only at the end", 60, 78, { size: 2.7, align: "center", color: C.accent, weight: 600 });
+    }
+    K.alpha(1);
+  },
 };
 
 /* stage controller */
@@ -1676,8 +2036,8 @@ function exDraw(canvas, scene, S, time, C){
 function initExplainer(){
   if (exCleanup){ exCleanup(); exCleanup = null; }
   const host = $("#ex"); if (!host) return;
-  const post = SITE.posts.find(p => p.slug === host.dataset.slug); if (!post || !SCENES[post.scene]) return;
-  const N = post.steps.length, scene = post.scene;
+  const scene = host.dataset.scene; if (!SCENES[scene]) return;
+  const N = host.querySelectorAll(".steps .step").length;
   let C = exColors(), lastC = 0;
   if (reduce){
     host.classList.add("static");
@@ -1729,6 +2089,20 @@ const projRow = (p, i = 0) => `
 const tagHTML = k => `<span class="tag ${k}">${esc(SITE.labels[k].replace(/s$/,""))}</span>`;
 const sorted = () => [...SITE.posts].sort((a,b) => b.date.localeCompare(a.date));
 const postHTML = p => `<a class="post" href="${url(`/writing/${p.slug}/`)}"><span class="d num">${p.kind === "explainer" ? `${p.steps.length} steps` : fmt(p.date)}</span><h3>${esc(p.title)}</h3>${tagHTML(p.kind)}<p>${esc(p.excerpt)}</p></a>`;
+const exStage = (scene, title, steps) => `
+      <section class="build explainer" id="ex" data-scene="${esc(scene)}" aria-label="${esc(title)}, step by step">
+        <div class="build-track" style="height:${steps.length * 90}vh">
+          <div class="pin">
+            <ol class="steps">${steps.map(([t, d], i) => `<li class="step${i ? "" : " on"}"><span class="n">${i + 1}</span><h3>${esc(t)}</h3><p>${esc(d)}</p></li>`).join("")}</ol>
+            <div class="screen" aria-hidden="true">
+              <div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="file">${esc(title)}</span><span class="sample">Illustration</span></div>
+              <canvas></canvas>
+            </div>
+            <div class="ex-stills">${steps.map(([t, d]) => `<div class="ex-still"><h3>${esc(t)}</h3><p>${esc(d)}</p><canvas aria-hidden="true"></canvas></div>`).join("")}</div>
+            <div class="progress"><i></i></div>
+          </div>
+        </div>
+      </section>`;
 const explainerHTML = p => {
   const n = p.steps.length;
   return `
@@ -1739,19 +2113,7 @@ const explainerHTML = p => {
         <h1>${esc(p.title)}</h1>
         <p class="lede">${esc(p.intro)}</p>
       </section>
-      <section class="build explainer" id="ex" data-slug="${esc(p.slug)}" aria-label="${esc(p.title)}, step by step">
-        <div class="build-track" style="height:${n * 90}vh">
-          <div class="pin">
-            <ol class="steps">${p.steps.map(([t, d], i) => `<li class="step${i ? "" : " on"}"><span class="n">${i + 1}</span><h3>${esc(t)}</h3><p>${esc(d)}</p></li>`).join("")}</ol>
-            <div class="screen" aria-hidden="true">
-              <div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="file">${esc(p.title)}</span><span class="sample">Illustration</span></div>
-              <canvas></canvas>
-            </div>
-            <div class="ex-stills">${p.steps.map(([t, d]) => `<div class="ex-still"><h3>${esc(t)}</h3><p>${esc(d)}</p><canvas aria-hidden="true"></canvas></div>`).join("")}</div>
-            <div class="progress"><i></i></div>
-          </div>
-        </div>
-      </section>
+      ${exStage(p.scene, p.title, p.steps)}
       <section class="cv">
         <h2>In short</h2><div><ul class="plain">${p.takeaways.map(t => `<li>${esc(t)}</li>`).join("")}</ul></div>
         ${p.source ? `<h2>Source</h2><div><p class="src">${esc(p.source.text)} <a href="${esc(p.source.url)}" target="_blank" rel="noopener">${esc(p.source.link)}</a></p></div>` : ""}
@@ -1812,6 +2174,7 @@ const V = {
         <div class="facts"><span><b>${esc(p.client)}</b></span><span>${esc(p.role)}</span><span class="num">${esc(p.when)}</span>${!p.code && p.codeNote ? `<span>${esc(p.codeNote)}</span>` : ""}</div>
         ${links ? `<div class="row">${links}</div>` : ""}
       </section>
+      ${p.tour ? `<div class="tour-head"><h2>See it work</h2><span>${p.tour.steps.length} steps · scroll to play</span></div>${exStage(p.tour.scene, p.title, p.tour.steps)}` : ""}
       <section class="cv">
         <h2>Problem</h2><div><p class="lede">${esc(p.problem)}</p></div>
         <h2>Solution</h2><div><p style="max-width:62ch">${esc(p.solution)}</p></div>
@@ -1832,6 +2195,10 @@ const V = {
       <section>
         <div class="sh"><h1 class="title">Services</h1><p>Every project starts with a free 15-minute call. You get a written plan and a price before any work begins.</p></div>
         <div style="margin:0 0 40px">${schedule()}</div>
+      </section>
+      <div class="tour-head"><h2>What each service looks like</h2><span>${SITE.servicesTour.length} steps · scroll to play</span></div>
+      ${exStage("services", "How I work", SITE.servicesTour)}
+      <section>
         <div class="offers">${SITE.offers.map((o, i) => `<div class="offer"><div><h3 class="shift" style="--i:${i}">${esc(o.name)}</h3><p>${esc(o.text)}</p><ul>${o.items.map(i => `<li>${esc(i)}</li>`).join("")}</ul></div><div class="terms"><span>Scope and price agreed after a first call</span><a class="btn line" href="${url("/book/")}" data-meet="${o.meeting}">Talk about this <span class="arr">${ICONS.arrow}</span></a></div></div>`).join("")}</div>
       </section>
       <section>

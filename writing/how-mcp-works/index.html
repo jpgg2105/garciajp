@@ -25,7 +25,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@400;500;600;700&family=Funnel+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="/assets/site.css?v=f03c08d47a">
+<link rel="stylesheet" href="/assets/site.css?v=ee61ed1598">
 </head>
 <body>
 <a class="skip" href="#view">Skip to content</a>
@@ -44,7 +44,8 @@
         <h1>How MCP connects AI apps to tools</h1>
         <p class="lede">The Model Context Protocol (MCP) is an open standard for connecting AI applications to tools and data. Write a server once and any MCP app can use it.</p>
       </section>
-      <section class="build explainer" id="ex" data-slug="how-mcp-works" aria-label="How MCP connects AI apps to tools, step by step">
+      
+      <section class="build explainer" id="ex" data-scene="mcp" aria-label="How MCP connects AI apps to tools, step by step">
         <div class="build-track" style="height:450vh">
           <div class="pin">
             <ol class="steps"><li class="step on"><span class="n">1</span><h3>Without a standard</h3><p>Every AI app needs its own integration with every tool. Three apps and four tools means twelve pieces of custom code.</p></li><li class="step"><span class="n">2</span><h3>One protocol in the middle</h3><p>With MCP, each app includes an MCP client and each tool sits behind an MCP server. Each side implements the protocol once.</p></li><li class="step"><span class="n">3</span><h3>Discover what's available</h3><p>The client connects and the two sides exchange capabilities. Then it asks the server which tools it offers, each with a name and an input schema.</p></li><li class="step"><span class="n">4</span><h3>Call a tool</h3><p>The model picks a tool and the app, often after asking the user, sends a tools/call request. The server runs it and returns the result.</p></li><li class="step"><span class="n">5</span><h3>Same server, any app</h3><p>The GitHub server written once now works in a chat app, an IDE and an agent, with no extra integration work.</p></li></ol>
@@ -75,9 +76,9 @@
 <!-- ===================== CONTENT =====================
      Everything on the site comes from this JSON. Edit it, then run `python build.py`.
      See README.md for what each field does. -->
-<script src="/assets/content.js?v=d9a7d3a405"></script>
+<script src="/assets/content.js?v=840485ec0b"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/motion@11.11.13/dist/motion.js"></script>
-<script src="/assets/site.js?v=663c40a1ca"></script>
+<script src="/assets/site.js?v=66a45238ee"></script>
 </body>
 </html>
