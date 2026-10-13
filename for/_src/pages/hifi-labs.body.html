@@ -1,0 +1,41 @@
+<section class="block"><div class="wrap">
+<h2>Launch simulator</h2>
+<p class="intro">A simple model of the first ten minutes. Fans arrive front loaded, 40 percent in the first minute, and each one makes one write. Move the slider and switch between sending everyone straight to Firestore and using the waiting room.</p>
+<div class="panel">
+<div class="wbar"><div class="seg" role="group" aria-label="Setup"><button type="button" id="h-direct" data-h="direct" aria-pressed="true">Straight to Firestore</button><button type="button" id="h-room" data-h="room" aria-pressed="false">With the waiting room</button></div><span class="example">A model, not a measurement</span></div>
+<div class="grid2">
+<div>
+<div class="range"><label for="h-fans">Fans in the first 10 minutes</label><output id="h-fans-out" for="h-fans" class="num"></output><input id="h-fans" type="range" min="20000" max="1000000" step="10000" value="250000"></div>
+<div class="stats" id="h-stats" style="margin-top:18px"></div>
+<p class="summary" id="h-sum"></p>
+</div>
+<div style="min-width:0">
+<svg id="h-chart" viewBox="0 0 520 280" role="img" aria-label="Chart of fans arriving per second and fans admitted per second over time" style="width:100%;height:auto;display:block"></svg>
+<p class="note" style="margin-top:8px;font-size:14px"><span style="color:var(--muted)">Grey</span> is fans arriving per second. <span style="color:var(--accent)">Teal</span> is writes reaching Firestore. The dashed line is the 500 per second starting rate.</p>
+</div>
+</div>
+</div>
+</div></section>
+
+<section class="block"><div class="wrap">
+<div class="cols">
+<div>
+<h3 class="sub">How I would build it</h3>
+<ul class="steps-list">
+<li>A Cloudflare Worker waiting room with signed, short lived tokens, deployed where you already deploy.</li>
+<li>A load test the week before that replays the first ten minutes at full size against a staging project, with k6.</li>
+<li>One document per fan and a count query rolled into a single total, instead of a shared counter.</li>
+<li>Cloud Tasks for anything slow or third party, with retries and idempotency keys so a retry never double claims.</li>
+</ul>
+</div>
+<div>
+<h3 class="sub">What I would check first</h3>
+<ul class="steps-list">
+<li>What broke on the last big activation, if anything, and where the time went.</li>
+<li>Which actions have to feel instant for the fan and which can finish a few seconds later.</li>
+<li>Whether drops have a fixed supply, which changes how the line should be ordered.</li>
+</ul>
+<p class="note" style="margin-top:18px">I have shipped more on Postgres and FastAPI than on Firebase, so the limits on this page come from Google's published guidance, not from a launch I ran.</p>
+</div>
+</div>
+</div></section>

@@ -1,0 +1,46 @@
+<section class="block"><div class="wrap">
+<h2>Try one SKU</h2>
+<p class="intro">Merino crew socks, black, size M, sold on Amazon and Shopify, packed in cases of 12. Change the inputs and watch the number, the reason and the check update together.</p>
+<div class="panel">
+<div class="wbar"><span class="label">Example SKU</span><span class="example">Made up numbers</span></div>
+<div class="grid2">
+<div style="display:flex;flex-direction:column;gap:14px">
+<div class="range"><label for="f-v">Units sold per day</label><output id="f-v-out" for="f-v" class="num"></output><input id="f-v" type="range" min="2" max="80" value="24"></div>
+<div class="range"><label for="f-l">Supplier lead time, days</label><output id="f-l-out" for="f-l" class="num"></output><input id="f-l" type="range" min="3" max="60" value="21"></div>
+<div class="range"><label for="f-s">Safety days</label><output id="f-s-out" for="f-s" class="num"></output><input id="f-s" type="range" min="0" max="30" value="7"></div>
+<div class="range"><label for="f-c">Days of cover after it arrives</label><output id="f-c-out" for="f-c" class="num"></output><input id="f-c" type="range" min="7" max="90" value="30"></div>
+<div class="range"><label for="f-o">On hand, all locations</label><output id="f-o-out" for="f-o" class="num"></output><input id="f-o" type="range" min="0" max="3000" step="10" value="340"></div>
+<div class="range"><label for="f-i">Inbound on open POs</label><output id="f-i-out" for="f-i" class="num"></output><input id="f-i" type="range" min="0" max="2000" step="10" value="300"></div>
+<label style="display:flex;gap:10px;align-items:flex-start;font-size:15px;cursor:pointer"><input id="f-promo" type="checkbox" checked style="margin-top:4px;accent-color:var(--accent-fill);width:18px;height:18px"> <span>Amazon ran a promo last week, so 7 of the last 28 days sold at three times the usual rate</span></label>
+</div>
+<div style="display:flex;flex-direction:column;gap:16px;min-width:0">
+<div class="stats" id="f-stats"></div>
+<div><p class="label" style="margin-bottom:8px">What the buyer reads</p><p class="out-text" id="f-reason"></p></div>
+<div><p class="label" style="margin-bottom:8px">Draft to the supplier</p><p class="out-text" id="f-note"></p></div>
+<div><div class="wbar"><p class="label">Number check</p><button type="button" class="btn line" id="f-bad" style="min-height:36px;font-size:14px;padding:0 12px">Show a bad draft</button></div><div id="f-check" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px"></div><p class="summary" id="f-check-sum" style="font-size:15px"></p></div>
+</div>
+</div>
+</div>
+</div></section>
+
+<section class="block"><div class="wrap">
+<div class="cols">
+<div>
+<h3 class="sub">How I would build it</h3>
+<ul class="steps-list">
+<li>In Node, inside your test first workflow. The reorder math gets unit tests for each edge case before any model is involved.</li>
+<li>Spike and stockout detection per channel, so one marketplace promo does not inflate the order.</li>
+<li>The model only writes text from a fixed set of numbers. A validator compares every number in its output with the engine's output.</li>
+<li>A shadow mode first. Suggestions run quietly next to what buyers actually order, and we compare before anyone sees them.</li>
+</ul>
+</div>
+<div>
+<h3 class="sub">What I would check first</h3>
+<ul class="steps-list">
+<li>How reorder suggestions work today and how often buyers override them.</li>
+<li>Whether case packs, minimum orders and supplier calendars are stored per supplier.</li>
+<li>Which channels cause the most stockouts and which cause the most dead stock.</li>
+</ul>
+</div>
+</div>
+</div></section>
