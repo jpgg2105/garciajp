@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>An eval gate for the 90 day warranty · a sketch for Rather Labs by Juan Pablo García</title>
+<meta name="description" content="An eval gate on every AI change, so a fix for one answer cannot quietly break ten others during the warranty.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="author" content="Juan Pablo García">
+<meta property="og:type" content="article">
+<meta property="og:title" content="An eval gate for the 90 day warranty · a sketch for Rather Labs by Juan Pablo García">
+<meta property="og:description" content="An eval gate on every AI change, so a fix for one answer cannot quietly break ten others during the warranty.">
+<meta property="og:url" content="https://garciajp.com/for/rather-labs/">
+<meta property="og:image" content="https://garciajp.com/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0E0F12">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231D6B70'/%3E%3Ctext x='32' y='42' font-family='Helvetica,Arial,sans-serif' font-size='28' font-weight='700' fill='%23FFFFFF' text-anchor='middle'%3EJP%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@400;500;600;700&family=Funnel+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="/for/for.css">
+</head>
+<body>
+<header class="top"><div class="wrap"><a class="brand" href="/">Juan Pablo García</a><nav aria-label="Site"><a class="hide-s" href="/projects/">Projects</a><a href="/resume.pdf">Resume</a><a class="go" href="/book/">Book a call</a></nav></div></header>
+<main>
+<section class="hero"><div class="wrap">
+<p class="eyebrow">A sketch for Rather Labs</p>
+<h1>An eval gate for AI features under a 90 day warranty</h1>
+<p class="lede">You take AI MVPs to production and cover each launch with a <b>90 day warranty</b> on bugs and incidents. With LLM features, a fix for one answer can quietly break ten others, and a normal test suite will not notice. This is the gate I would put on every AI change, so the warranty costs less and the client sees why.</p>
+</div></section>
+<div class="wrap"><section class="stage" id="flow-stage" aria-label="From real traffic to a release you can defend">
+<div class="stage-head"><h2>From real traffic to a release you can defend</h2><p class="hint">Plays on its own. Tap any box to jump to it.</p></div>
+<div class="flow"></div>
+<div class="narr"><span class="count num" data-n></span><h3 data-t></h3><p data-d></p></div>
+<div class="ctrl"><button type="button" data-prev>Back</button><button type="button" data-play aria-pressed="true">Pause</button><button type="button" data-next>Next</button><div class="dots" data-dots></div></div>
+</section></div>
+<section class="block"><div class="wrap">
+<h2>Ship a change to a transcription feature</h2>
+<p class="intro">Three changes a team might make during a warranty. Run each one through the gate against the last release, on 300 golden cases.</p>
+<div class="panel">
+<div class="wbar"><div class="seg" role="group" aria-label="Change to test" id="r-changes"></div><span class="example">Made up numbers</span></div>
+<div style="margin-top:18px"><div style="height:6px;border-radius:99px;background:var(--bg);overflow:hidden"><div id="r-bar" style="height:100%;width:0;background:var(--accent);transition:width .1s linear"></div></div><p class="note num" id="r-prog" style="margin-top:8px;font-size:14px"></p></div>
+<div class="tscroll" style="margin-top:12px"><table class="score"><thead><tr><th>Metric</th><th>Last release</th><th>This change</th><th>Change</th></tr></thead><tbody id="r-rows"></tbody></table></div>
+<div class="wbar" style="margin-top:18px"><p class="summary" id="r-sum" style="margin:0"></p><span id="r-verdict"></span></div>
+</div>
+</div></section>
+
+<section class="block"><div class="wrap">
+<div class="cols">
+<div>
+<h3 class="sub">How I would build it</h3>
+<ul class="steps-list">
+<li>The harness from my <a href="https://github.com/jpgg2105/agent-benchmark">agent benchmark</a>, which already runs in CI and tests without API keys by replaying recorded responses.</li>
+<li>Case by case comparison with the last release, with a threshold per metric that the client agrees to up front.</li>
+<li>A short release report in plain language, which doubles as the warranty log.</li>
+<li>Production traces sampled into the golden set, with a person approving each new case.</li>
+</ul>
+</div>
+<div>
+<h3 class="sub">What I would check first</h3>
+<ul class="steps-list">
+<li>Which AI projects are inside a warranty window right now.</li>
+<li>Whether clients can share production logs, and under what rules.</li>
+<li>How you handle model provider updates that nobody on the team asked for.</li>
+</ul>
+</div>
+</div>
+</div></section>
+
+<section class="block"><div class="wrap">
+<p class="note">I put this together from your public pages and posts, so I am guessing at your internals. Treat it as a starting point for a conversation. Example numbers on this page are made up to show the idea.</p>
+<div class="cta-row"><a class="btn" href="/book/">Book a 15 minute call</a><a class="btn line" href="/resume.pdf">Resume (PDF)</a><a class="btn line" href="/">See my work</a></div>
+</div></section>
+</main>
+<footer class="foot"><div class="wrap">
+<div><p class="who">Juan Pablo García</p><p class="muted">AI engineer in San Juan, Argentina (UTC-3). RAG, agents and evals, built for production.</p></div>
+<nav aria-label="Contact"><a href="mailto:jpgarcia2154@gmail.com">jpgarcia2154@gmail.com</a><a href="/resume.pdf">Resume (PDF)</a><a href="/book/">Book a call</a><a href="https://github.com/jpgg2105">GitHub</a><a href="https://www.linkedin.com/in/juan-pablo-garc%C3%ADa-ba3496360">LinkedIn</a></nav>
+</div></footer>
+<script src="/for/flow.js"></script>
+<script>
+var FLOW = {"label": "Diagram of an evaluation gate that scores every AI change against a golden set before it ships", "nodes": [{"id": "traffic", "c": 0, "r": 0, "t": "Real traffic", "s": "from the MVP", "tag": "data"}, {"id": "edge", "c": 0, "r": 2, "t": "Client edge cases", "s": "what they worry about", "tag": "data"}, {"id": "golden", "c": 1, "r": 1, "t": "Golden set", "s": "inputs and good answers", "tag": "data"}, {"id": "change", "c": 2, "r": 2, "t": "A change", "s": "prompt, model, retrieval", "tag": "PR"}, {"id": "eval", "c": 3, "r": 1, "t": "Eval run", "s": "quality, cost, latency", "tag": "code"}, {"id": "gate", "c": 4, "r": 1, "t": "Gate", "s": "case by case vs last release", "tag": "code"}, {"id": "ship", "c": 5, "r": 0, "t": "Ship", "s": "with a plain report", "tag": "out"}, {"id": "block", "c": 5, "r": 2, "t": "Blocked", "s": "cases that got worse", "tag": "out"}], "edges": [{"a": "traffic", "b": "golden"}, {"a": "edge", "b": "golden"}, {"a": "golden", "b": "eval"}, {"a": "change", "b": "eval"}, {"a": "eval", "b": "gate"}, {"a": "gate", "b": "ship"}, {"a": "gate", "b": "block"}, {"a": "ship", "b": "golden", "back": true, "label": "warranty incidents become new cases"}], "steps": [{"t": "Start from real inputs", "d": "Logs from the MVP plus the cases the client is nervous about. For a product like TranscribeMe that means domain terms, crosstalk and accents.", "on": ["traffic", "edge"], "go": []}, {"t": "A golden set, not a demo", "d": "A few hundred inputs with what good looks like. Some are checked exactly, some by a rubric the client signs off on.", "on": ["golden"], "go": ["traffic>golden", "edge>golden"]}, {"t": "Any change counts", "d": "A shorter prompt, a cheaper model, a new chunking rule or a library bump. All of them can move outputs.", "on": ["change"], "go": []}, {"t": "Score it on every pull request", "d": "Accuracy, grounding in the source, latency and cost per call. It runs in CI on recorded responses, so repeating it is cheap and does not need API keys.", "on": ["eval"], "go": ["golden>eval", "change>eval"]}, {"t": "Compare case by case", "d": "The gate compares each case with the last release. A better average that hides five broken cases does not pass.", "on": ["gate"], "go": ["eval>gate"]}, {"t": "Ship with a diff, or stop", "d": "What improved, what got worse and why, in a short report the client can read. Or a list of the exact cases that blocked it.", "on": ["ship", "block"], "go": ["gate>ship", "gate>block"]}, {"t": "The warranty keeps teaching it", "d": "Every incident in the 90 days becomes a new case, so the same bug cannot come back in the next release.", "on": ["ship", "golden"], "go": ["ship>golden"]}]};
+FLOW.id = "f"; Flow(document.getElementById("flow-stage"), FLOW);
+</script>
+<script>
+(function () {
+  var BASE = { acc: 91.2, ground: 96.0, terms: 88.5, p95: 2.4, cost: 3.10 };
+  var METRICS = [
+    ["acc", "Accuracy", "%", 1, true], ["ground", "Grounded in the audio", "%", 1, true],
+    ["terms", "Domain terms right", "%", 1, true], ["p95", "Latency, p95", " s", 1, false], ["cost", "Cost per 1k calls", "", 2, false]
+  ];
+  var C = [
+    { id: "prompt", name: "Shorter prompt", d: { acc: -0.4, ground: -3.1, terms: -0.2, p95: -0.3, cost: -0.87 }, better: 4, worse: 14, pass: false,
+      sum: "Cost drops 28 percent, but grounding falls on 14 cases, all with two or more speakers. Blocked, with those 14 cases listed." },
+    { id: "model", name: "Cheaper model", d: { acc: -2.8, ground: -1.2, terms: -6.0, p95: -0.9, cost: -1.89 }, better: 9, worse: 31, pass: false,
+      sum: "Faster and 61 percent cheaper, but domain terms fall six points. Blocked. A good candidate for the simpler calls only." },
+    { id: "glossary", name: "Add 40 glossary terms", d: { acc: 1.3, ground: 0.2, terms: 5.1, p95: 0.1, cost: 0.06 }, better: 17, worse: 2, pass: true,
+      sum: "Domain terms up five points. Two cases got worse, both inside the agreed threshold, and both go in the release report." }
+  ];
+  var bar = document.getElementById("r-changes"), rows = document.getElementById("r-rows");
+  var pbar = document.getElementById("r-bar"), prog = document.getElementById("r-prog");
+  var sum = document.getElementById("r-sum"), verdict = document.getElementById("r-verdict");
+  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches, timer = null;
+  function fmt(v, unit, dp) { return (unit === "" ? "$" : "") + v.toFixed(dp) + unit; }
+  function table(c, done) {
+    rows.innerHTML = METRICS.map(function (m) {
+      var b = BASE[m[0]], d = c.d[m[0]], v = b + d;
+      var good = m[4] ? d >= 0 : d <= 0;
+      var big = m[4] ? d <= -1 : false;
+      var col = !done ? "muted" : big ? "bad" : good ? "ok" : "warn";
+      return "<tr><td>" + m[1] + "</td><td class='num'>" + fmt(b, m[2], m[3]) + "</td><td class='num'>" + (done ? fmt(v, m[2], m[3]) : "·") +
+        "</td><td class='num' style='color:var(--" + col + ")'>" + (done ? (d > 0 ? "+" : d < 0 ? "-" : "") + (m[2] === "" ? "$" + Math.abs(d).toFixed(2) : Math.abs(d).toFixed(m[3]) + m[2].trim()) : "") + "</td></tr>";
+    }).join("");
+  }
+  function run(i) {
+    var c = C[i];
+    Array.prototype.forEach.call(bar.children, function (x, j) { x.setAttribute("aria-pressed", j === i ? "true" : "false"); });
+    clearInterval(timer);
+    verdict.innerHTML = ""; sum.textContent = "";
+    var n = reduce ? 300 : 0;
+    function tick() {
+      pbar.style.width = (n / 3) + "%";
+      prog.textContent = n < 300 ? "Running case " + n + " of 300" : "300 of 300 cases. " + c.better + " better, " + c.worse + " worse, " + (300 - c.better - c.worse) + " the same.";
+      table(c, n >= 300);
+      if (n >= 300) {
+        clearInterval(timer);
+        sum.textContent = c.sum;
+        verdict.innerHTML = '<span class="chip ' + (c.pass ? "ok" : "bad") + '">' + (c.pass ? "Ships" : "Blocked") + "</span>";
+      }
+      n = Math.min(300, n + 12);
+    }
+    tick();
+    if (!reduce) timer = setInterval(tick, 40);
+  }
+  C.forEach(function (c, i) {
+    var b = document.createElement("button");
+    b.type = "button"; b.id = "r-" + c.id; b.textContent = c.name;
+    b.setAttribute("aria-pressed", "false");
+    b.addEventListener("click", function () { run(i); });
+    bar.appendChild(b);
+  });
+  table(C[0], false);
+  run(0);
+})();
+
+</script>
+</body>
+</html>
