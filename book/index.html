@@ -1816,7 +1816,9 @@ function exKit(ctx, C, fsc = 1){
   K.font = (o={}) => `${o.weight || 500} ${(o.size || 3.6) * fsc}px ${o.mono ? EXF.mono : o.display ? EXF.disp : EXF.sans}`;
   K.text = (s,x,y,o={}) => {
     ctx.font = K.font(o); ctx.fillStyle = o.color || C.ink;
-    ctx.textAlign = o.align || "left"; ctx.textBaseline = o.base || "middle"; ctx.fillText(s, x, y);
+    ctx.textAlign = o.align || "left"; ctx.textBaseline = o.base || "middle";
+    if (o.halo){ ctx.lineJoin = "round"; ctx.lineWidth = o.halo === true ? 1 : o.halo; ctx.strokeStyle = C.surface; ctx.strokeText(s, x, y); }
+    ctx.fillText(s, x, y);
   };
   K.width = (s,o={}) => { ctx.font = K.font(o); return ctx.measureText(s).width; };
   K.line = (x1,y1,x2,y2,o={}) => {
@@ -1952,15 +1954,16 @@ const SCENES = {
       K.alpha(listA);
       K.text("Reranked by relevance", 4, 30, { size: 2.8, color: C.muted, weight: 500 });
       const mv = K.io(K.seg(S, 4.25, 4.9));
-      cand.forEach((c, i) => {
-        const from = 36 + i * 10.5, to = 36 + reranked.indexOf(i) * 10.5, y = K.lerp(from, to, mv);
+      const drawOrder = cand.map((c, i) => i).sort((a, b) => (reranked.indexOf(b) - b) - (reranked.indexOf(a) - a));
+      drawOrder.forEach(i => { const c = cand[i];
+        const from = 36 + i * 10.5, to = 36 + reranked.indexOf(i) * 10.5, y = K.lerp(from, to, mv), sinks = reranked.indexOf(i) > i;
         const top = reranked.indexOf(i) < 2 && mv > .9;
         const g = K.io(K.seg(S, 3.95 + i * .05, 4.3 + i * .05));
         if (g < 1){
           K.alpha(1); K.rect(K.lerp(c[3].x - 1.2, 4, g), K.lerp(c[3].y - 1.2, y - 4.2, g), K.lerp(2.4, 44, g), K.lerp(2.4, 9, g), K.lerp(1.2, 1.8, g), { fill: K.lerp(0, 1, g) < .4 ? C.accent : C.surface, stroke: C.accent, lw: .3 });
           return;
         }
-        K.alpha(K.seg(S, 4.3 + i * .05, 4.38 + i * .05));
+        K.alpha(K.seg(S, 4.3 + i * .05, 4.38 + i * .05) * (sinks ? 1 - .85 * Math.sin(Math.PI * mv) : 1));
         K.rect(4, y - 4.2, 44, 9, 1.8, { fill: C.surface, stroke: top ? C.accent : C.line, lw: top ? .45 : .3 });
         K.text(texts[c[0]][c[1]], 6, y - 1.1, { size: 2.6, weight: 500 });
         K.rect(6, y + 2, 30 * c[2] * K.seg(S, 4.1, 4.5), 1, .5, { fill: top ? C.accent : C.strong });
@@ -2157,7 +2160,7 @@ const SCENES = {
       if (lit > 0){ K.alpha(fade * lit); K.dot(X[l], y, 3, { fill: C.accent }); }
       if (bw <= l && S >= 3 && S < 4){ K.alpha(fade * .9); K.dot(X[l], y, 3.6, { fill: false, stroke: C.warn, lw: .4 }); }
     }));
-    K.alpha(K.seg(S, .3, .6) * fade);
+    K.alpha(K.seg(S, .3, .6) * (1 - K.seg(S, 4, 4.15)));
     ["input", "hidden", "hidden", "output"].forEach((s, l) => K.text(s, X[l], 82, { size: 2.6, align: "center", color: C.muted }));
     // output vs target
     const oa = K.seg(S, 2, 2.3) * (1 - K.seg(S, 4, 4.2));
@@ -2209,7 +2212,7 @@ const SCENES = {
     const ga = K.seg(S, .7, 1);
     groups.forEach(([n, c, r]) => {
       K.alpha(ga * .5 * (1 - .6 * K.seg(S, 3, 3.3))); K.dot(c[0], c[1], r, { fill: false, stroke: C.line, lw: .3 });
-      K.alpha(ga); K.text(n, c[0], c[1] - r - 2, { size: 2.6, align: "center", color: C.muted });
+      K.alpha(ga); K.text(n, c[0], c[1] - r - 2, { size: 2.6, align: "center", color: C.muted, halo: true });
     });
     // HNSW graph
     const gr = K.seg(S, 3, 3.3);
@@ -2224,8 +2227,8 @@ const SCENES = {
         const p = K.clamp(hp - i); if (p <= 0) break;
         K.alpha(1); K.arrow(P[path[i]][0], P[path[i]][1], P[path[i + 1]][0], P[path[i + 1]][1], { p, color: C.accent, lw: .55, hs: 1.6 });
       }
-      K.alpha(K.seg(S, 3.3, 3.45)); K.text("start", P.truck[0], P.truck[1] + 4.5, { size: 2.5, align: "center", color: C.accent });
-      K.alpha(K.seg(S, 3.85, 4)); K.text("3 hops instead of 12 comparisons", 60, 95, { size: 2.8, align: "center", color: C.accent, weight: 600 });
+      K.alpha(K.seg(S, 3.3, 3.45)); K.text("start", P.truck[0], P.truck[1] + 4.5, { size: 2.5, align: "center", color: C.accent, halo: true });
+      K.alpha(K.seg(S, 3.85, 4)); K.text("3 hops instead of 12 comparisons", 60, 95, { size: 2.8, align: "center", color: C.accent, weight: 600, halo: 1.4 });
     }
     // points
     names.forEach((n, i) => {
@@ -2234,7 +2237,7 @@ const SCENES = {
       const dim = S >= 2 && S < 3 && !top3.includes(n) ? 1 - .6 * K.seg(S, 2.45, 2.6) : 1;
       K.alpha(K.seg(S, i * .03, .2 + i * .03) * dim);
       K.dot(x, y, 1.3, { fill: hit ? C.accent : C.ink });
-      K.text(n, x + 2, y - .2, { size: 2.8, weight: hit ? 600 : 500, color: hit ? C.accent : C.ink });
+      K.text(n, x + 2, y - .2, { size: 2.8, weight: hit ? 600 : 500, color: hit ? C.accent : C.ink, halo: true });
     });
     // cosine similarity
     if (S >= 1 && S < 2){
@@ -2247,8 +2250,8 @@ const SCENES = {
       K.alpha(K.seg(S, first ? 1.3 : 1.85, first ? 1.4 : 1.95));
       let lo = Math.min(a1, a2), hi = Math.max(a1, a2); if (hi - lo > Math.PI){ const t = lo; lo = hi; hi = t + Math.PI * 2; }
       K.ctx.beginPath(); K.ctx.arc(O[0], O[1], 7, lo, hi); K.ctx.strokeStyle = C.accent; K.ctx.lineWidth = .4; K.ctx.stroke();
-      K.text(`${pair[0]} vs ${pair[1]}: cosine ${sim}`, 60, 95, { size: 3, align: "center", color: C.accent, weight: 600 });
-      K.alpha(a); K.text("origin", O[0] + 2, O[1] + 3, { size: 2.4, color: C.muted });
+      K.text(`${pair[0]} vs ${pair[1]}: cosine ${sim}`, 60, 95, { size: 3, align: "center", color: C.accent, weight: 600, halo: 1.4 });
+      K.alpha(a); K.text("origin", O[0] + 2, O[1] + 3, { size: 2.4, color: C.muted, halo: true });
     }
     if (S >= 2 && S < 3){ K.alpha(1); K.dot(O[0], O[1], .9, { fill: C.muted }); K.arrow(O[0], O[1], Q[0], Q[1], { p: K.seg(S, 2.05, 2.3), color: C.accent, lw: .3, dash: [1, .8] }); }
     // query
@@ -2257,7 +2260,7 @@ const SCENES = {
       K.alpha(qa * (1 - K.seg(S, 2.45, 2.6)) * .6);
       names.forEach(n => K.line(Q[0], Q[1], P[n][0], P[n][1], { color: C.strong, lw: .2, dash: [.8, .8] }));
       K.alpha(qa); K.dot(Q[0], Q[1], 1.9, { fill: C.fill, stroke: C.accent, lw: .4 });
-      K.text("puppy", Q[0] + 2.6, Q[1] + 3.6, { size: 3, weight: 700, color: C.accent });
+      K.text("puppy", Q[0] + 2.6, Q[1] + 3.6, { size: 3, weight: 700, color: C.accent, halo: true });
       const ra = K.seg(S, 2.55, 2.8);
       if (ra > 0){
         K.alpha(ra); K.rect(3, 68, 30, 25, 2.4, { fill: C.surface, stroke: C.strong });
@@ -2508,7 +2511,7 @@ const SCENES = {
   /* ---------- MCP ---------- */
   mcp(K, S, time){
     const C = K.C, apps = [["Chat app", 25], ["IDE", 50], ["Agent", 75]], tools = [["GitHub", 20], ["Database", 40], ["Calendar", 60], ["Files", 80]];
-    const focus = K.io(K.seg(S, 2, 2.4)), reuse = K.io(K.seg(S, 4, 4.4));
+    const focus = K.io(K.seg(S, 2, 2.4)), reuse = K.io(K.seg(S, 4.12, 4.45)), clear = K.seg(S, 4, 4.12);
     const hub = K.seg(S, 1, 1.3);
     // tangle
     const tangle = K.seg(S, 0, .3) * (1 - hub);
@@ -2535,7 +2538,7 @@ const SCENES = {
     tools.forEach(([n, y], i) => {
       const isGH = i === 0;
       const x = isGH ? K.lerp(103, 100, focus) : 103, yy = isGH ? K.lerp(y, 50, focus) : y;
-      K.alpha(K.seg(S, 0, .2) * (isGH ? 1 : 1 - focus));
+      K.alpha(K.seg(S, 0, .2) * (isGH ? 1 : 1 - K.seg(S, 2, 2.12)));
       K.node(x, yy, 24, 10, n, { sub: S >= 1 ? "MCP server" : "tool", size: 3 });
     });
     // focused conversation
@@ -2546,12 +2549,12 @@ const SCENES = {
       K.alpha(1); K.rect(x - w / 2, 46.5, w, 7, 3.5, { fill: C.raised, stroke: color || C.accent, lw: .35 });
       K.text(text, x, 50, { size: 2.5, mono: true, align: "center", color: color || C.accent });
     };
-    if (focus > 0 && reuse < 1){
-      K.alpha(focus * (1 - reuse)); K.line(29, 50, 88, 50, { color: C.line, dash: [1, 1] });
-      K.text("JSON-RPC over stdio or HTTP", 59, 41, { size: 2.5, align: "center", color: C.muted });
+    if (focus > 0 && clear < 1){
+      K.alpha(focus * (1 - clear)); K.line(29, 50, 88, 50, { color: C.line, dash: [1, 1] });
+      K.alpha(K.seg(S, 2.3, 2.45) * (1 - clear)); K.text("JSON-RPC over stdio or HTTP", 59, 41, { size: 2.5, align: "center", color: C.muted });
       msg("initialize", 1, 2.3, 2.45); msg("capabilities", -1, 2.45, 2.6, C.ok);
       msg("tools/list", 1, 2.6, 2.75); msg("2 tools", -1, 2.75, 2.88, C.ok);
-      const ta = K.seg(S, 2.85, 3) * (1 - reuse);
+      const ta = K.seg(S, 2.85, 3) * (1 - clear);
       if (ta > 0){
         [["search_issues", "query: string"], ["create_issue", "title, body: string"]].forEach(([n, sig], i) => {
           K.alpha(ta); K.rect(4, 64 + i * 11, 44, 9, 2, { fill: C.surface, stroke: S >= 3.3 && i === 1 ? C.accent : C.strong, lw: .35 });
@@ -2567,7 +2570,7 @@ const SCENES = {
       const run = K.seg(S, 3.68, 3.75) * (1 - K.seg(S, 3.82, 3.86));
       if (run > 0){ K.alpha(run); K.rect(88, 45, 24, 10, 2.4, { stroke: C.accent, lw: .6 }); }
       msg('{ "url": "…/issues/128" }', -1, 3.78, 3.95, C.ok);
-      const done = K.seg(S, 3.93, 4) * (1 - reuse);
+      const done = K.seg(S, 3.93, 4) * (1 - clear);
       if (done > 0){ K.alpha(done); K.check(8, 32, 2.6, C.ok); K.text("Issue #128 created", 12, 32, { size: 2.8, color: C.ok, weight: 600 }); }
     }
     // reuse
@@ -2606,7 +2609,8 @@ const SCENES = {
     const ta = K.seg(S, 1, 1.3);
     if (ta > 0){
       const rootKeys = split > .5 ? "ivy · kai · mia · tom" : "ivy · mia · tom";
-      K.alpha(ta); K.rect(62, 18, 36, 9, 2, { fill: C.surface, stroke: (S >= 2 && S < 3) ? C.accent : C.strong, lw: (S >= 2 && S < 3) ? .5 : .35 });
+      const rw = Math.max(36, K.width(rootKeys, { size: 2.6, mono: true }) + 6);
+      K.alpha(ta); K.rect(80 - rw / 2, 18, rw, 9, 2, { fill: C.surface, stroke: (S >= 2 && S < 3) ? C.accent : C.strong, lw: (S >= 2 && S < 3) ? .5 : .35 });
       K.text(rootKeys, 80, 22.5, { size: 2.6, mono: true, align: "center", weight: 500 });
       K.text("index on email", 80, 13, { size: 2.6, align: "center", color: C.muted });
       L.forEach((keys, i) => {
@@ -2660,22 +2664,23 @@ const SCENES = {
     if (df > 0){
       K.alpha(df); K.rect(2, 14, 56, 40, 2.4, { fill: C.surface, stroke: C.strong });
       K.text("Dockerfile", 5, 18.5, { size: 2.6, color: C.muted });
+      const lsz = Math.min(2.3, 2.3 * 51 / Math.max(...lines.map(l => K.width(l, { size: 2.3, mono: true }))));
       lines.forEach((l, i) => {
         const changed = i === 3 && S >= 2 && S < 3 && K.seg(S, 2.05, 2.15) > 0;
         if (changed){ K.alpha(df * .8); K.rect(3.5, 23.5 + i * 6.2 - 2.6, 53, 5, 1, { fill: "rgba(253,186,116,.12)" }); }
-        K.alpha(df); K.typed([l], K.seg(S, .1 + i * .15, .25 + i * .15), 5, 23.5 + i * 6.2, 0, { size: 2.3, mono: true, color: changed ? C.warn : C.ink });
+        K.alpha(df); K.typed([l], K.seg(S, .1 + i * .15, .25 + i * .15), 5, 23.5 + i * 6.2, 0, { size: lsz, mono: true, color: changed ? C.warn : C.ink });
       });
       K.alpha(df * K.seg(S, 2.05, 2.2) * (S < 3 ? 1 : 0)); K.text("you edited app.py", 5, 58, { size: 2.6, color: C.warn });
     }
     // image layers
     const sx = K.lerp(66, 6, run), sw = K.lerp(50, 34, run), sy = K.lerp(76, 80, run) - ship * 56;
     layers.forEach(([n, size], i) => {
-      const a = K.seg(S, 1 + i * .18, 1.2 + i * .18) * (1 - K.seg(S, 4.15, 4.35));
+      const a = K.seg(S, 1 + i * .18, 1.2 + i * .18) * (1 - K.seg(S, 4, 4.12));
       if (a <= 0) return;
       const y = sy - i * 9.5, rebuilt = i === 3 && S >= 2 && S < 3, flash = rebuilt ? K.seg(S, 2.3, 2.6) : 1;
       K.alpha(a); K.rect(sx, y - 4, sw, 8, 1.6, { fill: C.surface, stroke: rebuilt ? (flash < 1 ? C.warn : C.ok) : C.strong, lw: rebuilt ? .55 : .35 });
       K.text(n, sx + 2.5, y, { size: run > .5 ? 2.4 : 2.7, weight: 600 });
-      if (run < .5 && !(S >= 2 && S < 3)) K.text(size, sx + sw - 2.5, y, { size: 2.5, mono: true, align: "right", color: C.muted });
+      if (run < .2 && !(S >= 2 && S < 3)){ K.alpha(a * (1 - run * 5)); K.text(size, sx + sw - 2.5, y, { size: 2.5, mono: true, align: "right", color: C.muted }); K.alpha(a); }
       if (S < 2 && S >= 1){ K.alpha(a * (1 - K.seg(S, 1.8, 1.95)) * .6); K.line(58, 23.5 + i * 6.2, sx, y, { color: C.line, dash: [.8, .8] }); }
       if (S >= 2 && S < 3){
         const tag = i < 3 ? "cached" : (flash < 1 ? "rebuilding…" : "rebuilt in 2 s");
@@ -2687,7 +2692,7 @@ const SCENES = {
       K.alpha(K.seg(S, 2.6, 2.8) * (1 - run)); K.text("put rarely changed steps first", 91, 32, { size: 2.6, align: "center", color: C.accent });
     }
     // containers on a host
-    const ha = run * (1 - ship);
+    const ha = K.seg(run, .65, 1) * (1 - ship);
     if (ha > 0){
       K.alpha(ha); K.rect(46, 14, 72, 74, 3, { stroke: C.strong });
       K.text("one host", 49, 18.5, { size: 2.6, color: C.muted });
@@ -2704,7 +2709,7 @@ const SCENES = {
     }
     // registry
     if (ship > 0){
-      K.alpha(ship); K.node(23, 12, 26, 9, "registry", { sub: "stores images", size: 3 });
+      K.alpha(K.seg(S, 4.12, 4.3)); K.node(23, 12, 26, 9, "registry", { sub: "stores images", size: 3 });
       [["laptop", 34], ["CI", 64], ["cloud server", 96]].forEach(([n, x], i) => {
         const a = K.seg(S, 4.4 + i * .12, 4.6 + i * .12);
         K.alpha(ship); K.packet(23, 16.5, x, 78, K.seg(S, 4.35 + i * .12, 4.6 + i * .12), { r: 1.1 });
@@ -2720,8 +2725,8 @@ const SCENES = {
     const C = K.C;
     const cases = [["Refund on annual plans?", "30 days"], ["Do you ship to Chile?", "yes, 5 to 7 days"], ["Cancel a monthly plan?", "anytime, in settings"], ["Price for teams?", "volume discount"], ["Change my email?", "settings, account"]];
     const outs = [["30 days", true, 5], ["yes, 5 to 7 days", true, 5], ["call support", false, 2], ["$10 per seat", false, 3], ["settings, account", true, 5]];
-    const chart = K.io(K.seg(S, 3, 3.35));
-    const tab = 1 - chart;
+    const chart = K.io(K.seg(S, 3.12, 3.4));
+    const tab = 1 - K.seg(S, 3, 3.12);
     // cases
     if (tab > 0){
       K.alpha(tab * K.seg(S, 0, .2)); K.text("test cases", 4, 14, { size: 2.6, color: C.muted });
@@ -2893,7 +2898,7 @@ const SCENES = {
     const C = K.C, N = 16, Y = 34, cx = i => 8 + (i - 1) * 6.5, bx = k => cx(k) + 6.25;
     const tests = [[8, true, 1.05, 2], [12, false, 2.05, 3], [10, true, 3.05, 3.5], [11, false, 3.5, 4]];
     const clearAt = i => i <= 8 ? 1.5 : i >= 13 ? 2.5 : i <= 10 ? 3.25 : i === 12 ? 3.72 : 99;
-    const table = K.io(K.seg(S, 4, 4.3)), hit = K.seg(S, 3.8, 3.95);
+    const table = K.io(K.seg(S, 4.12, 4.35)), logOut = K.seg(S, 4, 4.12), hit = K.seg(S, 3.8, 3.95);
     for (let i = 1; i <= N; i++){
       const dim = K.seg(S, clearAt(i), clearAt(i) + .3), on = i === 11 && hit > 0;
       K.alpha(K.seg(S, i * .02, .25 + i * .02) * (1 - dim * .7));
@@ -2919,7 +2924,7 @@ const SCENES = {
     });
     // log
     tests.forEach(([k, ok, t0], j) => {
-      const a = K.seg(S, t0 + .25, t0 + .4) * (1 - table);
+      const a = K.seg(S, t0 + .25, t0 + .4) * (1 - logOut);
       if (a <= 0) return;
       const ly = 56 + j * 7;
       K.alpha(a);
@@ -2927,7 +2932,7 @@ const SCENES = {
       K.text(`as it was after change ${k}`, 36, ly, { size: 2.6 });
       K.text(ok ? "works" : "broken", 100, ly, { size: 2.6, weight: 600, align: "right", color: ok ? C.ok : C.warn });
     });
-    K.alpha(K.seg(S, 3.9, 4) * (1 - table)); K.text("4 tests instead of up to 16", 60, 90, { size: 2.8, align: "center", color: C.accent, weight: 600 });
+    K.alpha(K.seg(S, 3.9, 4) * (1 - logOut)); K.text("4 tests instead of up to 16", 60, 90, { size: 2.8, align: "center", color: C.accent, weight: 600 });
     // how it scales
     if (table > 0){
       const cols = [26, 62, 96];
@@ -3006,7 +3011,7 @@ const SCENES = {
       const x = cx(pos(i)), h = val(i) * sc * K.ease(K.seg(S, .1 + i * .06, .5 + i * .06));
       K.alpha(1); K.rect(x - 4.5, B - h, 9, h, .8, { fill: C.strong });
       K.alpha(1 - (r1[i] < 3 ? 0 : top3)); K.rect(x - 4.5, B - h, 9, h, .8, { fill: C.accent });
-      const moving = 1 - .85 * Math.max(Math.sin(Math.PI * sort1), Math.sin(Math.PI * sort2));
+      const moving = K.clamp(1 - 2.2 * Math.max(Math.sin(Math.PI * sort1), Math.sin(Math.PI * sort2)));
       K.alpha(K.seg(S, .2, .5) * moving);
       K.text(n1, x, B + 3.5, { size: 2.2, align: "center" });
       if (n2) K.text(n2, x, B + 6.6, { size: 2.2, align: "center", color: C.muted });
@@ -3071,7 +3076,7 @@ const SCENES = {
       ctx.setLineDash([1, .8]); ctx.strokeStyle = C.muted; ctx.lineWidth = .35; ctx.stroke(); ctx.setLineDash([]);
     }
     // first guess, before any test
-    K.alpha(K.seg(S, .4, .7) * (1 - K.seg(S, 1.15, 1.3)));
+    K.alpha(K.seg(S, .4, .7) * (1 - K.seg(S, 1, 1.12)));
     K.line(sx(20), 80, sx(20), 52, { color: C.accent, dash: [1, .8], lw: .4 });
     K.text("guess: 20", sx(20), 48.5, { size: 2.5, align: "center", color: C.accent, weight: 600 });
     // tests
