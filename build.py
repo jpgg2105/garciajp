@@ -47,7 +47,24 @@ name = site["name"]
 domain = site["domain"].rstrip("/")
 default_desc = site["description"]
 info = site.get("person", {})
-home_title = f"{name} · AI Developer, RAG and Multi-Agent Systems"
+home_title = f"{name} · AI Engineer, RAG, Agents and LLM Evaluation"
+
+# Shared styles, content and code go to /assets so every page is small and its text comes first.
+import hashlib
+ASSETS = OUT / "assets"
+ASSETS.mkdir(exist_ok=True)
+def _asset(name, text):
+    (ASSETS / name).write_text(text, encoding="utf-8")
+    return f"/assets/{name}?v={hashlib.sha1(text.encode()).hexdigest()[:10]}"
+_style = re.search(r"<style>(.*?)</style>", src, re.S)
+_content = re.search(r'<script type="application/json" id="content">(.*?)</script>', src, re.S)
+_main = list(re.finditer(r"<script>(.*?)</script>", src, re.S))[-1]
+css_url = _asset("site.css", _style.group(1).strip() + "\n")
+data_url = _asset("content.js", "window.__CONTENT__ = " + json.dumps(site, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/") + ";\n")
+js_url = _asset("site.js", _main.group(1).strip() + "\n")
+template = (src[:_style.start()] + f'<link rel="stylesheet" href="{css_url}">'
+            + src[_style.end():_content.start()] + f'<script src="{data_url}"></script>'
+            + src[_content.end():_main.start()] + f'<script src="{js_url}"></script>' + src[_main.end():])
 
 person = {
     "@type": "Person",
@@ -113,7 +130,7 @@ for p in site.get("posts", []):
 def head_for(path, title, desc, ld, noindex=False):
     t, d = html.escape(title), html.escape(desc, quote=True)
     u = html.escape(domain + path, quote=True)
-    out = re.sub(r"<title>.*?</title>", f"<title>{t}</title>", src, count=1, flags=re.S)
+    out = re.sub(r"<title>.*?</title>", f"<title>{t}</title>", template, count=1, flags=re.S)
     out = re.sub(r'<meta name="description" content="[^"]*">', f'<meta name="description" content="{d}">', out, count=1)
     out = re.sub(r'<link rel="canonical" href="[^"]*">', f'<link rel="canonical" href="{u}">', out, count=1)
     out = re.sub(r'<meta property="og:url" content="[^"]*">', f'<meta property="og:url" content="{u}">', out, count=1)
