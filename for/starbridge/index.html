@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Meetings Bridge, before the RFP · a sketch for Starbridge by Juan Pablo García</title>
+<meta name="description" content="How I would make Meetings Bridge land closer on the first pass and keep late stage results out by default.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="author" content="Juan Pablo García">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Meetings Bridge, before the RFP · a sketch for Starbridge by Juan Pablo García">
+<meta property="og:description" content="How I would make Meetings Bridge land closer on the first pass and keep late stage results out by default.">
+<meta property="og:url" content="https://garciajp.com/for/starbridge/">
+<meta property="og:image" content="https://garciajp.com/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0E0F12">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231D6B70'/%3E%3Ctext x='32' y='42' font-family='Helvetica,Arial,sans-serif' font-size='28' font-weight='700' fill='%23FFFFFF' text-anchor='middle'%3EJP%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@400;500;600;700&family=Funnel+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="/for/for.css">
+</head>
+<body>
+<header class="top"><div class="wrap"><a class="brand" href="/">Juan Pablo García</a><nav aria-label="Site"><a class="hide-s" href="/projects/">Projects</a><a href="/resume.pdf">Resume</a><a class="go" href="/book/">Book a call</a></nav></div></header>
+<main>
+<section class="hero"><div class="wrap">
+<p class="eyebrow">A sketch for Starbridge</p>
+<h1>Find the pain in the meeting, not the RFP that follows it</h1>
+<p class="lede">Your help center says a Meetings Bridge usually takes <b>two or three rounds of tuning</b>, that good matches can still land in the bottom half, and that procurement already underway gets in unless someone writes a negative criterion for it. This is how I would make the first pass land closer and keep late stage results out by default.</p>
+</div></section>
+<div class="wrap"><section class="stage" id="flow-stage" aria-label="From a board meeting to a signal a rep can use">
+<div class="stage-head"><h2>From a board meeting to a signal a rep can use</h2><p class="hint">Plays on its own. Tap any box to jump to it.</p></div>
+<div class="flow"></div>
+<div class="narr"><span class="count num" data-n></span><h3 data-t></h3><p data-d></p></div>
+<div class="ctrl"><button type="button" data-prev>Back</button><button type="button" data-play aria-pressed="true">Pause</button><button type="button" data-next>Next</button><div class="dots" data-dots></div></div>
+</section></div>
+<section class="block"><div class="wrap">
+<h2>Try it on five meeting snippets</h2>
+<p class="intro">A seller's Bridge describes their problem as <b>scheduling staff training is manual and error prone</b>. Here is what a phrase match returns compared with hybrid matching plus the stage gate.</p>
+<div class="panel">
+<div class="wbar"><div class="seg" role="group" aria-label="Matching method"><button type="button" id="m-phrase" data-m="phrase" aria-pressed="true">Phrase match</button><button type="button" id="m-hybrid" data-m="hybrid" aria-pressed="false">Hybrid + stage gate</button></div><span class="example">Example snippets I wrote</span></div>
+<div class="cards" id="snips"></div>
+<p class="summary" id="snip-sum"></p>
+</div>
+</div></section>
+
+<section class="block"><div class="wrap">
+<div class="cols">
+<div>
+<h3 class="sub">How I would build it</h3>
+<ul class="steps-list">
+<li>Agenda item segmentation from timestamps and minutes, so every match has a short clip to cite.</li>
+<li>Hybrid retrieval with BM25, embeddings and a cross-encoder rerank. I built the same setup in my <a href="https://github.com/jpgg2105/ai-document-analyst">document analyst project</a>.</li>
+<li>A stage classifier with a strict JSON schema and an evidence quote. If the quote is not in the transcript, the label gets thrown out.</li>
+<li>An eval set built from rep feedback and run on every change, the same way my <a href="https://github.com/jpgg2105/agent-benchmark">agent benchmark</a> scores a change before it ships.</li>
+</ul>
+</div>
+<div>
+<h3 class="sub">What I would check first</h3>
+<ul class="steps-list">
+<li>How transcripts come in today, how good the speech to text is, and whether speakers are labeled.</li>
+<li>How much rep feedback already exists on saved Bridges. That is the fastest eval set to start from.</li>
+<li>Whether reps want fewer results or more recall. The gate can lean either way.</li>
+</ul>
+</div>
+</div>
+</div></section>
+
+<section class="block"><div class="wrap">
+<p class="note">I put this together from your public pages and posts, so I am guessing at your internals. Treat it as a starting point for a conversation. Example numbers on this page are made up to show the idea.</p>
+<div class="cta-row"><a class="btn" href="/book/">Book a 15 minute call</a><a class="btn line" href="/resume.pdf">Resume (PDF)</a><a class="btn line" href="/">See my work</a></div>
+</div></section>
+</main>
+<footer class="foot"><div class="wrap">
+<div><p class="who">Juan Pablo García</p><p class="muted">AI engineer in San Juan, Argentina (UTC-3). RAG, agents and evals, built for production.</p></div>
+<nav aria-label="Contact"><a href="mailto:jpgarcia2154@gmail.com">jpgarcia2154@gmail.com</a><a href="/resume.pdf">Resume (PDF)</a><a href="/book/">Book a call</a><a href="https://github.com/jpgg2105">GitHub</a><a href="https://www.linkedin.com/in/juan-pablo-garc%C3%ADa-ba3496360">LinkedIn</a></nav>
+</div></footer>
+<script src="/for/flow.js"></script>
+<script>
+var FLOW = {"label": "Diagram of a pipeline from public meeting recordings to ranked buying signals", "nodes": [{"id": "src", "c": 0, "r": 1, "t": "Board meetings", "s": "video, audio, minutes", "tag": "source"}, {"id": "seg", "c": 1, "r": 1, "t": "Split by item", "s": "agenda + timestamps", "tag": "code"}, {"id": "kw", "c": 2, "r": 0, "t": "Keyword match", "s": "BM25", "tag": "code"}, {"id": "sem", "c": 2, "r": 2, "t": "Meaning match", "s": "embeddings", "tag": "model"}, {"id": "fuse", "c": 3, "r": 1, "t": "Fuse + rerank", "s": "cross-encoder", "tag": "model"}, {"id": "stage", "c": 4, "r": 0, "t": "Buying stage", "s": "late stages dropped", "tag": "LLM"}, {"id": "buyer", "c": 4, "r": 2, "t": "Who can buy", "s": "speaker to buyer", "tag": "LLM"}, {"id": "out", "c": 5, "r": 1, "t": "Signal for the rep", "s": "quote, time, contact", "tag": "out"}], "edges": [{"a": "src", "b": "seg"}, {"a": "seg", "b": "kw"}, {"a": "seg", "b": "sem"}, {"a": "kw", "b": "fuse"}, {"a": "sem", "b": "fuse"}, {"a": "fuse", "b": "stage"}, {"a": "fuse", "b": "buyer"}, {"a": "stage", "b": "out"}, {"a": "buyer", "b": "out"}, {"a": "out", "b": "fuse", "back": true, "label": "rep feedback becomes the eval set"}], "steps": [{"t": "One meeting, many topics", "d": "A three hour school board video gets split at each agenda item with its timestamps. A match then points to the two minutes that matter, and the quote links straight there.", "on": ["src", "seg"], "go": ["src>seg"]}, {"t": "Two ways to match", "d": "Keywords catch exact terms like a product category. Embeddings catch the same problem said in an official's own words, which is exactly where phrase lists miss.", "on": ["kw", "sem"], "go": ["seg>kw", "seg>sem"]}, {"t": "One ranked list", "d": "Both result sets get fused and reranked against the seller's problem statement, so a strong match stops hiding in the bottom half.", "on": ["fuse"], "go": ["kw>fuse", "sem>fuse"]}, {"t": "Where is this deal", "d": "A model labels the buying stage in strict JSON, along with the sentence it relied on. Awarded contracts, issued RFPs and vendor pitches get dropped here, with no negative criterion to write.", "on": ["stage"], "go": ["fuse>stage"]}, {"t": "Speaker or buyer", "d": "The person who raised the issue is often not the one who signs. Their role gets mapped to the likely decision maker for that board or council.", "on": ["buyer"], "go": ["fuse>buyer"]}, {"t": "What the rep sees", "d": "An early stage signal, the exact quote, the timestamp and who to contact. Short, ranked and checked.", "on": ["out"], "go": ["stage>out", "buyer>out"]}, {"t": "Every click becomes a test", "d": "Each thumbs up or down goes into an eval set. Any change to phrases, prompts or the reranker gets scored on it, including recall on the matches that used to land low.", "on": ["out", "fuse"], "go": ["out>fuse"]}]};
+FLOW.id = "f"; Flow(document.getElementById("flow-stage"), FLOW);
+</script>
+<script>
+(function () {
+  var S = [
+    { q: "Principals are still tracking PD hours in spreadsheets and it goes wrong every semester.", where: "School board, item 6", stage: "Pain", phrase: "miss", hybrid: "show" },
+    { q: "The board approved the award of RFP 26-114 for staff training scheduling software.", where: "School board, consent agenda", stage: "Awarded", phrase: "noise", hybrid: "drop" },
+    { q: "We set aside eighty thousand dollars next year to replace how we schedule staff training.", where: "Budget workshop, item 3", stage: "Budgeted", phrase: "show", hybrid: "show" },
+    { q: "Presentation from a vendor on their training scheduling platform.", where: "City council, item 9", stage: "Vendor pitch", phrase: "noise", hybrid: "drop" },
+    { q: "Teachers told us the substitute and training calendar is a mess every Monday.", where: "School board, public comment", stage: "Pain", phrase: "miss", hybrid: "show" }
+  ];
+  var LABEL = {
+    show: ["ok", "Shown, early stage"],
+    noise: ["bad", "Shown, but too late"],
+    miss: ["warn", "Missed"],
+    drop: ["dim", "Dropped by the gate"]
+  };
+  var box = document.getElementById("snips"), sum = document.getElementById("snip-sum");
+  var mode = "phrase";
+  function render() {
+    box.innerHTML = "";
+    S.forEach(function (s) {
+      var v = s[mode], l = LABEL[v];
+      var c = document.createElement("div");
+      c.className = "card " + (v === "show" ? "shown" : v === "noise" ? "noise" : "out");
+      var q = document.createElement("q"); q.textContent = s.q;
+      var m = document.createElement("span"); m.className = "meta";
+      m.textContent = s.where + (mode === "hybrid" ? " · stage " + s.stage : "");
+      var chip = document.createElement("span"); chip.className = "v chip " + l[0]; chip.textContent = l[1];
+      c.appendChild(q); c.appendChild(chip); c.appendChild(m);
+      box.appendChild(c);
+    });
+    sum.textContent = mode === "phrase"
+      ? "Phrase match shows three results, and two of them are an awarded contract and a vendor pitch. It misses both real complaints because nobody said scheduling."
+      : "Hybrid matching finds both complaints by meaning. The stage gate drops the award and the pitch, so all three results are early enough to act on.";
+  }
+  document.querySelectorAll("[data-m]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      mode = b.getAttribute("data-m");
+      document.querySelectorAll("[data-m]").forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+      render();
+    });
+  });
+  render();
+})();
+
+</script>
+</body>
+</html>

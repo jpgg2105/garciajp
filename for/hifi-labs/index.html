@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Drop day · a sketch for HIFI Labs by Juan Pablo García</title>
+<meta name="description" content="A launch setup for artist activations on Cloudflare and Firebase, built around the first ten minutes.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="author" content="Juan Pablo García">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Drop day · a sketch for HIFI Labs by Juan Pablo García">
+<meta property="og:description" content="A launch setup for artist activations on Cloudflare and Firebase, built around the first ten minutes.">
+<meta property="og:url" content="https://garciajp.com/for/hifi-labs/">
+<meta property="og:image" content="https://garciajp.com/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0E0F12">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231D6B70'/%3E%3Ctext x='32' y='42' font-family='Helvetica,Arial,sans-serif' font-size='28' font-weight='700' fill='%23FFFFFF' text-anchor='middle'%3EJP%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@400;500;600;700&family=Funnel+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="/for/for.css">
+</head>
+<body>
+<header class="top"><div class="wrap"><a class="brand" href="/">Juan Pablo García</a><nav aria-label="Site"><a class="hide-s" href="/projects/">Projects</a><a href="/resume.pdf">Resume</a><a class="go" href="/book/">Book a call</a></nav></div></header>
+<main>
+<section class="hero"><div class="wrap">
+<p class="eyebrow">A sketch for HIFI Labs</p>
+<h1>Drop day, when every fan shows up in the same minute</h1>
+<p class="lede">An artist posts the link and most of the day's traffic lands in the first few minutes. On Firebase that is a known pain. Google's guidance puts a single document at <b>about one sustained write per second</b>, and says a new collection should start around <b>500 operations per second</b> and grow from there. This is the setup I would put in front of the next activation, on the stack you already use.</p>
+</div></section>
+<div class="wrap"><section class="stage" id="flow-stage" aria-label="From the artist's post to a live page that holds">
+<div class="stage-head"><h2>From the artist's post to a live page that holds</h2><p class="hint">Plays on its own. Tap any box to jump to it.</p></div>
+<div class="flow"></div>
+<div class="narr"><span class="count num" data-n></span><h3 data-t></h3><p data-d></p></div>
+<div class="ctrl"><button type="button" data-prev>Back</button><button type="button" data-play aria-pressed="true">Pause</button><button type="button" data-next>Next</button><div class="dots" data-dots></div></div>
+</section></div>
+<section class="block"><div class="wrap">
+<h2>Launch simulator</h2>
+<p class="intro">A simple model of the first ten minutes. Fans arrive front loaded, 40 percent in the first minute, and each one makes one write. Move the slider and switch between sending everyone straight to Firestore and using the waiting room.</p>
+<div class="panel">
+<div class="wbar"><div class="seg" role="group" aria-label="Setup"><button type="button" id="h-direct" data-h="direct" aria-pressed="true">Straight to Firestore</button><button type="button" id="h-room" data-h="room" aria-pressed="false">With the waiting room</button></div><span class="example">A model, not a measurement</span></div>
+<div class="grid2">
+<div>
+<div class="range"><label for="h-fans">Fans in the first 10 minutes</label><output id="h-fans-out" for="h-fans" class="num"></output><input id="h-fans" type="range" min="20000" max="1000000" step="10000" value="250000"></div>
+<div class="stats" id="h-stats" style="margin-top:18px"></div>
+<p class="summary" id="h-sum"></p>
+</div>
+<div style="min-width:0">
+<svg id="h-chart" viewBox="0 0 520 280" role="img" aria-label="Chart of fans arriving per second and fans admitted per second over time" style="width:100%;height:auto;display:block"></svg>
+<p class="note" style="margin-top:8px;font-size:14px"><span style="color:var(--muted)">Grey</span> is fans arriving per second. <span style="color:var(--accent)">Teal</span> is writes reaching Firestore. The dashed line is the 500 per second starting rate.</p>
+</div>
+</div>
+</div>
+</div></section>
+
+<section class="block"><div class="wrap">
+<div class="cols">
+<div>
+<h3 class="sub">How I would build it</h3>
+<ul class="steps-list">
+<li>A Cloudflare Worker waiting room with signed, short lived tokens, deployed where you already deploy.</li>
+<li>A load test the week before that replays the first ten minutes at full size against a staging project, with k6.</li>
+<li>One document per fan and a count query rolled into a single total, instead of a shared counter.</li>
+<li>Cloud Tasks for anything slow or third party, with retries and idempotency keys so a retry never double claims.</li>
+</ul>
+</div>
+<div>
+<h3 class="sub">What I would check first</h3>
+<ul class="steps-list">
+<li>What broke on the last big activation, if anything, and where the time went.</li>
+<li>Which actions have to feel instant for the fan and which can finish a few seconds later.</li>
+<li>Whether drops have a fixed supply, which changes how the line should be ordered.</li>
+</ul>
+<p class="note" style="margin-top:18px">I have shipped more on Postgres and FastAPI than on Firebase, so the limits on this page come from Google's published guidance, not from a launch I ran.</p>
+</div>
+</div>
+</div></section>
+
+<section class="block"><div class="wrap">
+<p class="note">I put this together from your public pages and posts, so I am guessing at your internals. Treat it as a starting point for a conversation. Example numbers on this page are made up to show the idea.</p>
+<div class="cta-row"><a class="btn" href="/book/">Book a 15 minute call</a><a class="btn line" href="/resume.pdf">Resume (PDF)</a><a class="btn line" href="/">See my work</a></div>
+</div></section>
+</main>
+<footer class="foot"><div class="wrap">
+<div><p class="who">Juan Pablo García</p><p class="muted">AI engineer in San Juan, Argentina (UTC-3). RAG, agents and evals, built for production.</p></div>
+<nav aria-label="Contact"><a href="mailto:jpgarcia2154@gmail.com">jpgarcia2154@gmail.com</a><a href="/resume.pdf">Resume (PDF)</a><a href="/book/">Book a call</a><a href="https://github.com/jpgg2105">GitHub</a><a href="https://www.linkedin.com/in/juan-pablo-garc%C3%ADa-ba3496360">LinkedIn</a></nav>
+</div></footer>
+<script src="/for/flow.js"></script>
+<script>
+var FLOW = {"label": "Diagram of fan traffic going through an edge cache and a waiting room into Firestore", "nodes": [{"id": "fans", "c": 0, "r": 1, "t": "Fans", "s": "the artist posts", "tag": "traffic"}, {"id": "cache", "c": 1, "r": 0, "t": "Edge cache", "s": "pages, art, video", "tag": "edge"}, {"id": "wait", "c": 1, "r": 2, "t": "Waiting room", "s": "Worker, signed tokens", "tag": "edge"}, {"id": "ramp", "c": 2, "r": 2, "t": "Ramp control", "s": "500/s, +50% per 5 min", "tag": "code"}, {"id": "store", "c": 3, "r": 1, "t": "Firestore", "s": "one doc per fan", "tag": "db"}, {"id": "tasks", "c": 4, "r": 1, "t": "Cloud Tasks", "s": "claims, receipts, email", "tag": "queue"}, {"id": "live", "c": 4, "r": 2, "t": "Live total", "s": "count, once a second", "tag": "code"}, {"id": "app", "c": 5, "r": 0, "t": "Fan app", "s": "Next.js and Expo", "tag": "out"}], "edges": [{"a": "fans", "b": "cache"}, {"a": "fans", "b": "wait"}, {"a": "cache", "b": "app"}, {"a": "wait", "b": "ramp"}, {"a": "ramp", "b": "store"}, {"a": "store", "b": "tasks"}, {"a": "store", "b": "live"}, {"a": "tasks", "b": "app"}, {"a": "live", "b": "app"}], "steps": [{"t": "The link goes live", "d": "The curve is steep. Most fans arrive in the first two minutes, and everything below is built around that shape instead of the daily average.", "on": ["fans"], "go": []}, {"t": "Most requests never reach the backend", "d": "Pages, artwork and video come from Cloudflare's cache, where you already deploy. Only actions that change something go further.", "on": ["cache", "app"], "go": ["fans>cache", "cache>app"]}, {"t": "A line instead of errors", "d": "A Worker hands out signed entry tokens. Fans see their place and a real wait time instead of a spinner and a failed request.", "on": ["wait"], "go": ["fans>wait"]}, {"t": "Admit at the rate Firestore likes", "d": "The gate lets fans in on Google's ramp, 500 operations per second to start and 50 percent more every five minutes. A load test the week before warms the same path.", "on": ["ramp"], "go": ["wait>ramp", "ramp>store"]}, {"t": "No hot documents", "d": "Each fan writes only their own document. There is no shared counter for thousands of fans to fight over.", "on": ["store"], "go": ["ramp>store"]}, {"t": "Slow work goes to a queue", "d": "Claims, receipts and emails run in Cloud Tasks with retries and idempotency keys, so a slow provider never holds up the fan.", "on": ["tasks"], "go": ["store>tasks", "tasks>app"]}, {"t": "Everyone still sees it live", "d": "One function runs a count query each second and writes a single total. Every fan's listener reads that one document.", "on": ["live", "app"], "go": ["store>live", "live>app"]}]};
+FLOW.id = "f"; Flow(document.getElementById("flow-stage"), FLOW);
+</script>
+<script>
+(function () {
+  var SHARE = [0.40, 0.20, 0.12, 0.08, 0.06, 0.028, 0.028, 0.028, 0.028, 0.028];
+  var NS = "http://www.w3.org/2000/svg";
+  var mode = "direct";
+  var slider = document.getElementById("h-fans"), outN = document.getElementById("h-fans-out");
+  var stats = document.getElementById("h-stats"), sum = document.getElementById("h-sum"), chart = document.getElementById("h-chart");
+  var fmt = function (n) { return Math.round(n).toLocaleString("en-US"); };
+  function dur(s) { s = Math.round(s); if (s < 60) return s + " s"; var m = Math.floor(s / 60), r = s % 60; return m + " min" + (r ? " " + r + " s" : ""); }
+
+  function arrivalRate(t) { var m = Math.floor(t / 60); return m < 10 ? SHARE[m] / 60 : 0; }
+  function capacity(t) { return 500 * Math.pow(1.5, Math.floor(t / 300)); }
+
+  function simulate(N) {
+    var T = 3600, A = [0], S = [0], arr = [], adm = [], q = 0, clear = 0;
+    for (var t = 0; t < T; t++) {
+      var a = N * arrivalRate(t);
+      q += a;
+      var s = Math.min(q, capacity(t));
+      q -= s;
+      arr.push(a); adm.push(s);
+      A.push(A[t] + a); S.push(S[t] + s);
+      if (q > 0.5) clear = t + 1;
+      if (t > 600 && q <= 0.5) break;
+    }
+    var maxWait = 0, j = 0;
+    for (var i = 1; i < A.length; i++) {
+      while (j < S.length - 1 && S[j] < A[i] - 0.5) j++;
+      maxWait = Math.max(maxWait, j - i);
+    }
+    return { arr: arr, adm: adm, clear: clear, maxWait: maxWait };
+  }
+
+  function el(tag, a, p) { var e = document.createElementNS(NS, tag); for (var k in a) e.setAttribute(k, a[k]); if (p) p.appendChild(e); return e; }
+
+  function draw(sim, N, animate) {
+    chart.innerHTML = "";
+    var L = 52, R = 12, Tp = 14, B = 34, W = 520, H = 280, pw = W - L - R, ph = H - Tp - B;
+    var mins = Math.max(10, Math.ceil(sim.clear / 60) + 1);
+    var Tmax = mins * 60;
+    var peak = N * SHARE[0] / 60;
+    var ymax = Math.max(peak, 600);
+    var nice = [100, 200, 250, 500, 1000, 2000, 2500, 5000, 10000, 20000];
+    var stepY = nice.find(function (v) { return ymax / v <= 5; }) || 20000;
+    ymax = Math.ceil(ymax / stepY) * stepY;
+    var x = function (t) { return L + pw * t / Tmax; }, y = function (v) { return Tp + ph * (1 - v / ymax); };
+    for (var v = 0; v <= ymax; v += stepY) {
+      el("line", { x1: L, x2: W - R, y1: y(v), y2: y(v), style: "stroke:var(--line);stroke-width:1" }, chart);
+      var tx = el("text", { x: L - 8, y: y(v) + 4, "text-anchor": "end", style: "fill:var(--muted);font:11px var(--f-code)" }, chart);
+      tx.textContent = v >= 1000 ? (v / 1000) + "k" : v;
+    }
+    var tickEvery = mins > 20 ? 5 : mins > 10 ? 2 : 1;
+    for (var m = 0; m <= mins; m += tickEvery) {
+      var tt = el("text", { x: x(m * 60), y: H - B + 18, "text-anchor": "middle", style: "fill:var(--muted);font:11px var(--f-code)" }, chart);
+      tt.textContent = m + "m";
+    }
+    el("line", { x1: L, x2: W - R, y1: y(500), y2: y(500), style: "stroke:var(--warn);stroke-width:1.2;stroke-dasharray:4 5" }, chart);
+    function pts(series) {
+      var p = [];
+      for (var t = 0; t < Tmax; t += 5) p.push(x(t).toFixed(1) + "," + y(series[t] || 0).toFixed(1));
+      return p.join(" ");
+    }
+    var admitted = mode === "direct" ? sim.arr : sim.adm;
+    if (mode === "room") {
+      var poly = [];
+      for (var t = 0; t < Tmax; t += 5) poly.push(x(t).toFixed(1) + "," + y(sim.arr[t] || 0).toFixed(1));
+      for (t = Math.floor((Tmax - 5) / 5) * 5; t >= 0; t -= 5) poly.push(x(t).toFixed(1) + "," + y(sim.adm[t] || 0).toFixed(1));
+      el("polygon", { points: poly.join(" "), style: "fill:var(--accent-wash)" }, chart);
+    }
+    el("polyline", { points: pts(sim.arr), style: "fill:none;stroke:var(--muted);stroke-width:1.6" }, chart);
+    var line = el("polyline", { points: pts(admitted), style: "fill:none;stroke:var(--accent);stroke-width:2.4;stroke-linejoin:round" }, chart);
+    if (animate && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      var len = line.getTotalLength();
+      line.style.strokeDasharray = len; line.style.strokeDashoffset = len;
+      line.getBoundingClientRect();
+      line.style.transition = "stroke-dashoffset .9s cubic-bezier(.23,1,.32,1)";
+      line.style.strokeDashoffset = 0;
+    }
+    var yl = el("text", { x: L, y: Tp - 2, style: "fill:var(--muted);font:11px var(--f-code)" }, chart);
+    yl.textContent = "per second";
+  }
+
+  function stat(v, label, cls) {
+    return '<div class="stat"><b style="color:var(--' + cls + ')">' + v + "</b><span>" + label + "</span></div>";
+  }
+
+  function render(animate) {
+    var N = +slider.value;
+    outN.textContent = fmt(N);
+    var sim = simulate(N);
+    var peak = N * SHARE[0] / 60;
+    if (mode === "direct") {
+      stats.innerHTML =
+        stat(fmt(peak) + "/s", "writes on a shared counter at peak, against about 1 per second", peak > 1 ? "bad" : "ok") +
+        stat(fmt(peak) + "/s", "into a cold collection in minute one, against a 500 start", peak > 500 ? "bad" : "ok");
+      sum.textContent = peak > 500
+        ? "Expect contention errors and retries in exactly the minutes that matter, and fans who refresh, which adds more load."
+        : "At this size the collection is fine, but a shared counter is still the first thing to break.";
+    } else {
+      stats.innerHTML =
+        stat("1/s", "writes on the busiest document, the live total", "ok") +
+        stat(fmt(Math.min(peak, 500)) + "/s", "peak writes into Firestore in the first five minutes", "ok") +
+        stat(sim.maxWait > 0 ? dur(sim.maxWait) : "none", "longest time a fan waits in line", sim.maxWait > 300 ? "warn" : "ok") +
+        stat(sim.clear > 0 ? "minute " + Math.ceil(sim.clear / 60) : "never forms", "when the line is empty", "ok");
+      sum.textContent = sim.maxWait > 0
+        ? "Nobody gets an error. The busiest fans wait in a visible line while Firestore takes writes at the rate it is designed for."
+        : "At this size nobody waits. The room stays in place for the post that goes viral.";
+    }
+    draw(sim, N, animate);
+  }
+
+  document.querySelectorAll("[data-h]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      mode = b.getAttribute("data-h");
+      document.querySelectorAll("[data-h]").forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+      render(true);
+    });
+  });
+  slider.addEventListener("input", function () { render(false); });
+  render(true);
+})();
+
+</script>
+</body>
+</html>

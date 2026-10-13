@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>A weekly growth loop · a sketch for Privy by Juan Pablo García</title>
+<meta name="description" content="One loop a week from Privy's investor activity data to metro pages, short video, outbound and trials.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="author" content="Juan Pablo García">
+<meta property="og:type" content="article">
+<meta property="og:title" content="A weekly growth loop · a sketch for Privy by Juan Pablo García">
+<meta property="og:description" content="One loop a week from Privy's investor activity data to metro pages, short video, outbound and trials.">
+<meta property="og:url" content="https://garciajp.com/for/privy/">
+<meta property="og:image" content="https://garciajp.com/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0E0F12">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231D6B70'/%3E%3Ctext x='32' y='42' font-family='Helvetica,Arial,sans-serif' font-size='28' font-weight='700' fill='%23FFFFFF' text-anchor='middle'%3EJP%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@400;500;600;700&family=Funnel+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="/for/for.css">
+</head>
+<body>
+<header class="top"><div class="wrap"><a class="brand" href="/">Juan Pablo García</a><nav aria-label="Site"><a class="hide-s" href="/projects/">Projects</a><a href="/resume.pdf">Resume</a><a class="go" href="/book/">Book a call</a></nav></div></header>
+<main>
+<section class="hero"><div class="wrap">
+<p class="eyebrow">A sketch for Privy</p>
+<h1>One loop a week from Privy's data to new trials</h1>
+<p class="lede">The role asks for an always on growth engine built with Claude, with content from your data, SEO and AEO, email journeys and outbound. You already have the input nobody else can copy, <b>live investor activity by market</b>. This is the loop I would ship in the first two weeks and then improve every week after.</p>
+</div></section>
+<div class="wrap"><section class="stage" id="flow-stage" aria-label="From this week's investor activity to tracked trials">
+<div class="stage-head"><h2>From this week's investor activity to tracked trials</h2><p class="hint">Plays on its own. Tap any box to jump to it.</p></div>
+<div class="flow"></div>
+<div class="narr"><span class="count num" data-n></span><h3 data-t></h3><p data-d></p></div>
+<div class="ctrl"><button type="button" data-prev>Back</button><button type="button" data-play aria-pressed="true">Pause</button><button type="button" data-next>Next</button><div class="dots" data-dots></div></div>
+</section></div>
+<section class="block"><div class="wrap">
+<h2>What one week produces</h2>
+<p class="intro">Pick a metro. These are the pieces the loop would draft from that week's numbers, ready for a person to approve.</p>
+<div class="panel">
+<div class="wbar"><div class="seg" role="group" aria-label="Metro" id="p-metros"></div><span class="example">Made up numbers</span></div>
+<div class="stats" id="p-data" style="margin-top:20px"></div>
+<div class="grid2" id="p-out" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr))"></div>
+</div>
+</div></section>
+
+<section class="block"><div class="wrap">
+<h2>The first four weeks</h2>
+<div class="cards" id="p-weeks"></div>
+</div></section>
+
+<section class="block"><div class="wrap">
+<div class="cols">
+<div>
+<h3 class="sub">How I would build it</h3>
+<ul class="steps-list">
+<li>Claude Code for the build, Claude for the drafts, and a plain scheduled job to run it. Close to the <a href="/projects/chatbots-and-outreach/">pipeline I built</a> that finds leads and reaches them on WhatsApp with n8n, Airtable and the OpenAI API.</li>
+<li>A check on every page and email that each number matches Privy's data before a person approves it.</li>
+<li>Metro pages with schema markup and short, direct answers, so answer engines can quote them.</li>
+<li>One attribution view in HubSpot from day one, so every new system is judged on trials.</li>
+</ul>
+</div>
+<div>
+<h3 class="sub">What I would check first</h3>
+<ul class="steps-list">
+<li>Which data is fine to publish by zip and which has to stay inside the product.</li>
+<li>Which channel brings the best trials today, so week one starts there.</li>
+<li>Who approves content and how fast, since the loop is only as quick as that step.</li>
+</ul>
+</div>
+</div>
+</div></section>
+
+<section class="block"><div class="wrap">
+<p class="note">I put this together from your public pages and posts, so I am guessing at your internals. Treat it as a starting point for a conversation. Example numbers on this page are made up to show the idea.</p>
+<div class="cta-row"><a class="btn" href="/book/">Book a 15 minute call</a><a class="btn line" href="/resume.pdf">Resume (PDF)</a><a class="btn line" href="/">See my work</a></div>
+</div></section>
+</main>
+<footer class="foot"><div class="wrap">
+<div><p class="who">Juan Pablo García</p><p class="muted">AI engineer in San Juan, Argentina (UTC-3). RAG, agents and evals, built for production.</p></div>
+<nav aria-label="Contact"><a href="mailto:jpgarcia2154@gmail.com">jpgarcia2154@gmail.com</a><a href="/resume.pdf">Resume (PDF)</a><a href="/book/">Book a call</a><a href="https://github.com/jpgg2105">GitHub</a><a href="https://www.linkedin.com/in/juan-pablo-garc%C3%ADa-ba3496360">LinkedIn</a></nav>
+</div></footer>
+<script src="/for/flow.js"></script>
+<script>
+var FLOW = {"label": "Diagram of a weekly growth loop from market data to content, outbound, HubSpot and attribution", "nodes": [{"id": "data", "c": 0, "r": 1, "t": "Privy market data", "s": "buys and flips by zip", "tag": "data"}, {"id": "moved", "c": 1, "r": 1, "t": "What moved", "s": "top metros this week", "tag": "code"}, {"id": "pages", "c": 2, "r": 0, "t": "Metro pages", "s": "SEO and AEO, schema", "tag": "LLM"}, {"id": "video", "c": 2, "r": 1, "t": "Short video", "s": "script from the numbers", "tag": "LLM"}, {"id": "list", "c": 2, "r": 2, "t": "Who is active", "s": "agents and investors, Clay", "tag": "data"}, {"id": "email", "c": 3, "r": 2, "t": "Personal email", "s": "their market's numbers", "tag": "LLM"}, {"id": "hub", "c": 4, "r": 1, "t": "HubSpot journey", "s": "trial and nurture", "tag": "tool"}, {"id": "attr", "c": 5, "r": 1, "t": "Attribution", "s": "metro and asset", "tag": "code"}], "edges": [{"a": "data", "b": "moved"}, {"a": "moved", "b": "pages"}, {"a": "moved", "b": "video"}, {"a": "moved", "b": "list"}, {"a": "list", "b": "email"}, {"a": "pages", "b": "hub"}, {"a": "video", "b": "hub"}, {"a": "email", "b": "hub"}, {"a": "hub", "b": "attr"}, {"a": "attr", "b": "moved", "back": true, "label": "next week's picks"}], "steps": [{"t": "Start from what only Privy has", "d": "Investor purchases and flips by zip code. Nobody else can publish this, which is what makes it rank and get quoted.", "on": ["data"], "go": []}, {"t": "Pick the story", "d": "A small job ranks metros by what changed this week. More flips, shorter holds, or a new buyer group moving in.", "on": ["moved"], "go": ["data>moved"]}, {"t": "Turn it into content", "d": "Claude drafts a metro page with structured data so search and answer engines can cite it, plus a 60 second video script. Numbers are checked against the data and a person approves before anything goes live.", "on": ["pages", "video"], "go": ["moved>pages", "moved>video"]}, {"t": "Reach the people in that market", "d": "Clay finds agents and investors active in those zips. Each email opens with a number from their own market, not a template line.", "on": ["list", "email"], "go": ["moved>list", "list>email"]}, {"t": "Everything lands in one journey", "d": "Signups from pages, video and email enter HubSpot tagged with the metro and the asset that brought them.", "on": ["hub"], "go": ["pages>hub", "video>hub", "email>hub"]}, {"t": "Measure, then pick again", "d": "Every trial ties back to a metro and an asset. Next week's picks lean toward what converted, not what got clicks.", "on": ["attr"], "go": ["hub>attr"]}, {"t": "Then ship the next piece", "d": "Same loop, one new system every week or two. A new channel, a new page type or a better hook, each judged on trials.", "on": ["attr", "moved"], "go": ["attr>moved"]}]};
+FLOW.id = "f"; Flow(document.getElementById("flow-stage"), FLOW);
+</script>
+<script>
+(function () {
+  var M = [
+    { id: "phx", name: "Phoenix", flips: 18, hold: 141, holdDrop: 3, zip: "85033", zipFlips: 41 },
+    { id: "tpa", name: "Tampa", flips: 11, hold: 168, holdDrop: 2, zip: "33610", zipFlips: 29 },
+    { id: "cle", name: "Cleveland", flips: 24, hold: 119, holdDrop: 4, zip: "44105", zipFlips: 37 }
+  ];
+  var pick = 0;
+  var bar = document.getElementById("p-metros"), data = document.getElementById("p-data"), out = document.getElementById("p-out");
+  M.forEach(function (m, i) {
+    var b = document.createElement("button");
+    b.type = "button"; b.id = "p-" + m.id; b.textContent = m.name;
+    b.setAttribute("aria-pressed", i === 0 ? "true" : "false");
+    b.addEventListener("click", function () {
+      pick = i;
+      Array.prototype.forEach.call(bar.children, function (x, j) { x.setAttribute("aria-pressed", j === i ? "true" : "false"); });
+      render();
+    });
+    bar.appendChild(b);
+  });
+  function piece(label, body) {
+    return '<div><p class="label" style="margin-bottom:8px">' + label + '</p><p class="out-text">' + body + "</p></div>";
+  }
+  function render() {
+    var m = M[pick];
+    data.innerHTML =
+      '<div class="stat"><b>+' + m.flips + "%</b><span>flips vs last month</span></div>" +
+      '<div class="stat"><b>' + m.hold + " days</b><span>median hold, down " + m.holdDrop + " weeks</span></div>" +
+      '<div class="stat"><b>' + m.zip + "</b><span>busiest zip, " + m.zipFlips + " flips</span></div>";
+    out.innerHTML =
+      piece("Metro page title", "Where investors are flipping in " + m.name + " this month") +
+      piece("Video hook, first 3 seconds", m.name + " investors are holding " + m.holdDrop + " weeks less than last month. Here is the zip where it is happening.") +
+      piece("Email subject", m.zip + " had " + m.zipFlips + " flips last month") +
+      piece("Email first line", "You closed in " + m.zip + " this year, so this might be useful. Flips there are up " + m.flips + " percent and the median hold is down to " + m.hold + " days.");
+  }
+  var W = [
+    ["Week 1", "Metro pages for the top five markets and one outbound email per market, tracked in HubSpot."],
+    ["Week 2", "Video scripts from the same numbers, and the first look at which metro brought trials."],
+    ["Week 3", "FAQ blocks and schema on every metro page, aimed at answer engines."],
+    ["Week 4", "A nurture journey for trials who have not run a search yet, using their own metro."]
+  ];
+  document.getElementById("p-weeks").innerHTML = W.map(function (w) {
+    return '<div class="card"><q style="font-size:16px">' + w[1] + '</q><span class="v chip ok">' + w[0] + "</span></div>";
+  }).join("");
+  render();
+})();
+
+</script>
+</body>
+</html>
