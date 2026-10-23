@@ -47,7 +47,7 @@ name = site["name"]
 domain = site["domain"].rstrip("/")
 default_desc = site["description"]
 info = site.get("person", {})
-home_title = f"{name} · AI Engineer, RAG, Agents and LLM Evaluation"
+home_title = f"{name} · AI Developer, RAG, Agents and LLM Evaluation"
 
 # Shared styles, content and code go to /assets so every page is small and its text comes first.
 import hashlib

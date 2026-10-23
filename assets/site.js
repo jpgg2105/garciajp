@@ -2124,7 +2124,7 @@ const explainerHTML = p => {
 const socials = () => ["github","linkedin","x"].filter(k => SITE.links[k]).map(k => `<a href="${esc(SITE.links[k])}" target="_blank" rel="noopener" aria-label="${{github:"GitHub",linkedin:"LinkedIn",x:"X (Twitter)"}[k]}">${ICONS[k]}</a>`).join("");
 const ctaHTML = () => `
   <section class="cta">
-    <h2>Hiring an AI engineer, or need an AI feature built? Let's talk.</h2>
+    <h2>Hiring, or need an AI feature built? Let's talk.</h2>
     <div class="row" style="justify-content:space-between;gap:20px">
       <div class="row" style="flex:1 1 320px"><a class="btn" href="mailto:${esc(SITE.email)}">Email me <span class="arr">${ICONS.arrow}</span></a><a class="btn line" href="${url("/resume/")}">Read my resume</a><a class="btn line" href="${url("/book/")}">Book a call</a></div>
       <div class="socials">${socials()}</div>
@@ -2136,9 +2136,9 @@ const V = {
     <div class="page">
       <section class="hero">
         <h1>I build AI systems that work <em>in production.</em></h1>
-        <p class="sub">I'm Juan Pablo, an AI engineer in Argentina. I build <b>RAG pipelines and multi-agent systems</b>, and I measure whether they actually work.</p>
+        <p class="sub">I'm Juan Pablo, an AI developer in Argentina. I build <b>RAG pipelines and multi-agent systems</b>, and I measure whether they actually work.</p>
         <div class="row"><a class="btn" href="${url("/projects/")}">See my work <span class="arr">${ICONS.arrow}</span></a><a class="btn line" href="${url("/resume/")}">Resume</a><a class="btn line" href="mailto:${esc(SITE.email)}">Email me</a></div>
-        <ul class="avail" aria-label="Availability"><li><b>Open to remote AI engineering roles</b></li><li>UTC−3, overlaps US working hours</li><li>English C2 · Spanish native</li></ul>
+        <ul class="avail" aria-label="Availability"><li><b>Open to remote AI roles</b></li><li>UTC−3, overlaps US working hours</li><li>English C2 · Spanish native</li></ul>
       </section>
       ${buildStage()}
       <section>
