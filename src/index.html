@@ -138,7 +138,7 @@ pre.code{margin:0;font:14px/1.75 var(--f-code);white-space:pre;color:var(--ink);
 .run-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:4px}
 .run-head h4{font-size:17px;letter-spacing:-.01em}
 .run-score{font-family:var(--f-display);font-size:40px;font-weight:600;letter-spacing:-.03em;line-height:1}
-.run-score small{font-size:16px;color:var(--muted);letter-spacing:0}
+.run-score{text-align:right;white-space:nowrap}.run-score small{display:block;font-family:var(--f-body);font-size:12.5px;font-weight:500;color:var(--muted);letter-spacing:0;margin-top:4px}
 .agent{display:grid;grid-template-columns:104px minmax(0,1fr) auto;gap:14px;align-items:center;padding:11px 14px;border:1px solid var(--line);border-radius:12px;font-size:15px;background:var(--raised)}
 .agent b{font-weight:600}
 .agent .t{color:var(--muted);font-size:14px}
@@ -1730,6 +1730,11 @@ footer a{color:var(--muted)}
       "How a project runs",
       "A 15-minute intro call, a written plan with scope and price, working demos every week, and a documented handover."
     ]
+  ],
+  "featured": [
+    "how-to-evaluate-llm-apps",
+    "how-rag-works",
+    "how-ai-agents-work"
   ]
 }
 </script>
@@ -1806,7 +1811,7 @@ const AGENTS = [
 ];
 const RUN = `
   <div class="run">
-    <div class="run-head"><div><h4>Agent run</h4><span class="muted" style="font-size:14px">4 agents · 5.7 s</span></div><div class="run-score num">8.6<small> / 10</small></div></div>
+    <div class="run-head"><div><h4>Agent run</h4><span class="muted" style="font-size:14px">4 agents · 5.7 s</span></div><div class="run-score num">6/6<small>claims cited</small></div></div>
     ${AGENTS.map(([n,t,s,f]) => `<div class="agent" data-row><b>${n}</b><span class="t">${t}${f ? '<span class="flag">Revised</span>' : ""}</span><span class="muted num" style="font-size:14px">${s}</span></div>`).join("")}
   </div>`;
 const SHIP = `
@@ -3883,7 +3888,7 @@ const V = {
         <div class="sh"><h2>Selected projects</h2><a href="${url("/projects/")}">All projects</a></div>
         <div class="plist">${SITE.projects.slice(0,3).map(projRow).join("")}</div>
       </section>
-      ${SITE.posts.length ? `<section><div class="sh"><h2>Recent writing</h2><a href="${url("/writing/")}">All articles, interviews and notes</a></div><div class="posts">${sorted().slice(0,3).map(postHTML).join("")}</div></section>` : ""}
+      ${SITE.posts.length ? `<section><div class="sh"><h2>Recent writing</h2><a href="${url("/writing/")}">All articles, interviews and notes</a></div><div class="posts">${(SITE.featured || []).map(s => SITE.posts.find(p => p.slug === s)).filter(Boolean).concat(sorted()).filter((p, i, a) => a.indexOf(p) === i).slice(0,3).map(postHTML).join("")}</div></section>` : ""}
       ${ctaHTML()}
     </div>`,
 
@@ -3977,7 +3982,7 @@ const V = {
   writing: () => {
     const counts = { all: SITE.posts.length };
     SITE.posts.forEach(p => counts[p.kind] = (counts[p.kind]||0) + 1);
-    const opts = [["all","All"], ...Object.entries(SITE.labels)];
+    const opts = [["all","All"], ...Object.entries(SITE.labels).filter(([k]) => counts[k])];
     const btns = tab => opts.map(([k,l]) => `<button type="button" ${tab ? `data-f="${k}" aria-pressed="${filter===k}"` : 'tabindex="-1" aria-hidden="true"'}>${l}<span class="num">${counts[k]||0}</span></button>`).join("");
     return `
     <div class="page">

@@ -68,7 +68,7 @@ const AGENTS = [
 ];
 const RUN = `
   <div class="run">
-    <div class="run-head"><div><h4>Agent run</h4><span class="muted" style="font-size:14px">4 agents · 5.7 s</span></div><div class="run-score num">8.6<small> / 10</small></div></div>
+    <div class="run-head"><div><h4>Agent run</h4><span class="muted" style="font-size:14px">4 agents · 5.7 s</span></div><div class="run-score num">6/6<small>claims cited</small></div></div>
     ${AGENTS.map(([n,t,s,f]) => `<div class="agent" data-row><b>${n}</b><span class="t">${t}${f ? '<span class="flag">Revised</span>' : ""}</span><span class="muted num" style="font-size:14px">${s}</span></div>`).join("")}
   </div>`;
 const SHIP = `
@@ -2145,7 +2145,7 @@ const V = {
         <div class="sh"><h2>Selected projects</h2><a href="${url("/projects/")}">All projects</a></div>
         <div class="plist">${SITE.projects.slice(0,3).map(projRow).join("")}</div>
       </section>
-      ${SITE.posts.length ? `<section><div class="sh"><h2>Recent writing</h2><a href="${url("/writing/")}">All articles, interviews and notes</a></div><div class="posts">${sorted().slice(0,3).map(postHTML).join("")}</div></section>` : ""}
+      ${SITE.posts.length ? `<section><div class="sh"><h2>Recent writing</h2><a href="${url("/writing/")}">All articles, interviews and notes</a></div><div class="posts">${(SITE.featured || []).map(s => SITE.posts.find(p => p.slug === s)).filter(Boolean).concat(sorted()).filter((p, i, a) => a.indexOf(p) === i).slice(0,3).map(postHTML).join("")}</div></section>` : ""}
       ${ctaHTML()}
     </div>`,
 
@@ -2239,7 +2239,7 @@ const V = {
   writing: () => {
     const counts = { all: SITE.posts.length };
     SITE.posts.forEach(p => counts[p.kind] = (counts[p.kind]||0) + 1);
-    const opts = [["all","All"], ...Object.entries(SITE.labels)];
+    const opts = [["all","All"], ...Object.entries(SITE.labels).filter(([k]) => counts[k])];
     const btns = tab => opts.map(([k,l]) => `<button type="button" ${tab ? `data-f="${k}" aria-pressed="${filter===k}"` : 'tabindex="-1" aria-hidden="true"'}>${l}<span class="num">${counts[k]||0}</span></button>`).join("");
     return `
     <div class="page">
