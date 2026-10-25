@@ -21,7 +21,7 @@ const ICONS = {
   check: '<svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3 3 7-7"/></svg>',
 };
 
-$("#nav").innerHTML = TABS.map(([p,l,k]) => `<a href="${url(p)}" data-k="${k}"${k==="book"?' class="cta-link"':""}>${l}</a>`).join("");
+$("#nav").innerHTML = TABS.map(([p,l,k]) => `<a href="${url(p)}" data-k="${k}">${l}</a>`).join("");
 $(".brand").href = url("/");
 $("#foot").textContent = "© " + new Date().getFullYear() + " " + SITE.name + " · " + SITE.location;
 $("#footMail").textContent = SITE.email; $("#footMail").href = "mailto:" + SITE.email;

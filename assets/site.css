@@ -51,7 +51,6 @@ p{margin:0;text-wrap:pretty}
 .nav a{text-decoration:none;color:var(--muted);font-size:15px;font-weight:500;padding:10px 12px;border-radius:10px;white-space:nowrap;scroll-snap-align:start;transition:color .15s ease,background-color .15s ease,transform .16s var(--ease-out)}
 .nav a:active{transform:scale(.96)}
 .nav a[aria-current="page"]{color:var(--ink);background:var(--raised)}
-.nav a.cta-link{color:var(--accent)}
 @media (hover:hover) and (pointer:fine){.nav a:hover{color:var(--ink)}}
 
 /* buttons */
