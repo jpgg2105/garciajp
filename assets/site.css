@@ -343,7 +343,6 @@ footer a{color:var(--muted)}
   .nav a:first-child{margin-left:0}
 }
 @media (max-width:720px){
-  .nav{-webkit-mask-image:linear-gradient(90deg,#000 85%,transparent);mask-image:linear-gradient(90deg,#000 85%,transparent)}
   .post,.cv,.job,.group,.empty{grid-template-columns:minmax(0,1fr)}
   .post p{grid-column:1}
   .cv>div{border-top:0;padding-top:8px}
