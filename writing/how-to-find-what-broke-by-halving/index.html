@@ -18,14 +18,14 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://garciajp.com/og.png">
 <meta name="author" content="Juan Pablo García">
-<script type="application/ld+json" id="ld">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "url": "https://garciajp.com/writing/how-to-find-what-broke-by-halving/", "headline": "How to find what broke by halving", "description": "When something worked before and doesn't now, test the middle and throw away half the suspects each time.", "datePublished": "2026-10-12", "author": {"@type": "Person", "@id": "https://garciajp.com/#person", "name": "Juan Pablo García", "url": "https://garciajp.com/", "image": "https://garciajp.com/og.png", "jobTitle": "AI Developer", "description": "Juan Pablo García, AI developer in Argentina. RAG pipelines and multi-agent systems, built for production and measured with evals.", "email": "mailto:jpgarcia2154@gmail.com", "address": {"@type": "PostalAddress", "addressLocality": "San Juan", "addressRegion": "San Juan", "addressCountry": "AR"}, "alumniOf": [{"@type": "CollegeOrUniversity", "name": "University of Pennsylvania"}, {"@type": "CollegeOrUniversity", "name": "Universidad de Palermo"}], "worksFor": {"@type": "Organization", "name": "Nodos Hub"}, "knowsAbout": ["Retrieval-augmented generation", "Multi-agent systems", "LLM evaluation", "Python", "FastAPI", "React", "PostgreSQL", "Vector search"], "sameAs": ["https://github.com/jpgg2105", "https://www.linkedin.com/in/juan-pablo-garcia-guerrero", "https://x.com/garciajpgg21"]}, "genre": "Explainers"}]}</script>
+<script type="application/ld+json" id="ld">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "url": "https://garciajp.com/writing/how-to-find-what-broke-by-halving/", "headline": "How to find what broke by halving", "description": "When something worked before and doesn't now, test the middle and throw away half the suspects each time.", "datePublished": "2026-10-12", "author": {"@type": "Person", "@id": "https://garciajp.com/#person", "name": "Juan Pablo García", "url": "https://garciajp.com/", "image": "https://garciajp.com/og.png", "jobTitle": "AI Developer", "description": "Juan Pablo García, AI developer in Argentina. RAG pipelines and multi-agent systems, built for production and measured with evals.", "email": "mailto:jpgarcia2154@gmail.com", "address": {"@type": "PostalAddress", "addressLocality": "San Juan", "addressRegion": "San Juan", "addressCountry": "AR"}, "alumniOf": [{"@type": "CollegeOrUniversity", "name": "University of Pennsylvania"}, {"@type": "CollegeOrUniversity", "name": "Universidad de Palermo"}], "worksFor": {"@type": "Organization", "name": "Nodos Hub"}, "knowsAbout": ["Retrieval-augmented generation", "Multi-agent systems", "LLM evaluation", "Python", "FastAPI", "React", "PostgreSQL", "Vector search"], "sameAs": ["https://github.com/jpgg2105", "https://www.linkedin.com/in/juan-pablo-garcia-guerrero", "https://x.com/garciajpgg21"]}, "genre": "Explainers", "citation": [{"@type": "CreativeWork", "name": "Git documentation: git-bisect.", "url": "https://git-scm.com/docs/git-bisect"}, {"@type": "CreativeWork", "name": "Knuth (1998). The Art of Computer Programming, Vol. 3: Sorting and Searching, §6.2.1 (binary search). Addison-Wesley."}, {"@type": "CreativeWork", "name": "Zeller (2009). Why Programs Fail: A Guide to Systematic Debugging. Morgan Kaufmann."}]}]}</script>
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#0E0F12">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231D6B70'/%3E%3Ctext x='32' y='42' font-family='Helvetica,Arial,sans-serif' font-size='28' font-weight='700' fill='%23FFFFFF' text-anchor='middle'%3EJP%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@400;500;600;700&family=Instrument+Sans:wght@500&family=Funnel+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="/assets/site.css?v=2bff8d34b7">
+<link rel="stylesheet" href="/assets/site.css?v=6d9fbd8d96">
 </head>
 <body>
 <a class="skip" href="#view">Skip to content</a>
@@ -59,7 +59,8 @@
         </div>
       </section>
       <section class="cv">
-        <h2>In short</h2><div><ul class="plain"><li>It needs a quick, reliable test that says works or doesn't. Build that test first.</li><li>It works on code history (git bisect), recipe changes, settings, long spreadsheets and wiring.</li><li>If the problem only shows up sometimes, run each test more than once before you trust it.</li><li>The changes and results in the animation are illustrative.</li></ul></div>
+        <h2>In short</h2><div><ul class="plain"><li>It needs a quick, reliable test that says works or doesn't. Build that test first.</li><li>It assumes the problem appears at one change and stays. If it comes and goes across the history, halving can point to the wrong change.</li><li>If the problem only shows up sometimes, run each test more than once before you trust it.</li><li>It works on code history (git bisect), recipe changes, settings and wiring. The changes in the animation are illustrative.</li></ul></div>
+        <h2>References</h2><div><ol class="refs"><li><a href="https://git-scm.com/docs/git-bisect" target="_blank" rel="noopener">Git documentation: git-bisect.</a></li><li>Knuth (1998). The Art of Computer Programming, Vol. 3: Sorting and Searching, §6.2.1 (binary search). Addison-Wesley.</li><li>Zeller (2009). Why Programs Fail: A Guide to Systematic Debugging. Morgan Kaufmann.</li></ol></div>
         
       </section>
       
@@ -76,9 +77,9 @@
 <!-- ===================== CONTENT =====================
      Everything on the site comes from this JSON. Edit it, then run `python build.py`.
      See README.md for what each field does. -->
-<script src="/assets/content.js?v=4e89b368c6"></script>
+<script src="/assets/content.js?v=4cc6b21065"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/motion@11.11.13/dist/motion.js"></script>
-<script src="/assets/site.js?v=dd74ff1018"></script>
+<script src="/assets/site.js?v=16060d9ef3"></script>
 </body>
 </html>

@@ -487,7 +487,7 @@ const SCENES = {
     // attention arcs
     function headQuery(h){ return h === 2 ? 6 : 4; }
     const heads = [
-      { q: 4, w: [.04, .62, .06, .05, .12, .07, .04], label: "head 1: who “it” refers to" },
+      { q: 4, w: [.05, .7, .07, .05, .13, 0, 0], label: "head 1: who “it” refers to" },
       { prev: true, label: "head 2: the word just before" },
       { q: 6, w: [.02, .1, .04, .03, .5, .27, .04], label: "head 3: what is said about “it”" },
     ];
@@ -502,13 +502,13 @@ const SCENES = {
       const a = S < 3 ? K.seg(S, 2.05, 2.4) : K.seg((S - 3) * 3 - head, .05, .3);
       const H = heads[head];
       if (H.prev) toks.forEach((t, i) => { if (i > 0) arc(i, i - 1, .45, a); });
-      else H.w.forEach((wgt, j) => arc(H.q, j, wgt, a));
+      else H.w.forEach((wgt, j) => { if (j < H.q) arc(H.q, j, wgt, a); });
       if (!H.prev){
         const top = H.w.map((w, j) => [w, j]).filter(p => p[1] !== H.q).sort((p, q) => q[0] - p[0]).slice(0, 2);
         top.forEach(([w, j]) => { K.alpha(a); K.text(Math.round(w * 100) + "%", xs[j], Y + 7, { size: 2.8, align: "center", color: C.accent, weight: 600 }); });
       }
       K.alpha(S < 3 ? K.seg(S, 2.1, 2.4) : a);
-      K.text(S < 3 ? "attention from “it”" : H.label, 60, 14, { size: 3, align: "center", color: C.muted, weight: 500 });
+      K.text(S < 3 ? "attention from “it” (earlier tokens only)" : H.label, 60, 14, { size: 3, align: "center", color: C.muted, weight: 500 });
     }
     // next-token prediction
     const pa = K.seg(S, 4, 4.25);
@@ -2019,6 +2019,226 @@ const SCENES = {
     }
     K.alpha(1);
   },
+  /* ---------- RLHF ---------- */
+  rlhf(K, S, time){
+    const C = K.C, ctx = K.ctx;
+    const vis = (a, b) => K.seg(S, a, a + .15) * (1 - K.seg(S, b - .12, b));
+    const note = (t, a, b, col) => { K.alpha(K.seg(S, a, a + .2) * (1 - K.seg(S, b - .1, b))); K.text(t, 60, 94, { size: 2.7, align: "center", color: col || C.muted, weight: 600 }); };
+    const sig = z => 1 / (1 + Math.exp(-z));
+    const person = (x, y, a) => { K.alpha(a); K.dot(x, y - 3, 2.1, { fill: C.ink }); ctx.beginPath(); ctx.arc(x, y + 3.6, 3.8, Math.PI, 0); ctx.fillStyle = C.ink; ctx.fill(); };
+    // 1. supervised fine-tuning
+    const s1 = vis(0, 1.05);
+    if (s1 > 0){
+      K.alpha(s1 * K.seg(S, 0, .15)); K.node(16, 56, 26, 12, "base model", { sub: "continues text", size: 2.9 });
+      K.alpha(s1 * K.seg(S, .15, .3)); K.arrow(29.5, 56, 82.5, 56, { color: C.strong, hs: 1.1 });
+      K.text("supervised fine-tuning", 57, 62, { size: 2.5, align: "center", color: C.muted });
+      [["Q: Summarize this email", "A: written by a person"], ["Q: Explain DNS simply", "A: written by a person"], ["Q: Fix this SQL query", "A: written by a person"]].forEach(([q, a], i) => {
+        const t = K.seg(S, .2 + i * .1, .32 + i * .1), y = 14 + i * 3;
+        K.alpha(s1 * t); K.rect(35 + i * 3, y, 46, 11, 1.8, { fill: C.surface, stroke: C.strong });
+        if (i === 2){ K.text(q, 38 + i * 3, y + 3.8, { size: 2.2, mono: true, color: C.muted }); K.text(a, 38 + i * 3, y + 7.6, { size: 2.2, mono: true }); }
+        K.packet(58, 39, 58, 55, K.seg(S, .35 + i * .1, .5 + i * .1), { r: .9 });
+      });
+      K.alpha(s1 * K.seg(S, .3, .4)); K.text("demonstrations", 58, 11, { size: 2.4, align: "center", color: C.muted, weight: 600 });
+      K.alpha(s1 * K.seg(S, .6, .75)); K.node(100, 56, 33, 12, "SFT model", { sub: "follows instructions", size: 2.9, stroke: C.accent, lw: .5 });
+    }
+    note("stage 1: imitate good answers written by people", .65, 1.05, C.accent);
+    // 2. comparisons
+    const s2 = vis(1.02, 2.05);
+    if (s2 > 0){
+      const pick = K.seg(S, 1.55, 1.65);
+      K.alpha(s2); K.rect(16, 10, 88, 9, 2, { fill: C.raised, stroke: C.strong }); K.text("How do I reset my password?", 60, 14.5, { size: 2.8, align: "center", weight: 600 });
+      [[6, ["Go to Settings › Security,", "choose Reset password and", "follow the emailed link."], true], [64, ["Passwords can be reset in", "many ways depending on", "your setup."], false]].forEach(([x, lines, good], i) => {
+        const a = s2 * K.seg(S, 1.08 + i * .1, 1.2 + i * .1);
+        K.alpha(a * (good ? 1 : 1 - pick * .45));
+        K.rect(x, 25, 50, 25, 2, { fill: C.surface, stroke: pick > 0 ? (good ? C.ok : C.warn) : C.strong, lw: pick > 0 ? .5 : .35 });
+        K.text(`answer ${"AB"[i]}`, x + 3, 29.5, { size: 2.4, color: C.muted, weight: 600 });
+        K.typed(lines, K.seg(S, 1.12 + i * .1, 1.4 + i * .1), x + 3, 35, 4.6, { size: 2.5 });
+        if (pick > 0){ K.alpha(a * pick); K.text(good ? "preferred" : "rejected", x + 47, 29.5, { size: 2.4, align: "right", color: good ? C.ok : C.warn, weight: 700 }); }
+      });
+      person(60, 64, s2 * K.seg(S, 1.4, 1.5)); K.text("labeler", 60, 73, { size: 2.4, align: "center", color: C.muted });
+      K.alpha(s2 * pick); K.arrow(56, 61, 36, 51.5, { color: C.ok, hs: 1.1, lw: .45 });
+      K.alpha(s2 * K.seg(S, 1.7, 1.8)); K.text("A ≻ B", 60, 82, { size: 3.4, mono: true, align: "center", color: C.accent, weight: 600 });
+    }
+    note("stage 2: people compare answers, which is easier than scoring them", 1.75, 2.05);
+    // 3. reward model
+    const s3 = vis(2.02, 3.05);
+    if (s3 > 0){
+      const rA = 1.8, rB = -0.4, p = sig(rA - rB), loss = -Math.log(p);
+      K.alpha(s3); K.rect(4, 22, 20, 8, 1.6, { fill: C.surface, stroke: C.ok }); K.text("answer A", 14, 26, { size: 2.5, align: "center", color: C.ok });
+      K.rect(4, 36, 20, 8, 1.6, { fill: C.surface, stroke: C.warn }); K.text("answer B", 14, 40, { size: 2.5, align: "center", color: C.warn });
+      K.alpha(s3 * K.seg(S, 2.08, 2.2)); K.arrow(24.5, 26, 38.5, 31, { color: C.strong, hs: 1 }); K.arrow(24.5, 40, 38.5, 35, { color: C.strong, hs: 1 });
+      K.node(59, 33, 40, 13, "reward model", { sub: "SFT copy + score head", size: 3, stroke: C.accent, lw: .5 });
+      const ra = s3 * K.seg(S, 2.25, 2.4);
+      K.alpha(ra); K.arrow(79.5, 31, 86, 26, { color: C.strong, hs: 1 }); K.arrow(79.5, 35, 86, 40, { color: C.strong, hs: 1 });
+      K.text(`r(A) = ${rA.toFixed(1)}`, 88, 26, { size: 2.8, mono: true, color: C.ok, weight: 600 });
+      K.text(`r(B) = ${rB.toFixed(1).replace("-", "−")}`, 88, 40, { size: 2.8, mono: true, color: C.warn, weight: 600 });
+      const fa = s3 * K.seg(S, 2.45, 2.6);
+      K.alpha(fa); K.rect(14, 54, 92, 28, 2.4, { fill: C.raised, stroke: C.strong });
+      K.text("Bradley–Terry model", 18, 59, { size: 2.4, color: C.muted, weight: 600 });
+      K.text("P(A ≻ B) = σ(r(A) − r(B))", 60, 66, { size: 2.9, mono: true, align: "center" });
+      K.alpha(s3 * K.seg(S, 2.6, 2.72)); K.text(`= σ(${(rA - rB).toFixed(1)}) = ${p.toFixed(2)}`, 60, 71.5, { size: 2.9, mono: true, align: "center", color: C.accent });
+      K.alpha(s3 * K.seg(S, 2.72, 2.84)); K.text(`loss = −log ${p.toFixed(2)} = ${loss.toFixed(2)}`, 60, 77, { size: 2.6, mono: true, align: "center", color: C.muted });
+    }
+    note("stage 3: a model learns to score answers the way people rank them", 2.75, 3.05);
+    // 4. PPO with a KL leash
+    const s4 = vis(3.02, 4.05);
+    if (s4 > 0){
+      const P = [24, 40], A = [60, 22], RM = [96, 40], U = [60, 58], REF = [24, 76];
+      const nodes = [[P, "policy", "being tuned", 26], [A, "new answer", "", 24], [RM, "reward model", "frozen", 26], [U, "PPO update", "+ value model", 26]];
+      const edges = [[P[0] + 7, P[1] - 6, A[0] - 12, A[1] + 1], [A[0] + 12, A[1] + 1, RM[0] - 7, RM[1] - 6], [RM[0] - 7, RM[1] + 6, U[0] + 13, U[1] - 1], [U[0] - 13, U[1] - 1, P[0] + 7, P[1] + 6]];
+      edges.forEach(([x1, y1, x2, y2], i) => { K.alpha(s4 * K.seg(S, 3.15 + i * .06, 3.25 + i * .06)); K.arrow(x1, y1, x2, y2, { color: C.strong, hs: 1 }); });
+      const lap = ((time * .35) % 1) * 4, k = Math.floor(lap), f = lap - k;
+      if (S >= 3.4){ const [x1, y1, x2, y2] = edges[k]; K.alpha(s4); K.dot(K.lerp(x1, x2, f), K.lerp(y1, y2, f), 1, { fill: C.accent }); }
+      nodes.forEach(([[x, y], t, sub, w], i) => { K.alpha(s4 * K.seg(S, 3.05 + i * .06, 3.15 + i * .06)); K.node(x, y, w, 11, t, { sub: sub || undefined, size: 2.8, stroke: i === 0 ? C.accent : C.strong, lw: i === 0 ? .5 : .35 }); });
+      const ka = s4 * K.seg(S, 3.5, 3.65);
+      K.alpha(ka); K.node(REF[0], REF[1], 26, 11, "reference", { sub: "frozen SFT copy", size: 2.8 });
+      K.line(P[0], P[1] + 5.5, REF[0], REF[1] - 5.5, { color: C.warn, lw: .45, dash: [1, .8] });
+      K.text("KL penalty", P[0] + 2, 58, { size: 2.4, color: C.warn, weight: 600, halo: true });
+      K.alpha(s4 * K.seg(S, 3.65, 3.8));
+      K.text("maximize  r(x, y) − β · KL(π ‖ π_ref)", 42, 76, { size: 2.5, mono: true, color: C.ink });
+      K.text("score high, stay close to the reference", 42, 81, { size: 2.3, color: C.muted });
+    }
+    note("stage 4: generate, score, update, on a leash", 3.75, 4.05, C.accent);
+    // 5. reward hacking
+    const s5 = vis(4.02, 5.2);
+    if (s5 > 0){
+      const X0 = 14, X1 = 112, Y0 = 80, Y1 = 22, px = t => K.lerp(X0, X1, t), py = v => K.lerp(Y0, Y1, v);
+      const proxy = t => 1.02 * (1 - Math.exp(-3.4 * t)), truth = t => .82 * (1.9 * t - 1.6 * t * t) / .564;
+      const peak = .59, prog = K.seg(S, 4.12, 4.65);
+      K.alpha(s5); K.line(X0, Y0, X1, Y0, { color: C.strong }); K.line(X0, Y0, X0, Y1 - 4, { color: C.strong });
+      K.text("how far the policy moved from the reference (KL) →", X1, Y0 + 5, { size: 2.3, align: "right", color: C.muted });
+      K.text("score", X0 + 1.5, Y1 - 4, { size: 2.3, color: C.muted });
+      const curve = (fn, col, dash) => { ctx.beginPath(); for (let i = 0; i <= 60; i++){ const t = i / 60 * prog; const x = px(t), y = py(fn(t)); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } ctx.setLineDash(dash || []); ctx.strokeStyle = col; ctx.lineWidth = .6; ctx.stroke(); ctx.setLineDash([]); };
+      if (prog > 0){
+        const hz = K.seg(S, 4.7, 4.85);
+        if (hz > 0){ K.alpha(s5 * hz * .12); K.rect(px(peak), Y1 - 2, X1 - px(peak), Y0 - Y1 + 2, 0, { fill: C.warn }); }
+        K.alpha(s5); curve(proxy, C.accent); curve(truth, C.ink, [1.2, .8]);
+        if (hz > 0){
+          K.alpha(s5 * hz); K.line(px(peak), Y0, px(peak), Y1 - 2, { color: C.ok, lw: .4, dash: [.8, .8] });
+          K.text("stop here", px(peak) - 1.5, Y1 + 1, { size: 2.4, align: "right", color: C.ok, weight: 600, halo: true });
+          K.text("reward hacking", px(peak) + 2, Y0 - 4, { size: 2.5, color: C.warn, weight: 700 });
+        }
+      }
+      K.alpha(s5 * K.seg(S, 4.1, 4.2));
+      K.line(X0 + 4, 12, X0 + 9, 12, { color: C.accent, lw: .6 }); K.text("reward model score", X0 + 10.5, 12, { size: 2.4 });
+      K.line(X0 + 50, 12, X0 + 55, 12, { color: C.ink, lw: .6, dash: [1.2, .8] }); K.text("true quality (human judgment)", X0 + 56.5, 12, { size: 2.4 });
+    }
+    note("the proxy keeps rising after real quality starts falling", 4.75, 5.2, C.warn);
+    K.alpha(1);
+  },
+
+  /* ---------- DPO ---------- */
+  dpo(K, S, time){
+    const C = K.C, ctx = K.ctx;
+    const vis = (a, b) => K.seg(S, a, a + .15) * (1 - K.seg(S, b - .12, b));
+    const note = (t, a, b, col) => { K.alpha(K.seg(S, a, a + .2) * (1 - K.seg(S, b - .1, b))); K.text(t, 60, 94, { size: 2.7, align: "center", color: col || C.muted, weight: 600 }); };
+    const sig = z => 1 / (1 + Math.exp(-z));
+    // 1. two stages become one loss
+    const s1 = vis(0, 1.05);
+    if (s1 > 0){
+      const merge = K.io(K.seg(S, .45, .8));
+      K.alpha(s1); K.text("RLHF", 4, 17, { size: 2.6, color: C.muted, weight: 700 }); K.text("DPO", 4, 55, { size: 2.6, color: C.accent, weight: 700 });
+      const top = [[18, "SFT", 20], [44, "reward model", 24], [70, "PPO (RL)", 22], [100, "aligned model", 26]];
+      top.forEach(([x, t, w], i) => { K.alpha(s1 * K.seg(S, .02 + i * .05, .12 + i * .05)); K.node(x, 25, w, 10, t, { size: 2.7 }); if (i) K.arrow(top[i - 1][0] + top[i - 1][2] / 2 + .5, 25, x - w / 2 - .5, 25, { color: C.strong, hs: .9 }); });
+      K.alpha(s1 * K.seg(S, .25, .35) * K.clamp(1 - K.seg(S, .42, .47) + K.seg(S, .8, .88))); K.text("4 models in memory: policy, reference, reward, value", 60, 36, { size: 2.4, align: "center", color: C.muted });
+      // ghosts of the two middle stages sliding into one box
+      [[44, 24, "reward model"], [70, 22, "PPO (RL)"]].forEach(([x, w, t]) => { if (merge > 0 && merge < 1){ K.alpha(s1 * (1 - merge) * .8); K.node(K.lerp(x, 57, merge), K.lerp(25, 63, merge), w, 10, t, { size: 2.7 }); } });
+      const db = s1 * K.seg(S, .7, .85);
+      K.alpha(s1 * K.seg(S, .4, .5)); K.node(18, 63, 20, 10, "SFT", { size: 2.7 }); K.node(100, 63, 26, 10, "aligned model", { size: 2.7 });
+      K.alpha(db); K.node(57, 63, 26, 10, "DPO loss", { size: 2.9, stroke: C.accent, lw: .55 });
+      K.arrow(28.5, 63, 43.5, 63, { color: C.strong, hs: .9 }); K.arrow(70.5, 63, 86.5, 63, { color: C.strong, hs: .9 });
+      K.alpha(db * K.seg(S, .8, .9)); K.text("2 models: policy and frozen reference", 60, 74, { size: 2.4, align: "center", color: C.accent });
+    }
+    note("same preference pairs, no reward model, no RL loop", .8, 1.05, C.accent);
+    // 2. the derivation
+    const s2 = vis(1.02, 2.05);
+    if (s2 > 0){
+      const rows = [
+        ["RLHF objective", "max  E[ r(x,y) ] − β · KL(π ‖ π_ref)", 1.05],
+        ["has a closed-form optimum", "π*(y|x) ∝ π_ref(y|x) · exp( r(x,y) / β )", 1.25],
+        ["solve it for the reward", "r(x,y) = β · log π(y|x) / π_ref(y|x) + β · log Z(x)", 1.45],
+      ];
+      rows.forEach(([lab, eq, t], i) => {
+        const a = s2 * K.seg(S, t, t + .12), y = 14 + i * 17;
+        K.alpha(a); K.text(lab, 60, y, { size: 2.4, align: "center", color: C.muted });
+        K.rect(10, y + 2.5, 100, 9, 2, { fill: C.surface, stroke: i === 2 ? C.accent : C.strong, lw: i === 2 ? .5 : .35 });
+        K.text(eq, 60, y + 7, { size: 2.6, mono: true, align: "center", color: i === 2 ? C.accent : C.ink });
+        if (i) { K.alpha(a); K.arrow(60, y - 6.5, 60, y - 2.8, { color: C.strong, hs: .8 }); }
+      });
+      K.alpha(s2 * K.seg(S, 1.65, 1.78)); K.text("Z(x) is the same for both answers to a prompt, so it cancels", 60, 70, { size: 2.5, align: "center", color: C.muted });
+      K.alpha(s2 * K.seg(S, 1.75, 1.88)); K.text("the model's own probabilities define its reward", 60, 77, { size: 3, align: "center", color: C.accent, weight: 700 });
+    }
+    note("Rafailov et al., 2023: “your language model is secretly a reward model”", 1.85, 2.05);
+    // 3. the loss on one pair
+    const s3 = vis(2.02, 3.05);
+    if (s3 > 0){
+      const beta = .5, tr = K.ease(K.seg(S, 2.25, 2.85)), dw = 1.0 * tr, dl = -3.0 * tr, m = beta * (dw - dl), L = -Math.log(sig(m));
+      const f = v => v.toFixed(2).replace("-", "−");
+      K.alpha(s3); K.text("L = −log σ( β · [ Δ_chosen − Δ_rejected ] )", 60, 12, { size: 2.6, mono: true, align: "center" });
+      K.text("Δ = log π(y|x) − log π_ref(y|x)     β = 0.5", 60, 17.5, { size: 2.3, mono: true, align: "center", color: C.muted });
+      // bars
+      const Z = 48, sc = 6;
+      K.alpha(s3 * K.seg(S, 2.08, 2.2)); K.line(6, Z, 54, Z, { color: C.strong });
+      [[18, dw, C.ok, "chosen"], [42, dl, C.warn, "rejected"]].forEach(([x, v, col, lab]) => {
+        const h = v * sc; K.rect(x - 5, h >= 0 ? Z - h : Z, 10, Math.max(.3, Math.abs(h)), .8, { fill: col });
+        K.text(f(v), x, h >= 0 ? Z - h - 3 : Z - h + 3, { size: 2.6, mono: true, align: "center", color: col, weight: 600 });
+        K.text(`Δ ${lab}`, x, 79, { size: 2.4, align: "center", color: C.muted });
+      });
+      // sigmoid panel
+      const X0 = 64, X1 = 114, Y0 = 72, Y1 = 30, mx = z => K.lerp(X0, X1, (z + 1) / 4), my = v => K.lerp(Y0, Y1, v);
+      K.alpha(s3 * K.seg(S, 2.12, 2.25));
+      K.line(X0, Y0, X1, Y0, { color: C.strong }); K.line(mx(0), Y0, mx(0), Y1 - 2, { color: C.line, dash: [.8, .8] });
+      ctx.beginPath(); for (let i = 0; i <= 50; i++){ const z = -1 + i / 50 * 4; i ? ctx.lineTo(mx(z), my(sig(z))) : ctx.moveTo(mx(z), my(sig(z))); } ctx.strokeStyle = C.strong; ctx.lineWidth = .5; ctx.stroke();
+      K.text("margin β·(Δc − Δr)", X1, Y0 + 4.5, { size: 2.2, align: "right", color: C.muted });
+      K.text("σ", X0 - 2, Y1, { size: 2.6, mono: true, color: C.muted, align: "right" });
+      K.alpha(s3); K.dot(mx(m), my(sig(m)), 1.4, { fill: C.accent });
+      K.text(`loss ${L.toFixed(2)}`, mx(m) - 2, my(sig(m)) - 4, { size: 2.6, mono: true, align: "right", color: C.accent, weight: 700, halo: true });
+      K.alpha(s3 * K.seg(S, 2.2, 2.3)); K.text("starts at log 2 ≈ 0.69", X0 + 25, 84, { size: 2.3, align: "center", color: C.muted });
+    }
+    note("push the chosen answer up relative to the rejected one", 2.8, 3.05, C.accent);
+    // 4. beta and the offline catch
+    const s4 = vis(3.02, 4.05);
+    if (s4 > 0){
+      const bt = K.io(K.seg(S, 3.15, 3.55)), beta = K.lerp(.5, .05, bt), shift = K.lerp(8, 34, bt);
+      const AX0 = 8, AX1 = 112, Y0 = 72, bump = (c, h, w) => x => Y0 - h * Math.exp(-((x - c) ** 2) / (2 * w * w));
+      K.alpha(s4); K.text("β", 18, 18.5, { size: 3, mono: true, color: C.muted, align: "right" });
+      K.rect(22, 17.5, 66, 2, 1, { fill: C.raised }); const kx = K.lerp(80, 30, bt); K.dot(kx, 18.5, 2, { fill: C.accent });
+      K.text(`β = ${beta.toFixed(2)}`, 92, 18.5, { size: 2.6, mono: true, color: C.accent, weight: 600 });
+      K.text("strong pull to the reference", 22, 25, { size: 2.2, color: C.muted }); K.text("weak pull", 88, 25, { size: 2.2, color: C.muted, align: "right" });
+      K.line(AX0, Y0, AX1, Y0, { color: C.strong });
+      const ref = bump(40, 26, 10), pol = bump(40 + shift, 26, 10);
+      const draw = (fn, col, dash) => { ctx.beginPath(); for (let x = AX0; x <= AX1; x += 1){ const y = fn(x); x === AX0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); } ctx.setLineDash(dash || []); ctx.strokeStyle = col; ctx.lineWidth = .6; ctx.stroke(); ctx.setLineDash([]); };
+      draw(ref, C.muted, [1, .8]); draw(pol, C.accent);
+      K.text("reference", 40, 43, { size: 2.4, align: "center", color: C.muted, halo: true });
+      K.text("policy", 40 + shift, 41.5 - (bt > .3 ? 0 : 4), { size: 2.5, align: "center", color: C.accent, weight: 600, halo: true });
+      // preference data lives near the reference
+      const da = s4 * K.seg(S, 3.6, 3.72);
+      for (let i = 0; i < 14; i++){ const x = 26 + (i * 37 % 29); K.alpha(da); K.dot(x, Y0 + 3 + (i % 3) * 1.8, .7, { fill: C.ok }); }
+      K.alpha(da); K.text("preference pairs", 40, Y0 + 11, { size: 2.3, align: "center", color: C.ok });
+      const ga = s4 * K.seg(S, 3.75, 3.88);
+      if (ga > 0){ K.alpha(ga * .14); K.rect(62, 30, AX1 - 62, Y0 - 30, 0, { fill: C.warn }); K.alpha(ga); K.text("few or no pairs out here", 87, Y0 + 7, { size: 2.4, align: "center", color: C.warn, weight: 600 }); }
+    }
+    note("offline data can't correct a model that drifts past it", 3.8, 4.05, C.warn);
+    // 5. choosing
+    const s5 = vis(4.02, 5.2);
+    if (s5 > 0){
+      const card = (x, t, col, items, t0) => {
+        K.alpha(s5 * K.seg(S, t0, t0 + .12)); K.rect(x, 10, 52, 46, 2.4, { fill: C.surface, stroke: col, lw: .5 });
+        K.text(t, x + 4, 16, { size: 3, weight: 700, color: col });
+        items.forEach((it, i) => { K.alpha(s5 * K.seg(S, t0 + .08 + i * .06, t0 + .16 + i * .06)); K.dot(x + 5, 24 + i * 7.5, .7, { fill: col }); K.text(it, x + 8, 24 + i * 7.5, { size: 2.4 }); });
+      };
+      card(5, "DPO", C.accent, ["fixed preference pairs", "modest compute", "no RL infrastructure", "simple, reproducible"], 4.05);
+      card(63, "RLHF / online RL", C.ok, ["fresh samples in training", "reusable reward model", "rich or verifiable rewards", "higher ceiling, more tuning"], 4.25);
+      K.alpha(s5 * K.seg(S, 4.55, 4.65)); K.text("variants", 6, 64, { size: 2.4, color: C.muted, weight: 600 });
+      ["IPO", "KTO", "ORPO", "SimPO", "online DPO", "GRPO"].forEach((t, i) => {
+        const w = K.width(t, { size: 2.5, weight: 600 }) + 5, x = 6 + [0, 12, 24, 38, 54, 76][i];
+        K.alpha(s5 * K.seg(S, 4.6 + i * .04, 4.68 + i * .04)); K.rect(x, 67.5, w, 6.5, 3.25, { fill: C.raised, stroke: C.strong }); K.text(t, x + w / 2, 70.75, { size: 2.5, align: "center", weight: 600 });
+      });
+      K.alpha(s5 * K.seg(S, 4.8, 4.9)); K.text("they change the loss or the data, not the need for good labels", 60, 82, { size: 2.5, align: "center", color: C.muted });
+    }
+    note("pick by constraints, not by trend", 4.85, 5.2, C.accent);
+    K.alpha(1);
+  },
 };
 
 /* stage controller */
@@ -2116,6 +2336,7 @@ const explainerHTML = p => {
       ${exStage(p.scene, p.title, p.steps)}
       <section class="cv">
         <h2>In short</h2><div><ul class="plain">${p.takeaways.map(t => `<li>${esc(t)}</li>`).join("")}</ul></div>
+        ${p.refs && p.refs.length ? `<h2>References</h2><div><ol class="refs">${p.refs.map(([t, u]) => `<li>${u ? `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(t)}</a>` : esc(t)}</li>`).join("")}</ol></div>` : ""}
         ${p.source ? `<h2>Source</h2><div><p class="src">${esc(p.source.text)} <a href="${esc(p.source.url)}" target="_blank" rel="noopener">${esc(p.source.link)}</a></p></div>` : ""}
       </section>
       ${ctaHTML()}

@@ -18,14 +18,14 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://garciajp.com/og.png">
 <meta name="author" content="Juan Pablo García">
-<script type="application/ld+json" id="ld">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "url": "https://garciajp.com/writing/how-to-find-the-bottleneck/", "headline": "How to find the bottleneck", "description": "A process runs only as fast as its slowest step. Find that step, improve it, then look for the next one.", "datePublished": "2026-10-12", "author": {"@type": "Person", "@id": "https://garciajp.com/#person", "name": "Juan Pablo García", "url": "https://garciajp.com/", "image": "https://garciajp.com/og.png", "jobTitle": "AI Developer", "description": "Juan Pablo García, AI developer in Argentina. RAG pipelines and multi-agent systems, built for production and measured with evals.", "email": "mailto:jpgarcia2154@gmail.com", "address": {"@type": "PostalAddress", "addressLocality": "San Juan", "addressRegion": "San Juan", "addressCountry": "AR"}, "alumniOf": [{"@type": "CollegeOrUniversity", "name": "University of Pennsylvania"}, {"@type": "CollegeOrUniversity", "name": "Universidad de Palermo"}], "worksFor": {"@type": "Organization", "name": "Nodos Hub"}, "knowsAbout": ["Retrieval-augmented generation", "Multi-agent systems", "LLM evaluation", "Python", "FastAPI", "React", "PostgreSQL", "Vector search"], "sameAs": ["https://github.com/jpgg2105", "https://www.linkedin.com/in/juan-pablo-garcia-guerrero", "https://x.com/garciajpgg21"]}, "genre": "Explainers"}]}</script>
+<script type="application/ld+json" id="ld">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "url": "https://garciajp.com/writing/how-to-find-the-bottleneck/", "headline": "How to find the bottleneck", "description": "A process runs only as fast as its slowest step. Find that step, improve it, then look for the next one.", "datePublished": "2026-10-12", "author": {"@type": "Person", "@id": "https://garciajp.com/#person", "name": "Juan Pablo García", "url": "https://garciajp.com/", "image": "https://garciajp.com/og.png", "jobTitle": "AI Developer", "description": "Juan Pablo García, AI developer in Argentina. RAG pipelines and multi-agent systems, built for production and measured with evals.", "email": "mailto:jpgarcia2154@gmail.com", "address": {"@type": "PostalAddress", "addressLocality": "San Juan", "addressRegion": "San Juan", "addressCountry": "AR"}, "alumniOf": [{"@type": "CollegeOrUniversity", "name": "University of Pennsylvania"}, {"@type": "CollegeOrUniversity", "name": "Universidad de Palermo"}], "worksFor": {"@type": "Organization", "name": "Nodos Hub"}, "knowsAbout": ["Retrieval-augmented generation", "Multi-agent systems", "LLM evaluation", "Python", "FastAPI", "React", "PostgreSQL", "Vector search"], "sameAs": ["https://github.com/jpgg2105", "https://www.linkedin.com/in/juan-pablo-garcia-guerrero", "https://x.com/garciajpgg21"]}, "genre": "Explainers", "citation": [{"@type": "CreativeWork", "name": "Goldratt & Cox (1984). The Goal: A Process of Ongoing Improvement. North River Press."}, {"@type": "CreativeWork", "name": "Little (1961). A Proof for the Queuing Formula L = λW. Operations Research 9(3).", "url": "https://doi.org/10.1287/opre.9.3.383"}, {"@type": "CreativeWork", "name": "Hopp & Spearman (2008). Factory Physics, 3rd ed. Waveland Press."}]}]}</script>
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#0E0F12">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231D6B70'/%3E%3Ctext x='32' y='42' font-family='Helvetica,Arial,sans-serif' font-size='28' font-weight='700' fill='%23FFFFFF' text-anchor='middle'%3EJP%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@400;500;600;700&family=Instrument+Sans:wght@500&family=Funnel+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="/assets/site.css?v=2bff8d34b7">
+<link rel="stylesheet" href="/assets/site.css?v=6d9fbd8d96">
 </head>
 <body>
 <a class="skip" href="#view">Skip to content</a>
@@ -42,7 +42,7 @@
         <a class="crumb" href="/writing/"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"></path></svg> All writing</a>
         <div class="ex-meta"><span class="tag explainer">Explainer</span><span>5 steps · scroll to play</span></div>
         <h1>How to find the bottleneck</h1>
-        <p class="lede">Any process, from a kitchen to a hiring pipeline to a factory, finishes work at the speed of its slowest step. Improving any other step looks productive and changes nothing.</p>
+        <p class="lede">Any process, from a kitchen to a hiring pipeline to a factory, finishes work at the speed of its slowest step. Improving any other step looks productive and changes nothing. This is the core of the Theory of Constraints.</p>
       </section>
       
       <section class="build explainer" id="ex" data-scene="bottleneck" aria-label="How to find the bottleneck, step by step">
@@ -59,7 +59,8 @@
         </div>
       </section>
       <section class="cv">
-        <h2>In short</h2><div><ul class="plain"><li>A step that's 100% busy while others wait is where your next hour or dollar should go.</li><li>Before adding capacity, make sure the bottleneck never sits idle waiting for work or redoing work that gets thrown away.</li><li>It works for teams, factories, support queues, sales funnels and your own week.</li><li>The numbers in the animation are illustrative.</li></ul></div>
+        <h2>In short</h2><div><ul class="plain"><li>Goldratt's five focusing steps: identify the constraint, exploit it, subordinate everything else to it, elevate it, and repeat.</li><li>Before adding capacity, make sure the bottleneck never sits idle waiting for work or redoing work that gets thrown away.</li><li>A queue grows whenever work arrives faster than the bottleneck finishes it. By Little's law, work in progress = arrival rate × time in the system.</li><li>It works for teams, factories, support queues and sales funnels. The numbers in the animation are illustrative.</li></ul></div>
+        <h2>References</h2><div><ol class="refs"><li>Goldratt &amp; Cox (1984). The Goal: A Process of Ongoing Improvement. North River Press.</li><li><a href="https://doi.org/10.1287/opre.9.3.383" target="_blank" rel="noopener">Little (1961). A Proof for the Queuing Formula L = λW. Operations Research 9(3).</a></li><li>Hopp &amp; Spearman (2008). Factory Physics, 3rd ed. Waveland Press.</li></ol></div>
         
       </section>
       
@@ -76,9 +77,9 @@
 <!-- ===================== CONTENT =====================
      Everything on the site comes from this JSON. Edit it, then run `python build.py`.
      See README.md for what each field does. -->
-<script src="/assets/content.js?v=4e89b368c6"></script>
+<script src="/assets/content.js?v=4cc6b21065"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/motion@11.11.13/dist/motion.js"></script>
-<script src="/assets/site.js?v=dd74ff1018"></script>
+<script src="/assets/site.js?v=16060d9ef3"></script>
 </body>
 </html>

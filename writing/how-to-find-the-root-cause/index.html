@@ -18,14 +18,14 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://garciajp.com/og.png">
 <meta name="author" content="Juan Pablo García">
-<script type="application/ld+json" id="ld">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "url": "https://garciajp.com/writing/how-to-find-the-root-cause/", "headline": "How to find the root cause of a problem", "description": "Ask why, answer with facts, and keep going until you reach a cause you can change, so the problem doesn't come back.", "datePublished": "2026-10-12", "author": {"@type": "Person", "@id": "https://garciajp.com/#person", "name": "Juan Pablo García", "url": "https://garciajp.com/", "image": "https://garciajp.com/og.png", "jobTitle": "AI Developer", "description": "Juan Pablo García, AI developer in Argentina. RAG pipelines and multi-agent systems, built for production and measured with evals.", "email": "mailto:jpgarcia2154@gmail.com", "address": {"@type": "PostalAddress", "addressLocality": "San Juan", "addressRegion": "San Juan", "addressCountry": "AR"}, "alumniOf": [{"@type": "CollegeOrUniversity", "name": "University of Pennsylvania"}, {"@type": "CollegeOrUniversity", "name": "Universidad de Palermo"}], "worksFor": {"@type": "Organization", "name": "Nodos Hub"}, "knowsAbout": ["Retrieval-augmented generation", "Multi-agent systems", "LLM evaluation", "Python", "FastAPI", "React", "PostgreSQL", "Vector search"], "sameAs": ["https://github.com/jpgg2105", "https://www.linkedin.com/in/juan-pablo-garcia-guerrero", "https://x.com/garciajpgg21"]}, "genre": "Explainers"}]}</script>
+<script type="application/ld+json" id="ld">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "url": "https://garciajp.com/writing/how-to-find-the-root-cause/", "headline": "How to find the root cause of a problem", "description": "Ask why, answer with facts, and keep going until you reach a cause you can change, so the problem doesn't come back.", "datePublished": "2026-10-12", "author": {"@type": "Person", "@id": "https://garciajp.com/#person", "name": "Juan Pablo García", "url": "https://garciajp.com/", "image": "https://garciajp.com/og.png", "jobTitle": "AI Developer", "description": "Juan Pablo García, AI developer in Argentina. RAG pipelines and multi-agent systems, built for production and measured with evals.", "email": "mailto:jpgarcia2154@gmail.com", "address": {"@type": "PostalAddress", "addressLocality": "San Juan", "addressRegion": "San Juan", "addressCountry": "AR"}, "alumniOf": [{"@type": "CollegeOrUniversity", "name": "University of Pennsylvania"}, {"@type": "CollegeOrUniversity", "name": "Universidad de Palermo"}], "worksFor": {"@type": "Organization", "name": "Nodos Hub"}, "knowsAbout": ["Retrieval-augmented generation", "Multi-agent systems", "LLM evaluation", "Python", "FastAPI", "React", "PostgreSQL", "Vector search"], "sameAs": ["https://github.com/jpgg2105", "https://www.linkedin.com/in/juan-pablo-garcia-guerrero", "https://x.com/garciajpgg21"]}, "genre": "Explainers", "citation": [{"@type": "CreativeWork", "name": "Ohno (1988). Toyota Production System: Beyond Large-Scale Production. Productivity Press."}, {"@type": "CreativeWork", "name": "Card (2017). The problem with '5 whys'. BMJ Quality & Safety 26(8).", "url": "https://doi.org/10.1136/bmjqs-2016-005849"}, {"@type": "CreativeWork", "name": "Ishikawa (1986). Guide to Quality Control. Asian Productivity Organization."}]}]}</script>
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#0E0F12">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231D6B70'/%3E%3Ctext x='32' y='42' font-family='Helvetica,Arial,sans-serif' font-size='28' font-weight='700' fill='%23FFFFFF' text-anchor='middle'%3EJP%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@400;500;600;700&family=Instrument+Sans:wght@500&family=Funnel+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="/assets/site.css?v=2bff8d34b7">
+<link rel="stylesheet" href="/assets/site.css?v=6d9fbd8d96">
 </head>
 <body>
 <a class="skip" href="#view">Skip to content</a>
@@ -42,7 +42,7 @@
         <a class="crumb" href="/writing/"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"></path></svg> All writing</a>
         <div class="ex-meta"><span class="tag explainer">Explainer</span><span>5 steps · scroll to play</span></div>
         <h1>How to find the root cause of a problem</h1>
-        <p class="lede">Fixing what you can see makes the problem go away today and come back next week. Asking 'why' a few times in a row walks you from the symptom down to the cause that keeps producing it.</p>
+        <p class="lede">Fixing what you can see makes the problem go away today and come back next week. Asking 'why' a few times in a row, a method from the Toyota Production System, walks you from the symptom down to the cause that keeps producing it.</p>
       </section>
       
       <section class="build explainer" id="ex" data-scene="whys" aria-label="How to find the root cause of a problem, step by step">
@@ -59,7 +59,8 @@
         </div>
       </section>
       <section class="cv">
-        <h2>In short</h2><div><ul class="plain"><li>If an answer is 'someone made a mistake', ask why the process let that mistake through.</li><li>A problem can have more than one cause. When a why has two true answers, follow both.</li><li>It works for outages, missed deadlines, recurring arguments and failed projects.</li><li>The example in the animation is illustrative.</li></ul></div>
+        <h2>In short</h2><div><ul class="plain"><li>If an answer is 'someone made a mistake', ask why the process let that mistake through.</li><li>Five whys follows one chain and can stop at the first plausible answer. For complex failures, pair it with a fishbone (Ishikawa) diagram or a fault tree (Card, 2017).</li><li>It works for outages, missed deadlines, recurring arguments and failed projects.</li><li>The example in the animation is illustrative.</li></ul></div>
+        <h2>References</h2><div><ol class="refs"><li>Ohno (1988). Toyota Production System: Beyond Large-Scale Production. Productivity Press.</li><li><a href="https://doi.org/10.1136/bmjqs-2016-005849" target="_blank" rel="noopener">Card (2017). The problem with '5 whys'. BMJ Quality &amp; Safety 26(8).</a></li><li>Ishikawa (1986). Guide to Quality Control. Asian Productivity Organization.</li></ol></div>
         
       </section>
       
@@ -76,9 +77,9 @@
 <!-- ===================== CONTENT =====================
      Everything on the site comes from this JSON. Edit it, then run `python build.py`.
      See README.md for what each field does. -->
-<script src="/assets/content.js?v=4e89b368c6"></script>
+<script src="/assets/content.js?v=4cc6b21065"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/motion@11.11.13/dist/motion.js"></script>
-<script src="/assets/site.js?v=dd74ff1018"></script>
+<script src="/assets/site.js?v=16060d9ef3"></script>
 </body>
 </html>

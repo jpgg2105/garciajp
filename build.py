@@ -123,7 +123,8 @@ for p in site.get("posts", []):
         {"@type": "BlogPosting", "url": f"{domain}/writing/{p['slug']}/", "headline": p["title"],
          "description": p.get("excerpt", ""), "datePublished": p["date"], "author": person,
          "genre": site["labels"].get(p["kind"], p["kind"]),
-         **({"isBasedOn": p["source"]["url"]} if p.get("source") else {})},
+         **({"isBasedOn": p["source"]["url"]} if p.get("source") else {}),
+         **({"citation": [{"@type": "CreativeWork", "name": t, **({"url": u} if u else {})} for t, u in p["refs"]]} if p.get("refs") else {})},
     ])
 
 
