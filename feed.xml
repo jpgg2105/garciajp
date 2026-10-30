@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+  <title>Juan Pablo García · Writing</title>
+  <link>https://garciajp.com/writing/</link>
+  <atom:link href="https://garciajp.com/feed.xml" rel="self" type="application/rss+xml"/>
+  <description>Animated explainers and notes on building with AI: RAG, agents, evaluation, alignment and problem solving.</description>
+  <language>en</language>
+  <lastBuildDate>Tue, 27 Oct 2026 12:00:00 +0000</lastBuildDate>
+  <item>
+    <title>How RLHF works</title>
+    <link>https://garciajp.com/writing/how-rlhf-works/</link>
+    <guid isPermaLink="true">https://garciajp.com/writing/how-rlhf-works/</guid>
+    <pubDate>Tue, 27 Oct 2026 12:00:00 +0000</pubDate>
+    <description>Reinforcement learning from human feedback, stage by stage: demonstrations, comparisons, a reward model, PPO with a KL leash, and reward hacking.</description>
+  </item>
+  <item>
+    <title>How DPO works, and when to use it instead of RLHF</title>
+    <link>https://garciajp.com/writing/how-dpo-works/</link>
+    <guid isPermaLink="true">https://garciajp.com/writing/how-dpo-works/</guid>
+    <pubDate>Tue, 27 Oct 2026 12:00:00 +0000</pubDate>
+    <description>Direct Preference Optimization turns RLHF&#x27;s reward model and RL loop into one loss on preference pairs. The math, the trade-offs and when to choose it.</description>
+  </item>
+  <item>
+    <title>How to break down a big problem</title>
+    <link>https://garciajp.com/writing/how-to-break-down-a-problem/</link>
+    <guid isPermaLink="true">https://garciajp.com/writing/how-to-break-down-a-problem/</guid>
+    <pubDate>Mon, 12 Oct 2026 12:00:00 +0000</pubDate>
+    <description>Split a vague problem into parts that add up to the whole, until each part is small enough to check and fix.</description>
+  </item>
+  <item>
+    <title>How to find the root cause of a problem</title>
+    <link>https://garciajp.com/writing/how-to-find-the-root-cause/</link>
+    <guid isPermaLink="true">https://garciajp.com/writing/how-to-find-the-root-cause/</guid>
+    <pubDate>Mon, 12 Oct 2026 12:00:00 +0000</pubDate>
+    <description>Ask why, answer with facts, and keep going until you reach a cause you can change, so the problem doesn&#x27;t come back.</description>
+  </item>
+  <item>
+    <title>How to find what broke by halving</title>
+    <link>https://garciajp.com/writing/how-to-find-what-broke-by-halving/</link>
+    <guid isPermaLink="true">https://garciajp.com/writing/how-to-find-what-broke-by-halving/</guid>
+    <pubDate>Mon, 12 Oct 2026 12:00:00 +0000</pubDate>
+    <description>When something worked before and doesn&#x27;t now, test the middle and throw away half the suspects each time.</description>
+  </item>
+  <item>
+    <title>How to find the bottleneck</title>
+    <link>https://garciajp.com/writing/how-to-find-the-bottleneck/</link>
+    <guid isPermaLink="true">https://garciajp.com/writing/how-to-find-the-bottleneck/</guid>
+    <pubDate>Mon, 12 Oct 2026 12:00:00 +0000</pubDate>
+    <description>A process runs only as fast as its slowest step. Find that step, improve it, then look for the next one.</description>
+  </item>
+  <item>
+    <title>How to decide what to fix first</title>
+    <link>https://garciajp.com/writing/how-to-decide-what-to-fix-first/</link>
+    <guid isPermaLink="true">https://garciajp.com/writing/how-to-decide-what-to-fix-first/</guid>
+    <pubDate>Mon, 12 Oct 2026 12:00:00 +0000</pubDate>
+    <description>Count the problems, sort them, and you usually find a few causes behind most of the trouble.</description>
+  </item>
+  <item>
+    <title>How to solve problems with small experiments</title>
+    <link>https://garciajp.com/writing/how-to-solve-problems-with-small-experiments/</link>
+    <guid isPermaLink="true">https://garciajp.com/writing/how-to-solve-problems-with-small-experiments/</guid>
+    <pubDate>Mon, 12 Oct 2026 12:00:00 +0000</pubDate>
+    <description>Guess, test small, measure and adjust. Many cheap loops find a good answer faster than one big plan.</description>
+  </item>
+  <item>
+    <title>How AI is changing software development</title>
+    <link>https://garciajp.com/writing/how-ai-is-changing-software-development/</link>
+    <guid isPermaLink="true">https://garciajp.com/writing/how-ai-is-changing-software-development/</guid>
+    <pubDate>Mon, 12 Oct 2026 12:00:00 +0000</pubDate>
+    <description>From autocomplete to agents that ship whole features: specs, conducting, context and loops, how models run, and keeping agents safe.</description>
+  </item>
+  <item>
+    <title>How RAG works</title>
+    <link>https://garciajp.com/writing/how-rag-works/</link>
+    <guid isPermaLink="true">https://garciajp.com/writing/how-rag-works/</guid>
+    <pubDate>Fri, 09 Oct 2026 12:00:00 +0000</pubDate>
+    <description>Retrieval-augmented generation, step by step: from splitting documents to an answer with sources.</description>
+  </item>
+  <item>
+    <title>How AI agents work</title>
+    <link>https://garciajp.com/writing/how-ai-agents-work/</link>
+    <guid isPermaLink="true">https://garciajp.com/writing/how-ai-agents-work/</guid>
+    <pubDate>Fri, 09 Oct 2026 12:00:00 +0000</pubDate>
+    <description>An agent is a language model in a loop: plan, call a tool, read the result, decide again.</description>
+  </item>
+  <item>
+    <title>How transformers and attention work</title>
+    <link>https://garciajp.com/writing/how-transformers-work/</link>
+    <guid isPermaLink="true">https://garciajp.com/writing/how-transformers-work/</guid>
+    <pubDate>Fri, 09 Oct 2026 12:00:00 +0000</pubDate>
+    <description>What happens inside a large language model: tokens, embeddings, attention and next-token prediction.</description>
+  </item>
+  <item>
+    <title>How neural networks learn</title>
+    <link>https://garciajp.com/writing/how-neural-networks-learn/</link>
+    <guid isPermaLink="true">https://garciajp.com/writing/how-neural-networks-learn/</guid>
+    <pubDate>Fri, 09 Oct 2026 12:00:00 +0000</pubDate>
+    <description>Forward pass, loss, backpropagation and gradient descent, drawn one step at a time.</description>
+  </item>
+  <item>
+    <title>How embeddings and vector search work</title>
+    <link>https://garciajp.com/writing/how-vector-search-works/</link>
+    <guid isPermaLink="true">https://garciajp.com/writing/how-vector-search-works/</guid>
+    <pubDate>Fri, 09 Oct 2026 12:00:00 +0000</pubDate>
+    <description>How meaning becomes coordinates, and how a search finds the closest ones fast.</description>
+  </item>
+  <item>
+    <title>How a web request is served</title>
+    <link>https://garciajp.com/writing/how-a-web-request-is-served/</link>
+    <guid isPermaLink="true">https://garciajp.com/writing/how-a-web-request-is-served/</guid>
+    <pubDate>Fri, 09 Oct 2026 12:00:00 +0000</pubDate>
+    <description>Load balancing, caching and the database: the path most web requests take.</description>
+  </item>
+  <item>
+    <title>How fine-tuning with LoRA works</title>
+    <link>https://garciajp.com/writing/how-lora-fine-tuning-works/</link>
+    <guid isPermaLink="true">https://garciajp.com/writing/how-lora-fine-tuning-works/</guid>
+    <pubDate>Fri, 09 Oct 2026 12:00:00 +0000</pubDate>
+    <description>Why LoRA trains a fraction of a percent of the weights and still adapts a model.</description>
+  </item>
+  <item>
+    <title>How diffusion models generate images</title>
+    <link>https://garciajp.com/writing/how-diffusion-models-work/</link>
+    <guid isPermaLink="true">https://garciajp.com/writing/how-diffusion-models-work/</guid>
+    <pubDate>Fri, 09 Oct 2026 12:00:00 +0000</pubDate>
+    <description>Image generators learn to remove noise, then start from pure noise and clean it up step by step.</description>
+  </item>
+  <item>
+    <title>How MCP connects AI apps to tools</title>
+    <link>https://garciajp.com/writing/how-mcp-works/</link>
+    <guid isPermaLink="true">https://garciajp.com/writing/how-mcp-works/</guid>
+    <pubDate>Fri, 09 Oct 2026 12:00:00 +0000</pubDate>
+    <description>The Model Context Protocol, step by step: discovery, tool calls, and why one server works in every app.</description>
+  </item>
+  <item>
+    <title>How database indexes work</title>
+    <link>https://garciajp.com/writing/how-database-indexes-work/</link>
+    <guid isPermaLink="true">https://garciajp.com/writing/how-database-indexes-work/</guid>
+    <pubDate>Fri, 09 Oct 2026 12:00:00 +0000</pubDate>
+    <description>Why an index turns a full table scan into a few reads, and what it costs on every write.</description>
+  </item>
+  <item>
+    <title>How Docker containers work</title>
+    <link>https://garciajp.com/writing/how-docker-containers-work/</link>
+    <guid isPermaLink="true">https://garciajp.com/writing/how-docker-containers-work/</guid>
+    <pubDate>Fri, 09 Oct 2026 12:00:00 +0000</pubDate>
+    <description>Dockerfile, layers, caching, containers and registries: how one image runs the same everywhere.</description>
+  </item>
+  <item>
+    <title>How to evaluate an LLM app</title>
+    <link>https://garciajp.com/writing/how-to-evaluate-llm-apps/</link>
+    <guid isPermaLink="true">https://garciajp.com/writing/how-to-evaluate-llm-apps/</guid>
+    <pubDate>Fri, 09 Oct 2026 12:00:00 +0000</pubDate>
+    <description>Test cases, scoring, version comparisons and a release gate: measuring quality instead of guessing.</description>
+  </item>
+</channel>
+</rss>

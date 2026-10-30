@@ -8,6 +8,43 @@ const M = window.Motion || null;
 /* Real paths on garciajp.com (garciajp.com/projects/research-agent/). Hash paths when opened as a file or in a preview. */
 const HASH = location.protocol === "file:" || document.documentElement.dataset.mode === "hash";
 const url = p => HASH ? "#" + p : p;
+
+/* ===================== analytics =====================
+   GoatCounter: cookieless, no consent banner needed. Counts page views, plus events for the
+   actions that matter: contact clicks, resume downloads, finished explainers and shares.
+   Runs only on the live domain, so local previews and the build's pre-render are not counted. */
+const GA = (() => {
+  const code = SITE.analytics && SITE.analytics.goatcounter;
+  const live = code && !HASH && location.hostname === new URL(SITE.domain).hostname;
+  const queue = []; let ready = false, first = true;
+  const send = v => { if (ready && window.goatcounter && goatcounter.count) goatcounter.count(v); else queue.push(v); };
+  if (live){
+    window.goatcounter = { no_onload: true, no_events: true };
+    const sc = document.createElement("script");
+    sc.async = true; sc.src = "https://gc.zgo.at/count.js"; sc.dataset.goatcounter = `https://${code}.goatcounter.com/count`;
+    sc.onload = () => { ready = true; queue.splice(0).forEach(send); };
+    document.head.appendChild(sc);
+  }
+  const campaign = () => { const q = new URLSearchParams(location.search); return q.get("ref") || q.get("utm_source") || null; };
+  return {
+    view(){
+      if (!live) return;
+      // the first view keeps the visitor's real referrer (or ?ref= tag); later in-site views have none
+      const v = { path: location.pathname, title: document.title };
+      if (first){ const c = campaign(); if (c) v.referrer = c; first = false; } else v.referrer = "";
+      send(v);
+    },
+    event(name){ if (live) send({ path: name, title: name, event: true }); },
+  };
+})();
+document.addEventListener("click", e => {
+  const a = e.target.closest("a[href]"); if (!a) return;
+  const href = a.getAttribute("href");
+  if (href.startsWith("mailto:")) return GA.event("contact/email");
+  if (/\.pdf(\?|$)/i.test(href)) return GA.event("download/resume-pdf");
+  if (a.dataset.ev) return GA.event(a.dataset.ev);
+  if (/^https?:/.test(href)){ try { const h = new URL(href).hostname.replace(/^www\./, ""); if (h !== new URL(SITE.domain).hostname) GA.event("out/" + h); } catch(_){} }
+}, true);
 const asset = p => HASH ? p : "/" + p;
 const TABS = [["/","Home","home"],["/projects/","Projects","projects"],["/writing/","Writing","writing"],["/resume/","Resume","resume"],["/stack/","Stack","stack"],["/services/","Services","services"],["/book/","Contact","book"]];
 
@@ -18,6 +55,8 @@ const ICONS = {
   arrow: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>',
   ext: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h7v7M13 3 4 12"/></svg>',
   mail: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3.5" width="12" height="9" rx="1.5"/><path d="m2.5 4.5 5.5 4 5.5-4"/></svg>',
+  link: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.6 9.4a3 3 0 0 0 4.3 0l2.2-2.2a3 3 0 0 0-4.3-4.3l-.9.9"/><path d="M9.4 6.6a3 3 0 0 0-4.3 0L2.9 8.8a3 3 0 0 0 4.3 4.3l.9-.9"/></svg>',
+  share: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 10V2M5 5l3-3 3 3"/><path d="M3 8v5h10V8"/></svg>',
   check: '<svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3 3 7-7"/></svg>',
 };
 
@@ -2266,8 +2305,11 @@ function initExplainer(){
   }
   const canvas = host.querySelector(".screen canvas"), steps = [...host.querySelectorAll(".steps .step")], bar = host.querySelector(".progress i");
   const track = host.querySelector(".build-track");
-  let P = 0, Pd = -1, last = 0, cur = -1, raf = 0, visible = true, alive = true;
-  const setP = p => { P = Math.min(.9999, Math.max(0, p)); };
+  let P = 0, Pd = -1, last = 0, cur = -1, raf = 0, visible = true, alive = true, done = false;
+  const setP = p => {
+    P = Math.min(.9999, Math.max(0, p));
+    if (!done && P > .97){ done = true; GA.event("explainer-finished/" + location.pathname.split("/").filter(Boolean).pop()); }
+  };
   let stopScroll;
   if (M && M.scroll){ const st = M.scroll(p => setP(p), { target: track, offset: ["start start", "end end"] }); stopScroll = typeof st === "function" ? st : null; }
   else { const on = () => { const r = track.getBoundingClientRect(); setP(-r.top / (r.height - innerHeight)); }; addEventListener("scroll", on, { passive: true }); on(); stopScroll = () => removeEventListener("scroll", on); }
@@ -2338,9 +2380,35 @@ const explainerHTML = p => {
         <h2>In short</h2><div><ul class="plain">${p.takeaways.map(t => `<li>${esc(t)}</li>`).join("")}</ul></div>
         ${p.refs && p.refs.length ? `<h2>References</h2><div><ol class="refs">${p.refs.map(([t, u]) => `<li>${u ? `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(t)}</a>` : esc(t)}</li>`).join("")}</ol></div>` : ""}
         ${p.source ? `<h2>Source</h2><div><p class="src">${esc(p.source.text)} <a href="${esc(p.source.url)}" target="_blank" rel="noopener">${esc(p.source.link)}</a></p></div>` : ""}
+        <h2>Share</h2><div>${shareHTML(p)}</div>
       </section>
+      ${moreHTML(p)}
       ${ctaHTML()}
     </div>`;
+};
+/* reading paths: after each explainer, the three that build on it */
+const NEXT = {
+  rag: ["vectors", "evals", "agents"], agents: ["mcp", "rag", "evals"], transformer: ["neural", "lora", "rlhf"],
+  neural: ["transformer", "diffusion", "lora"], vectors: ["rag", "btree", "transformer"], web: ["btree", "docker", "bottleneck"],
+  lora: ["rlhf", "dpo", "transformer"], diffusion: ["neural", "transformer", "lora"], mcp: ["agents", "rag", "aidev"],
+  btree: ["vectors", "web", "bisect"], docker: ["web", "mcp", "experiments"], evals: ["rag", "dpo", "experiments"],
+  rlhf: ["dpo", "lora", "evals"], dpo: ["rlhf", "evals", "lora"], decompose: ["whys", "pareto", "experiments"],
+  whys: ["bisect", "decompose", "bottleneck"], bisect: ["whys", "experiments", "btree"], bottleneck: ["pareto", "web", "decompose"],
+  pareto: ["bottleneck", "decompose", "evals"], experiments: ["evals", "bisect", "whys"], aidev: ["agents", "mcp", "evals"],
+};
+const moreHTML = p => {
+  const list = (NEXT[p.scene] || []).map(sc => SITE.posts.find(x => x.scene === sc)).filter(Boolean);
+  return list.length ? `<section class="more"><div class="sh"><h2>Keep reading</h2><a href="${url("/writing/")}">All writing</a></div><div class="posts">${list.map(postHTML).join("")}</div></section>` : "";
+};
+const shareHTML = p => {
+  const link = `${SITE.domain.replace(/\/$/, "")}/writing/${p.slug}/`, u = encodeURIComponent(link);
+  const text = encodeURIComponent(`${p.title}: an animated, step-by-step explainer`);
+  return `<div class="share">
+      <a class="btn line" href="https://x.com/intent/post?text=${text}&url=${u}" target="_blank" rel="noopener" data-ev="share/x/${esc(p.slug)}">${ICONS.x} Post on X</a>
+      <a class="btn line" href="https://www.linkedin.com/sharing/share-offsite/?url=${u}" target="_blank" rel="noopener" data-ev="share/linkedin/${esc(p.slug)}">${ICONS.linkedin} Share on LinkedIn</a>
+      <button class="btn line" type="button" data-share="${esc(link)}" data-title="${esc(p.title)}">${ICONS.link} <span>Copy link</span></button>
+    </div>
+    <p class="share-note">Teaching this to a class or a new teammate? Send them the link.</p>`;
 };
 const socials = () => ["github","linkedin","x"].filter(k => SITE.links[k]).map(k => `<a href="${esc(SITE.links[k])}" target="_blank" rel="noopener" aria-label="${{github:"GitHub",linkedin:"LinkedIn",x:"X (Twitter)"}[k]}">${ICONS[k]}</a>`).join("");
 const ctaHTML = () => `
@@ -2567,6 +2635,7 @@ function route(scrollY){
     const active = $("#nav [aria-current]"); if (active) active.scrollIntoView({ block:"nearest", inline:"center" });
     document.title = r.title;
     initStage(); initExplainer(); placeSeg(false);
+    GA.view();
   };
   if (document.startViewTransition && !reduce && route.ran) document.startViewTransition(paint); else paint();
   route.ran = true;
@@ -2604,6 +2673,14 @@ view.addEventListener("click", e => {
   if (mb){ meet = +mb.dataset.m; rerender(V.book()); bump(); return; }
   const db = e.target.closest("[data-d]");
   if (db){ day = db.dataset.d; rerender(V.book()); bump(); return; }
+  const sh = e.target.closest("[data-share]");
+  if (sh){
+    const link = sh.dataset.share, label = sh.querySelector("span");
+    GA.event("share/copy/" + link.split("/").filter(Boolean).pop());
+    try { navigator.clipboard.writeText(link).then(() => { label.textContent = "Link copied"; setTimeout(() => label.textContent = "Copy link", 1800); }, () => { label.textContent = link; }); }
+    catch(_){ label.textContent = link; }
+    return;
+  }
   if (e.target.id === "copyEm"){
     const b = e.target;
     const ok = () => { b.textContent = "Copied"; setTimeout(() => b.textContent = "Copy", 1600); };

@@ -6,17 +6,18 @@
 <title>How Docker containers work · Juan Pablo García</title>
 <meta name="description" content="Dockerfile, layers, caching, containers and registries: how one image runs the same everywhere.">
 <link rel="canonical" href="https://garciajp.com/writing/how-docker-containers-work/">
-<meta property="og:type" content="website">
+<link rel="alternate" type="application/rss+xml" title="Juan Pablo García · Writing" href="/feed.xml">
+<meta property="og:type" content="article">
 <meta property="og:site_name" content="Juan Pablo García">
 <meta property="og:url" content="https://garciajp.com/writing/how-docker-containers-work/">
 <meta property="og:title" content="How Docker containers work · Juan Pablo García">
 <meta property="og:description" content="Dockerfile, layers, caching, containers and registries: how one image runs the same everywhere.">
-<meta property="og:image" content="https://garciajp.com/og.png">
+<meta property="og:image" content="https://garciajp.com/writing/how-docker-containers-work/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Juan Pablo García, AI developer">
+<meta property="og:image:alt" content="How Docker containers work, an animated explainer by Juan Pablo García">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://garciajp.com/og.png">
+<meta name="twitter:image" content="https://garciajp.com/writing/how-docker-containers-work/og.png">
 <meta name="author" content="Juan Pablo García">
 <script type="application/ld+json" id="ld">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "url": "https://garciajp.com/writing/how-docker-containers-work/", "headline": "How Docker containers work", "description": "Dockerfile, layers, caching, containers and registries: how one image runs the same everywhere.", "datePublished": "2026-10-09", "author": {"@type": "Person", "@id": "https://garciajp.com/#person", "name": "Juan Pablo García", "url": "https://garciajp.com/", "image": "https://garciajp.com/og.png", "jobTitle": "AI Developer", "description": "Juan Pablo García, AI developer in Argentina. RAG pipelines and multi-agent systems, built for production and measured with evals.", "email": "mailto:jpgarcia2154@gmail.com", "address": {"@type": "PostalAddress", "addressLocality": "San Juan", "addressRegion": "San Juan", "addressCountry": "AR"}, "alumniOf": [{"@type": "CollegeOrUniversity", "name": "University of Pennsylvania"}, {"@type": "CollegeOrUniversity", "name": "Universidad de Palermo"}], "worksFor": {"@type": "Organization", "name": "Nodos Hub"}, "knowsAbout": ["Retrieval-augmented generation", "Multi-agent systems", "LLM evaluation", "Python", "FastAPI", "React", "PostgreSQL", "Vector search"], "sameAs": ["https://github.com/jpgg2105", "https://www.linkedin.com/in/juan-pablo-garcia-guerrero", "https://x.com/garciajpgg21"]}, "genre": "Explainers", "citation": [{"@type": "CreativeWork", "name": "Docker documentation: Build cache.", "url": "https://docs.docker.com/build/cache/"}, {"@type": "CreativeWork", "name": "Docker documentation: Multi-stage builds.", "url": "https://docs.docker.com/build/building/multi-stage/"}, {"@type": "CreativeWork", "name": "Linux manual: namespaces(7).", "url": "https://man7.org/linux/man-pages/man7/namespaces.7.html"}, {"@type": "CreativeWork", "name": "Linux manual: cgroups(7).", "url": "https://man7.org/linux/man-pages/man7/cgroups.7.html"}]}]}</script>
 <meta name="color-scheme" content="dark">
@@ -25,7 +26,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@400;500;600;700&family=Instrument+Sans:wght@500&family=Funnel+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="/assets/site.css?v=6d9fbd8d96">
+<link rel="stylesheet" href="/assets/site.css?v=6eb6f97866">
 </head>
 <body>
 <a class="skip" href="#view">Skip to content</a>
@@ -62,7 +63,14 @@
         <h2>In short</h2><div><ul class="plain"><li>Containers share the host's kernel, so they start in seconds and use far less memory than virtual machines.</li><li>Copy dependency files and install them before copying your code, so code changes don't reinstall everything.</li><li>Keep images small: slim base images and multi-stage builds cut size and attack surface.</li><li>On macOS and Windows, Docker Desktop runs containers inside a lightweight Linux virtual machine.</li><li>The layer sizes in the animation are illustrative.</li></ul></div>
         <h2>References</h2><div><ol class="refs"><li><a href="https://docs.docker.com/build/cache/" target="_blank" rel="noopener">Docker documentation: Build cache.</a></li><li><a href="https://docs.docker.com/build/building/multi-stage/" target="_blank" rel="noopener">Docker documentation: Multi-stage builds.</a></li><li><a href="https://man7.org/linux/man-pages/man7/namespaces.7.html" target="_blank" rel="noopener">Linux manual: namespaces(7).</a></li><li><a href="https://man7.org/linux/man-pages/man7/cgroups.7.html" target="_blank" rel="noopener">Linux manual: cgroups(7).</a></li></ol></div>
         
+        <h2>Share</h2><div><div class="share">
+      <a class="btn line" href="https://x.com/intent/post?text=How%20Docker%20containers%20work%3A%20an%20animated%2C%20step-by-step%20explainer&amp;url=https%3A%2F%2Fgarciajp.com%2Fwriting%2Fhow-docker-containers-work%2F" target="_blank" rel="noopener" data-ev="share/x/how-docker-containers-work"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.66l-5.21-6.82-5.97 6.82H1.67l7.73-8.84L1.25 2.25h6.83l4.71 6.23 5.45-6.23Zm-1.16 17.52h1.83L7.08 4.13H5.12l11.96 15.64Z"></path></svg> Post on X</a>
+      <a class="btn line" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fgarciajp.com%2Fwriting%2Fhow-docker-containers-work%2F" target="_blank" rel="noopener" data-ev="share/linkedin/how-docker-containers-work"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"></path></svg> Share on LinkedIn</a>
+      <button class="btn line" type="button" data-share="https://garciajp.com/writing/how-docker-containers-work/" data-title="How Docker containers work"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.6 9.4a3 3 0 0 0 4.3 0l2.2-2.2a3 3 0 0 0-4.3-4.3l-.9.9"></path><path d="M9.4 6.6a3 3 0 0 0-4.3 0L2.9 8.8a3 3 0 0 0 4.3 4.3l.9-.9"></path></svg> <span>Copy link</span></button>
+    </div>
+    <p class="share-note">Teaching this to a class or a new teammate? Send them the link.</p></div>
       </section>
+      <section class="more"><div class="sh"><h2>Keep reading</h2><a href="/writing/">All writing</a></div><div class="posts"><a class="post" href="/writing/how-a-web-request-is-served/"><span class="d num">5 steps</span><h3>How a web request is served</h3><span class="tag explainer">Explainer</span><p>Load balancing, caching and the database: the path most web requests take.</p></a><a class="post" href="/writing/how-mcp-works/"><span class="d num">5 steps</span><h3>How MCP connects AI apps to tools</h3><span class="tag explainer">Explainer</span><p>The Model Context Protocol, step by step: discovery, tool calls, and why one server works in every app.</p></a><a class="post" href="/writing/how-to-solve-problems-with-small-experiments/"><span class="d num">5 steps</span><h3>How to solve problems with small experiments</h3><span class="tag explainer">Explainer</span><p>Guess, test small, measure and adjust. Many cheap loops find a good answer faster than one big plan.</p></a></div></section>
       
   <section class="cta">
     <h2>Hiring, or need an AI feature built? Let's talk.</h2>
@@ -77,9 +85,9 @@
 <!-- ===================== CONTENT =====================
      Everything on the site comes from this JSON. Edit it, then run `python build.py`.
      See README.md for what each field does. -->
-<script src="/assets/content.js?v=4cc6b21065"></script>
+<script src="/assets/content.js?v=5a131af3ef"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/motion@11.11.13/dist/motion.js"></script>
-<script src="/assets/site.js?v=16060d9ef3"></script>
+<script src="/assets/site.js?v=0e600c08f6"></script>
 </body>
 </html>

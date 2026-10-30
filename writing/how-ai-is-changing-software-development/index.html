@@ -6,17 +6,18 @@
 <title>How AI is changing software development · Juan Pablo García</title>
 <meta name="description" content="From autocomplete to agents that ship whole features: specs, conducting, context and loops, how models run, and keeping agents safe.">
 <link rel="canonical" href="https://garciajp.com/writing/how-ai-is-changing-software-development/">
-<meta property="og:type" content="website">
+<link rel="alternate" type="application/rss+xml" title="Juan Pablo García · Writing" href="/feed.xml">
+<meta property="og:type" content="article">
 <meta property="og:site_name" content="Juan Pablo García">
 <meta property="og:url" content="https://garciajp.com/writing/how-ai-is-changing-software-development/">
 <meta property="og:title" content="How AI is changing software development · Juan Pablo García">
 <meta property="og:description" content="From autocomplete to agents that ship whole features: specs, conducting, context and loops, how models run, and keeping agents safe.">
-<meta property="og:image" content="https://garciajp.com/og.png">
+<meta property="og:image" content="https://garciajp.com/writing/how-ai-is-changing-software-development/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Juan Pablo García, AI developer">
+<meta property="og:image:alt" content="How AI is changing software development, an animated explainer by Juan Pablo García">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://garciajp.com/og.png">
+<meta name="twitter:image" content="https://garciajp.com/writing/how-ai-is-changing-software-development/og.png">
 <meta name="author" content="Juan Pablo García">
 <script type="application/ld+json" id="ld">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "url": "https://garciajp.com/writing/how-ai-is-changing-software-development/", "headline": "How AI is changing software development", "description": "From autocomplete to agents that ship whole features: specs, conducting, context and loops, how models run, and keeping agents safe.", "datePublished": "2026-10-12", "author": {"@type": "Person", "@id": "https://garciajp.com/#person", "name": "Juan Pablo García", "url": "https://garciajp.com/", "image": "https://garciajp.com/og.png", "jobTitle": "AI Developer", "description": "Juan Pablo García, AI developer in Argentina. RAG pipelines and multi-agent systems, built for production and measured with evals.", "email": "mailto:jpgarcia2154@gmail.com", "address": {"@type": "PostalAddress", "addressLocality": "San Juan", "addressRegion": "San Juan", "addressCountry": "AR"}, "alumniOf": [{"@type": "CollegeOrUniversity", "name": "University of Pennsylvania"}, {"@type": "CollegeOrUniversity", "name": "Universidad de Palermo"}], "worksFor": {"@type": "Organization", "name": "Nodos Hub"}, "knowsAbout": ["Retrieval-augmented generation", "Multi-agent systems", "LLM evaluation", "Python", "FastAPI", "React", "PostgreSQL", "Vector search"], "sameAs": ["https://github.com/jpgg2105", "https://www.linkedin.com/in/juan-pablo-garcia-guerrero", "https://x.com/garciajpgg21"]}, "genre": "Explainers", "isBasedOn": "https://www.youtube.com/watch?v=hTAWHgQI4xg", "citation": [{"@type": "CreativeWork", "name": "Willison (2025). The lethal trifecta for AI agents.", "url": "https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/"}, {"@type": "CreativeWork", "name": "Stanford GSB. Andrew Ng: Why AI Is the New Electricity.", "url": "https://www.gsb.stanford.edu/insights/andrew-ng-why-ai-new-electricity"}, {"@type": "CreativeWork", "name": "Kwon et al. (2023). Efficient Memory Management for LLM Serving with PagedAttention. SOSP.", "url": "https://arxiv.org/abs/2309.06180"}]}]}</script>
 <meta name="color-scheme" content="dark">
@@ -25,7 +26,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@400;500;600;700&family=Instrument+Sans:wght@500&family=Funnel+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="/assets/site.css?v=6d9fbd8d96">
+<link rel="stylesheet" href="/assets/site.css?v=6eb6f97866">
 </head>
 <body>
 <a class="skip" href="#view">Skip to content</a>
@@ -62,7 +63,14 @@
         <h2>In short</h2><div><ul class="plain"><li>Skills, automations and sub-agents extend the same idea: reusable instructions, work triggered by events, and helpers that investigate a problem and report back.</li><li>The video quotes Andrew Ng's line that AI is the new electricity: like the power grid, it will need engineers who keep it reliable, safe and available.</li><li>Developers who are strong at architecture and critical thinking gain the most as coding agents improve.</li><li>The three-part risk in step 6 is what Simon Willison calls the lethal trifecta for AI agents.</li><li>The memory figures match an 8-billion-parameter model like Llama 3 8B at 16-bit precision. The other examples in the animation are illustrative.</li></ul></div>
         <h2>References</h2><div><ol class="refs"><li><a href="https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/" target="_blank" rel="noopener">Willison (2025). The lethal trifecta for AI agents.</a></li><li><a href="https://www.gsb.stanford.edu/insights/andrew-ng-why-ai-new-electricity" target="_blank" rel="noopener">Stanford GSB. Andrew Ng: Why AI Is the New Electricity.</a></li><li><a href="https://arxiv.org/abs/2309.06180" target="_blank" rel="noopener">Kwon et al. (2023). Efficient Memory Management for LLM Serving with PagedAttention. SOSP.</a></li></ol></div>
         <h2>Source</h2><div><p class="src">Based on a video on YouTube about how AI is changing software development. <a href="https://www.youtube.com/watch?v=hTAWHgQI4xg" target="_blank" rel="noopener">Watch it on YouTube</a></p></div>
+        <h2>Share</h2><div><div class="share">
+      <a class="btn line" href="https://x.com/intent/post?text=How%20AI%20is%20changing%20software%20development%3A%20an%20animated%2C%20step-by-step%20explainer&amp;url=https%3A%2F%2Fgarciajp.com%2Fwriting%2Fhow-ai-is-changing-software-development%2F" target="_blank" rel="noopener" data-ev="share/x/how-ai-is-changing-software-development"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.66l-5.21-6.82-5.97 6.82H1.67l7.73-8.84L1.25 2.25h6.83l4.71 6.23 5.45-6.23Zm-1.16 17.52h1.83L7.08 4.13H5.12l11.96 15.64Z"></path></svg> Post on X</a>
+      <a class="btn line" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fgarciajp.com%2Fwriting%2Fhow-ai-is-changing-software-development%2F" target="_blank" rel="noopener" data-ev="share/linkedin/how-ai-is-changing-software-development"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"></path></svg> Share on LinkedIn</a>
+      <button class="btn line" type="button" data-share="https://garciajp.com/writing/how-ai-is-changing-software-development/" data-title="How AI is changing software development"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.6 9.4a3 3 0 0 0 4.3 0l2.2-2.2a3 3 0 0 0-4.3-4.3l-.9.9"></path><path d="M9.4 6.6a3 3 0 0 0-4.3 0L2.9 8.8a3 3 0 0 0 4.3 4.3l.9-.9"></path></svg> <span>Copy link</span></button>
+    </div>
+    <p class="share-note">Teaching this to a class or a new teammate? Send them the link.</p></div>
       </section>
+      <section class="more"><div class="sh"><h2>Keep reading</h2><a href="/writing/">All writing</a></div><div class="posts"><a class="post" href="/writing/how-ai-agents-work/"><span class="d num">5 steps</span><h3>How AI agents work</h3><span class="tag explainer">Explainer</span><p>An agent is a language model in a loop: plan, call a tool, read the result, decide again.</p></a><a class="post" href="/writing/how-mcp-works/"><span class="d num">5 steps</span><h3>How MCP connects AI apps to tools</h3><span class="tag explainer">Explainer</span><p>The Model Context Protocol, step by step: discovery, tool calls, and why one server works in every app.</p></a><a class="post" href="/writing/how-to-evaluate-llm-apps/"><span class="d num">5 steps</span><h3>How to evaluate an LLM app</h3><span class="tag explainer">Explainer</span><p>Test cases, scoring, version comparisons and a release gate: measuring quality instead of guessing.</p></a></div></section>
       
   <section class="cta">
     <h2>Hiring, or need an AI feature built? Let's talk.</h2>
@@ -77,9 +85,9 @@
 <!-- ===================== CONTENT =====================
      Everything on the site comes from this JSON. Edit it, then run `python build.py`.
      See README.md for what each field does. -->
-<script src="/assets/content.js?v=4cc6b21065"></script>
+<script src="/assets/content.js?v=5a131af3ef"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/motion@11.11.13/dist/motion.js"></script>
-<script src="/assets/site.js?v=16060d9ef3"></script>
+<script src="/assets/site.js?v=0e600c08f6"></script>
 </body>
 </html>

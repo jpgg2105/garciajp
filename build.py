@@ -6,8 +6,9 @@ src/index.html is the only file you edit. This script:
      with the right title, description, link preview and structured data,
   2. pre-renders each page in a headless browser, so search engines, link
      previews and AI crawlers see the full text without running JavaScript,
-  3. renders the link-preview image og.png from src/og.html,
-  4. writes 404.html, sitemap.xml and robots.txt.
+  3. renders the link-preview image og.png from src/og.html, plus one per
+     explainer (writing/<slug>/og.png) showing a frame of its animation,
+  4. writes 404.html, sitemap.xml, robots.txt, feed.xml (RSS) and llms.txt.
 
 The finished pages land in the repo root, which is what GitHub Pages serves.
 After editing src/index.html:
@@ -128,15 +129,25 @@ for p in site.get("posts", []):
     ])
 
 
+explainers = [p for p in site.get("posts", []) if p.get("kind") == "explainer" and p.get("scene")]
+og_images = {f"/writing/{p['slug']}/": (f"{domain}/writing/{p['slug']}/og.png", f"{p['title']}, an animated explainer by {name}")
+             for p in explainers}
+
+
 def head_for(path, title, desc, ld, noindex=False):
     t, d = html.escape(title), html.escape(desc, quote=True)
     u = html.escape(domain + path, quote=True)
+    img = og_images.get(path)
     out = re.sub(r"<title>.*?</title>", f"<title>{t}</title>", template, count=1, flags=re.S)
     out = re.sub(r'<meta name="description" content="[^"]*">', f'<meta name="description" content="{d}">', out, count=1)
     out = re.sub(r'<link rel="canonical" href="[^"]*">', f'<link rel="canonical" href="{u}">', out, count=1)
     out = re.sub(r'<meta property="og:url" content="[^"]*">', f'<meta property="og:url" content="{u}">', out, count=1)
     out = re.sub(r'<meta property="og:title" content="[^"]*">', f'<meta property="og:title" content="{t}">', out, count=1)
     out = re.sub(r'<meta property="og:description" content="[^"]*">', f'<meta property="og:description" content="{d}">', out, count=1)
+    if img:
+        out = out.replace(f'content="{domain}/og.png"', f'content="{html.escape(img[0], quote=True)}"')
+        out = re.sub(r'<meta property="og:image:alt" content="[^"]*">', f'<meta property="og:image:alt" content="{html.escape(img[1], quote=True)}">', out, count=1)
+        out = out.replace('<meta property="og:type" content="website">', '<meta property="og:type" content="article">', 1)
     graph = json.dumps({"@context": "https://schema.org", "@graph": ld}, ensure_ascii=False).replace("</", "<\\/")
     out = out.replace('<script type="application/ld+json" id="ld">{}</script>',
                       f'<script type="application/ld+json" id="ld">{graph}</script>', 1)
@@ -174,8 +185,75 @@ today = date.today().isoformat()
     + "</urlset>\n", encoding="utf-8")
 (OUT / "robots.txt").write_text(f"User-agent: *\nAllow: /\n\nSitemap: {domain}/sitemap.xml\n", encoding="utf-8")
 
+# RSS feed of the writing, newest first
+from email.utils import format_datetime
+from datetime import datetime, timezone
+posts_sorted = sorted(site.get("posts", []), key=lambda p: p["date"], reverse=True)
+def _rfc822(d):
+    return format_datetime(datetime.fromisoformat(d).replace(hour=12, tzinfo=timezone.utc))
+x = html.escape
+(OUT / "feed.xml").write_text(
+    '<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">\n<channel>\n'
+    f"  <title>{x(name)} · Writing</title>\n  <link>{domain}/writing/</link>\n"
+    f'  <atom:link href="{domain}/feed.xml" rel="self" type="application/rss+xml"/>\n'
+    "  <description>Animated explainers and notes on building with AI: RAG, agents, evaluation, alignment and problem solving.</description>\n"
+    "  <language>en</language>\n"
+    + (f"  <lastBuildDate>{_rfc822(posts_sorted[0]['date'])}</lastBuildDate>\n" if posts_sorted else "")
+    + "".join(
+        f"  <item>\n    <title>{x(p['title'])}</title>\n    <link>{domain}/writing/{p['slug']}/</link>\n"
+        f"    <guid isPermaLink=\"true\">{domain}/writing/{p['slug']}/</guid>\n    <pubDate>{_rfc822(p['date'])}</pubDate>\n"
+        f"    <description>{x(p.get('excerpt', ''))}</description>\n  </item>\n" for p in posts_sorted)
+    + "</channel>\n</rss>\n", encoding="utf-8")
+
+# llms.txt: a plain-text map of the site for AI assistants and answer engines (llmstxt.org)
+def _line(title, path, note):
+    return f"- [{title}]({domain}{path}): {note}"
+llms = [f"# {name}", "", f"> {site['resume']['summary']}", "",
+        f"Contact: {site['email']} · Book a call: {domain}/book/ · Resume (PDF): {domain}/{site['resumePdf'].split('?')[0]}",
+        "Profiles: " + " · ".join(u for u in site["links"].values() if u), "",
+        "## Main pages",
+        _line("Projects", "/projects/", "client work and personal projects, each with the problem, the system and the result"),
+        _line("Services", "/services/", "adding AI to a product, building a whole product, or automating a workflow"),
+        _line("Resume", "/resume/", "experience, education and skills"),
+        _line("Stack", "/stack/", "languages, frameworks and AI tools in use"),
+        "", "## Projects"]
+llms += [_line(p["title"], f"/projects/{p['slug']}/", p["summary"]) for p in site["projects"]]
+llms += ["", "## Explainers (animated, step by step, with references)"]
+llms += [_line(p["title"], f"/writing/{p['slug']}/", p.get("excerpt", "")) for p in posts_sorted if p.get("kind") == "explainer"]
+other = [p for p in posts_sorted if p.get("kind") != "explainer"]
+if other:
+    llms += ["", "## Other writing"] + [_line(p["title"], f"/writing/{p['slug']}/", p.get("excerpt", "")) for p in other]
+(OUT / "llms.txt").write_text("\n".join(llms) + "\n", encoding="utf-8")
+
 
 # 2. pre-render: run each page in a headless browser and keep the HTML it produces
+OG_CARD = """([scene, S, title, n, excerpt]) => {
+  document.body.innerHTML = '';
+  document.body.style.cssText = 'margin:0;background:#0E0F12;overflow:hidden';
+  const esc = s => s.replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[c]);
+  const c = document.createElement('div');
+  c.style.cssText = 'position:fixed;inset:0;width:1200px;height:630px;box-sizing:border-box;padding:64px 0 60px 72px;display:grid;grid-template-columns:520px 1fr;gap:40px;font-family:var(--f-body);color:#ECEDF1;background:#0E0F12';
+  c.innerHTML = `
+    <div style="display:flex;flex-direction:column;justify-content:space-between;min-width:0">
+      <div style="display:flex;align-items:center;gap:14px;font:500 22px var(--f-body);color:#9EA2AD"><b style="width:44px;height:44px;border-radius:12px;background:#1D6B70;color:#fff;display:grid;place-items:center;font:700 19px var(--f-display)">JP</b>garciajp.com</div>
+      <div>
+        <div style="font:500 20px var(--f-body);color:#7FD6CB;margin-bottom:18px">Animated explainer · ${n} steps</div>
+        <h1 style="margin:0;font:600 ${title.length > 48 ? 50 : title.length > 30 ? 58 : 66}px/1.04 var(--f-display);letter-spacing:-.03em;color:#F1FBFA">${esc(title)}</h1>
+      </div>
+      <div style="font:500 22px var(--f-body);color:#ECEDF1">Juan Pablo García <span style="color:#9EA2AD">· AI developer</span></div>
+    </div>
+    <div style="position:relative">
+      <div style="position:absolute;left:0;top:-4px;width:700px;height:640px;background:#0F3338;border-radius:36px 0 0 36px"></div>
+      <div style="position:absolute;left:44px;top:62px;width:500px;background:#17181D;border:1px solid #24575C;border-radius:18px;overflow:hidden;box-shadow:0 30px 70px -24px rgba(0,0,0,.7)">
+        <div style="height:40px;border-bottom:1px solid #2A2C33;display:flex;align-items:center;gap:8px;padding:0 16px"><i style="width:10px;height:10px;border-radius:50%;background:#3A3D46"></i><i style="width:10px;height:10px;border-radius:50%;background:#3A3D46"></i><i style="width:10px;height:10px;border-radius:50%;background:#3A3D46"></i></div>
+        <canvas id="ogc" style="display:block;width:500px;height:417px;background:#17181D"></canvas>
+      </div>
+    </div>`;
+  document.body.appendChild(c);
+  exDraw(document.getElementById('ogc'), scene, S, 1.7, exColors());
+}"""
+
+
 def prerender():
     try:
         from playwright.sync_api import sync_playwright
@@ -216,6 +294,17 @@ def prerender():
                 card.goto(base + "/src/og.html", wait_until="networkidle")
                 card.evaluate("document.fonts.ready")
                 card.screenshot(path=str(OUT / "og.png"))
+            # one link-preview image per explainer: its title and a frame of its animation
+            if explainers:
+                card = browser.new_page(viewport={"width": 1200, "height": 630})
+                card.goto(base + "/writing/", wait_until="networkidle")
+                card.evaluate("document.fonts.ready")
+                for p in explainers:
+                    n = len(p["steps"])
+                    S = p.get("ogFrame", min(n - .1, 2.85))
+                    card.evaluate(OG_CARD, [p["scene"], S, p["title"], n, p.get("excerpt", "")])
+                    card.wait_for_timeout(120)
+                    card.screenshot(path=str(OUT / "writing" / p["slug"] / "og.png"))
             browser.close()
     finally:
         server.shutdown()
