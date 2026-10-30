@@ -15,7 +15,15 @@ const url = p => HASH ? "#" + p : p;
    Runs only on the live domain, so local previews and the build's pre-render are not counted. */
 const GA = (() => {
   const code = SITE.analytics && SITE.analytics.goatcounter;
-  const live = code && !HASH && location.hostname === new URL(SITE.domain).hostname;
+  // Your own devices: open any page with #notrack once to stop counting this browser, #track to resume.
+  let mine = false;
+  try {
+    if (location.hash === "#notrack") localStorage.setItem("skipgc", "t");
+    if (location.hash === "#track") localStorage.removeItem("skipgc");
+    mine = localStorage.getItem("skipgc") === "t";
+  } catch(_){}
+  if (/^#(no)?track$/.test(location.hash)) history.replaceState(history.state, "", location.pathname + location.search);
+  const live = code && !mine && !HASH && location.hostname === new URL(SITE.domain).hostname;
   const queue = []; let ready = false, first = true;
   const send = v => { if (ready && window.goatcounter && goatcounter.count) goatcounter.count(v); else queue.push(v); };
   if (live){
