@@ -251,6 +251,7 @@ function exKit(ctx, C, fsc = 1){
   K.lerp = (a,b,t) => a + (b - a) * t;
   K.alpha = a => { ctx.globalAlpha = K.clamp(a); };
   K.rect = (x,y,w,h,r=2,o={}) => {
+    if (!(w > 0 && h > 0)) return;
     ctx.beginPath();
     if (ctx.roundRect) ctx.roundRect(x, y, w, h, Math.min(r, w/2, h/2)); else ctx.rect(x, y, w, h);
     if (o.fill){ ctx.fillStyle = o.fill; ctx.fill(); }
@@ -2362,6 +2363,360 @@ const SCENES = {
       K.alpha(s5 * K.seg(S, 4.8, 4.9)); K.text("they change the loss or the data, not the need for good labels", 60, 82, { size: 2.5, align: "center", color: C.muted });
     }
     note("pick by constraints, not by trend", 4.6, 5.2, C.accent);
+    K.alpha(1);
+  },
+  /* ---------- LLM serving: prefill, decode, KV cache, batching, quantization ---------- */
+  serving(K, S, time){
+    const C = K.C, ctx = K.ctx;
+    const vis = (a, b) => K.seg(S, a, a + .15) * (1 - K.seg(S, b - .12, b));
+    const note = (t, a, b, col) => { K.alpha(K.seg(S, a, a + .2) * (1 - K.seg(S, b - .1, b))); K.text(t, 60, 94, { size: 2.7, align: "center", color: col || C.muted, weight: 600 }); };
+    const prompt = ["Summarize", "the", "refund", "policy", "in", "one", "line"];
+    const out = ["Refunds", "within", "30", "days", "of", "delivery."];
+    const chip = (x, y, t, o = {}) => {
+      const w = K.width(t, { size: 2.4, mono: true }) + 3;
+      K.rect(x, y - 2.6, w, 5.2, 1.2, { fill: o.fill || C.surface, stroke: o.stroke || C.strong, lw: o.lw || .3 });
+      K.text(t, x + w / 2, y, { size: 2.4, mono: true, align: "center", color: o.color || C.ink, weight: o.weight || 500 });
+      return w;
+    };
+    const model = (a, label, sub) => {
+      K.alpha(a); K.rect(22, 34, 76, 16, 2.6, { fill: C.raised, stroke: C.strong, lw: .4 });
+      K.text(label, 60, sub ? 40 : 42, { size: 3, align: "center", weight: 700 });
+      if (sub) K.text(sub, 60, 45.5, { size: 2.4, align: "center", color: C.muted });
+    };
+    // 1 + 2. prefill, then decode one token at a time
+    const s12 = vis(0, 2.05);
+    if (s12 > 0){
+      // prompt chips laid out on one row
+      let x = 8; const px = [];
+      prompt.forEach(t => { px.push(x); x += K.width(t, { size: 2.4, mono: true }) + 4.5; });
+      const enter = K.io(K.seg(S, .25, .6));
+      prompt.forEach((t, i) => {
+        K.alpha(s12 * K.seg(S, .02 + i * .02, .1 + i * .02));
+        if (S < .62) chip(px[i], 16, t); else chip(px[i], 16, t, { stroke: C.line, color: C.muted });
+        if (S >= .25 && S < .62){ K.alpha(s12 * .6); K.arrow(px[i] + 3, 19.5, px[i] + 3, 32.5, { color: C.accent, p: enter, hs: .8 }); }
+      });
+      K.alpha(s12 * K.seg(S, .02, .1)); K.text("prompt: 7 tokens", 8, 9.5, { size: 2.4, color: C.muted, weight: 600 });
+      const decoding = S >= 1;
+      model(s12, decoding ? "one pass per new token" : "one pass over all 7 tokens", decoding ? "reads every weight again each time" : "in parallel: the GPU's arithmetic is the limit");
+      // generated tokens
+      const nOut = S < .65 ? 0 : S < 1.12 ? 1 : Math.min(6, 1 + Math.floor((S - 1.12) / .13));
+      let ox = 8;
+      K.alpha(s12 * K.seg(S, .6, .7)); K.text("output", 8, 57, { size: 2.4, color: C.muted, weight: 600 });
+      out.slice(0, nOut).forEach((t, i) => {
+        const fresh = i === nOut - 1;
+        K.alpha(s12); ox += chip(ox, 63, t, { stroke: fresh ? C.accent : C.strong, color: fresh ? C.accent : C.ink, weight: fresh ? 700 : 500 }) + 1.5;
+      });
+      if (nOut > 0 && nOut < 6 && S > .65){ const blink = (Math.sin(time * 6) + 1) / 2; K.alpha(s12 * blink); K.rect(ox, 60.6, .8, 4.8, 0, { fill: C.accent }); }
+      // timeline: prefill block, then one tick per decoded token
+      const T0 = 8, TY = 77, pre = 26, tick = 9;
+      K.alpha(s12 * K.seg(S, .3, .45)); K.text("time", T0, TY - 5, { size: 2.2, color: C.muted });
+      K.line(T0, TY + 4, 112, TY + 4, { color: C.line });
+      const pw = pre * K.ease(K.seg(S, .3, .62));
+      K.alpha(s12); K.rect(T0, TY - 2.5, pw, 5, 1, { fill: C.accent });
+      K.alpha(s12 * K.seg(S, .55, .65));
+      K.text("prefill", T0 + pre / 2, TY, { size: 2.3, align: "center", color: C.white, weight: 700 });
+      K.text("time to first token", T0 + pre / 2, TY + 7.5, { size: 2.2, align: "center", color: C.accent, weight: 600 });
+      for (let i = 1; i < nOut; i++){ K.alpha(s12); K.rect(T0 + pre + 1 + (i - 1) * (tick + 1), TY - 2.5, tick, 5, 1, { fill: C.ok }); }
+      if (nOut > 1){
+        K.alpha(s12 * K.seg(S, 1.2, 1.35));
+        K.text("one decode step per token", T0 + pre + 1 + (tick + 1) * 2.5, TY + 7.5, { size: 2.2, align: "center", color: C.ok, weight: 600 });
+      }
+    }
+    note("prefill reads the whole prompt in one parallel pass", .35, 1.02, C.accent);
+    note("decode is sequential: memory bandwidth, not arithmetic, sets the speed", 1.25, 2.05, C.ok);
+    // 3. KV cache
+    const s3 = vis(2.02, 3.05);
+    if (s3 > 0){
+      const toks = prompt.concat(out), grow = S < 2.3 ? 7 : Math.min(13, 7 + Math.floor((S - 2.3) / .09));
+      const X0 = 22, Y0 = 18, cw = 6.6, rh = 7, layers = ["layer 1", "layer 2", "…", "layer 32"];
+      K.alpha(s3); K.text("KV cache: keys and values kept for every earlier token", 60, 9, { size: 2.6, align: "center", weight: 600 });
+      layers.forEach((l, r) => { K.alpha(s3); K.text(l, X0 - 2, Y0 + r * rh + 3, { size: 2.2, align: "right", color: C.muted }); });
+      for (let c = 0; c < grow; c++){
+        const fresh = c === grow - 1 && grow > 7;
+        for (let r = 0; r < 4; r++){
+          K.alpha(s3 * (r === 2 ? .35 : 1) * (c >= 7 && !fresh ? .55 : 1));
+          K.rect(X0 + c * cw, Y0 + r * rh, cw - 1, rh - 1.2, .8, { fill: fresh ? C.accent : c < 7 ? C.fill : C.ok, stroke: fresh ? C.accent : C.strong, lw: .25 });
+        }
+        K.alpha(s3 * .9); K.text(toks[c].slice(0, 4), X0 + c * cw + (cw - 1) / 2, Y0 + 4 * rh + 2.5, { size: 1.9, align: "center", mono: true, color: c < 7 ? C.muted : C.ink });
+      }
+      K.alpha(s3 * K.seg(S, 2.15, 2.3)); K.text("prompt (from prefill)", X0 + 3.5 * cw, Y0 + 4 * rh + 7, { size: 2.2, align: "center", color: C.muted });
+      if (grow > 7){ K.alpha(s3); K.text("+1 column per new token", X0 + (7 + (grow - 7) / 2) * cw, Y0 + 4 * rh + 7, { size: 2.2, align: "center", color: C.accent, weight: 600 }); }
+      // memory meter
+      const MX = 22, MY = 70;
+      K.alpha(s3 * K.seg(S, 2.4, 2.55));
+      K.text("memory per token, Llama 2 7B in 16-bit:", MX, MY - 4, { size: 2.3, color: C.muted });
+      K.text("32 layers × 4,096 × 2 (K and V) × 2 bytes ≈ 0.5 MB", MX, MY + .5, { size: 2.3, mono: true });
+      const bar = (y, t, gb, col, t0) => {
+        const a = s3 * K.seg(S, t0, t0 + .1); K.alpha(a);
+        K.text(t, MX, y, { size: 2.2, color: C.muted });
+        K.rect(MX + 30, y - 1.6, 40 * gb / 16 * K.ease(K.seg(S, t0, t0 + .25)), 3.2, 1, { fill: col });
+        K.text(`${gb} GB`, MX + 31 + 40 * gb / 16, y, { size: 2.3, color: col === C.strong ? C.ink : col, weight: 700 });
+      };
+      bar(MY + 7, "model weights", 13.5, C.strong, 2.6);
+      bar(MY + 12, "cache: 8 chats × 4,096", 16, C.warn, 2.72);
+    }
+    note("the cache saves recomputing, and it is what fills GPU memory", 2.45, 3.05, C.warn);
+    // 4. batching
+    const s4 = vis(3.02, 4.05);
+    if (s4 > 0){
+      const cont = K.seg(S, 3.48, 3.56) >= 1;
+      const lanes = 4, LX = 24, LY = 22, LH = 11, U = 7.2, steps = 11;
+      K.alpha(s4); K.text(cont ? "continuous batching" : "static batching", 60, 10, { size: 3, align: "center", weight: 700, color: cont ? C.ok : C.ink });
+      K.text(cont ? "a finished request leaves; a waiting one joins at the next step" : "the batch runs until its longest request finishes", 60, 15, { size: 2.3, align: "center", color: C.muted });
+      // requests: [lane, start, length, id]
+      const stat = [[0, 0, 3, "A"], [1, 0, 9, "B"], [2, 0, 5, "C"], [3, 0, 2, "D"], [0, 9, 2, "E"], [1, 9, 2, "F"]];
+      const dyn = [[0, 0, 3, "A"], [1, 0, 9, "B"], [2, 0, 5, "C"], [3, 0, 2, "D"], [3, 2, 4, "E"], [0, 3, 6, "F"], [2, 5, 4, "G"], [3, 6, 5, "H"], [0, 9, 2, "I"], [1, 9, 2, "J"]];
+      const play = K.clamp(cont ? (S - 3.55) / .35 : (S - 3.08) / .35) * steps;
+      for (let l = 0; l < lanes; l++){ K.alpha(s4); K.text(`slot ${l + 1}`, LX - 2, LY + l * LH + 2.6, { size: 2.2, align: "right", color: C.muted }); K.rect(LX, LY + l * LH, steps * U, LH - 3, 1.2, { fill: C.surface, stroke: C.line, lw: .25 }); }
+      (cont ? dyn : stat).forEach(([l, st, len, id]) => {
+        const shown = K.clamp((play - st) / len); if (shown <= 0) return;
+        K.alpha(s4); K.rect(LX + st * U + .3, LY + l * LH + .4, len * U * shown - .6, LH - 3.8, 1, { fill: cont ? C.ok : C.accent });
+        if (shown > .3) K.text(id, LX + st * U + 2, LY + l * LH + 3.6, { size: 2.3, color: C.white, weight: 700 });
+      });
+      // idle slots while the batch waits for B
+      if (!cont && play > 9){
+        [[0, 3, 6], [2, 5, 4], [3, 2, 7]].forEach(([l, st, len]) => { K.alpha(s4 * .9); for (let k = 0; k < len; k++) K.text("idle", LX + (st + k + .5) * U, LY + l * LH + 3.6, { size: 1.9, align: "center", color: C.warn }); });
+      }
+      const done = cont ? 10 : 6;
+      K.alpha(s4 * K.seg(S, cont ? 3.88 : 3.4, cont ? 3.95 : 3.46));
+      K.text(`${done} requests finished in the same 11 steps`, 60, LY + 4 * LH + 4, { size: 2.6, align: "center", weight: 700, color: cont ? C.ok : C.accent });
+      K.alpha(s4 * K.seg(S, 3.6, 3.75));
+      K.text("PagedAttention keeps each cache in small blocks,", 60, LY + 4 * LH + 11, { size: 2.2, align: "center", color: C.muted });
+      K.text("so memory isn't reserved for tokens never written", 60, LY + 4 * LH + 15, { size: 2.2, align: "center", color: C.muted });
+    }
+    note("one weight read serves every request in the batch", 3.15, 4.05, C.ok);
+    // 5. quantization and cost
+    const s5 = vis(4.02, 5.2);
+    if (s5 > 0){
+      K.alpha(s5); K.text("weights of an 8B model", 30, 12, { size: 2.6, align: "center", weight: 700 });
+      const bars = [["16-bit", 16], ["8-bit", 8], ["4-bit", 4]], BX = 10, BY = 66, sc = 2.9;
+      bars.forEach(([lab, gb], i) => {
+        const a = s5 * K.seg(S, 4.08 + i * .12, 4.2 + i * .12), h = gb * sc * K.ease(K.seg(S, 4.08 + i * .12, 4.3 + i * .12));
+        K.alpha(a); K.rect(BX + i * 15, BY - h, 10, h, 1, { fill: i ? C.accent : C.strong });
+        K.text(`${gb} GB`, BX + i * 15 + 5, BY - h - 3, { size: 2.5, align: "center", weight: 700, color: i ? C.accent : C.ink });
+        K.text(lab, BX + i * 15 + 5, BY + 4, { size: 2.3, align: "center", color: C.muted });
+      });
+      K.alpha(s5 * K.seg(S, 4.45, 4.55));
+      K.text("fewer bytes to read per token:", 30, 76, { size: 2.3, align: "center", color: C.muted });
+      K.text("faster decode, at some accuracy cost", 30, 80.5, { size: 2.3, align: "center", color: C.muted });
+      // cost panel
+      const cx = 64;
+      K.alpha(s5 * K.seg(S, 4.5, 4.6)); K.line(cx - 4, 10, cx - 4, 84, { color: C.line, dash: [.8, .8] });
+      K.text("what a request costs", 90, 12, { size: 2.6, align: "center", weight: 700 });
+      const rows = [["input tokens", "prefill: processed in parallel", .25, C.strong], ["output tokens", "decode: one pass each", 1, C.warn]];
+      rows.forEach(([t, sub, w, col], i) => {
+        const a = s5 * K.seg(S, 4.6 + i * .12, 4.72 + i * .12), y = 26 + i * 20;
+        K.alpha(a); K.text(t, cx, y, { size: 2.6, weight: 700 }); K.text(sub, cx, y + 4.5, { size: 2.2, color: C.muted });
+        K.rect(cx, y + 8, 48 * w * K.ease(K.seg(S, 4.6 + i * .12, 4.85 + i * .12)), 4, 1, { fill: col });
+      });
+      K.alpha(s5 * K.seg(S, 4.85, 4.95));
+      K.text("price per token, illustrative:", cx, 70, { size: 2.3, color: C.muted });
+      K.text("APIs usually charge several times", cx, 74.5, { size: 2.3, color: C.muted });
+      K.text("more for output than for input", cx, 79, { size: 2.3, color: C.muted });
+    }
+    note("latency ≈ time to first token + output tokens × time per token", 4.6, 5.2, C.accent);
+    K.alpha(1);
+  },
+  /* ---------- Structured outputs: constrained decoding ---------- */
+  structured(K, S, time){
+    const C = K.C, ctx = K.ctx;
+    const vis = (a, b) => K.seg(S, a, a + .15) * (1 - K.seg(S, b - .12, b));
+    const note = (t, a, b, col) => { K.alpha(K.seg(S, a, a + .2) * (1 - K.seg(S, b - .1, b))); K.text(t, 60, 94, { size: 2.7, align: "center", color: col || C.muted, weight: 600 }); };
+    const cross = (x, y, s, col) => { K.line(x - s, y - s, x + s, y + s, { color: col || C.warn, lw: .55 }); K.line(x - s, y + s, x + s, y - s, { color: col || C.warn, lw: .55 }); };
+    const mono = { size: 2.5, mono: true };
+    // 1. asking nicely
+    const s1 = vis(0, 1.05);
+    if (s1 > 0){
+      K.alpha(s1); K.text("prompt: “Extract the name and amount. Reply in JSON.”", 60, 10, { size: 2.6, align: "center", weight: 600 });
+      const outs = [
+        [['{"name": "Ana", "amount": 12}'], true, "parses"],
+        [['Sure! Here is the JSON:', '{"name": "Ana", "amount": 12}'], false, "text before it"],
+        [['{"name": "Ana", "amount": "twelve"'], false, "string, no }"],
+      ];
+      outs.forEach(([lines, ok, why], i) => {
+        const a = s1 * K.seg(S, .12 + i * .17, .24 + i * .17), y = 20 + i * 22;
+        K.alpha(a); K.rect(8, y, 76, 16, 2, { fill: C.surface, stroke: ok ? C.ok : C.warn, lw: .45 });
+        lines.forEach((l, j) => K.text(l, 12, y + (lines.length === 1 ? 8 : 5 + j * 5.5), { ...mono, color: j === 0 && lines.length > 1 ? C.muted : C.ink }));
+        if (ok) K.check(90, y + 6.5, 3, C.ok); else cross(90, y + 6.5, 1.8);
+        K.text(why, 94, y + 6.5, { size: 2.2, color: ok ? C.ok : C.warn, weight: 600 });
+        K.text(ok ? "" : "parse fails", 94, y + 10.5, { size: 2.1, color: C.muted });
+      });
+    }
+    note("a prompt makes the format likely, not guaranteed", .6, 1.05, C.warn);
+    // 2 + 3. next-token distribution, then the mask
+    const s23 = vis(1.02, 3.05);
+    if (s23 > 0){
+      K.alpha(s23); K.text("output so far", 8, 10, { size: 2.3, color: C.muted, weight: 600 });
+      K.rect(8, 13, 104, 9, 2, { fill: C.surface, stroke: C.strong });
+      K.text('{"name": "Ana", "amount": ', 12, 17.5, { ...mono, size: 2.7 });
+      const cw = K.width('{"name": "Ana", "amount": ', { ...mono, size: 2.7 }); const blink = (Math.sin(time * 6) + 1) / 2;
+      K.alpha(s23 * blink); K.rect(12 + cw, 14.8, .8, 5.4, 0, { fill: C.accent });
+      const cands = [["12", .34, true], ['"twelve"', .21, false], ["twelve", .12, false], ["␣12", .09, true], ["null", .08, false], ["-", .02, true], ["\\n", .06, true], ["1", .05, true], ["Sure", .03, false]];
+      const mask = K.ease(K.seg(S, 2.15, 2.45)), renorm = K.ease(K.seg(S, 2.5, 2.8));
+      const keep = cands.filter(c => c[2]).reduce((n, c) => n + c[1], 0);
+      K.alpha(s23 * K.seg(S, 1.1, 1.25)); K.text(S < 2.1 ? "the model scores every token in its vocabulary; a few of them:" : "the schema says a number comes next: every other token gets probability 0",
+        8, 29, { size: 2.3, color: S < 2.1 ? C.muted : C.accent, weight: 600 });
+      cands.forEach(([t, p, ok], i) => {
+        const y = 35 + i * 5.6, a = s23 * K.seg(S, 1.15 + i * .04, 1.25 + i * .04);
+        const pv = ok ? K.lerp(p, p / keep, renorm) : p * (1 - mask);
+        K.alpha(a * (ok ? 1 : 1 - .65 * mask)); K.text(t, 26, y, { ...mono, align: "right", color: ok ? C.ink : C.muted });
+        K.alpha(a); K.rect(29, y - 1.8, 70 * K.ease(K.seg(S, 1.15 + i * .04, 1.4 + i * .04)) * pv, 3.6, .8, { fill: ok && mask > .5 ? C.accent : C.strong });
+        K.alpha(a * (1 - mask * (ok ? 0 : .3))); K.text(pv < .005 ? "0" : pv.toFixed(2), 31 + 70 * pv, y, { size: 2.2, mono: true, color: C.muted });
+        if (!ok && mask > .05){ K.alpha(a * mask); cross(23 - K.width(t, mono) - 3, y, 1.1); }
+      });
+      K.alpha(s23 * K.seg(S, 1.5, 1.65) * (1 - K.seg(S, 2, 2.1))); K.text("an invalid token has a 44% chance of being picked here", 60, 87, { size: 2.4, align: "center", color: C.warn, weight: 600 });
+      K.alpha(s23 * K.seg(S, 2.7, 2.85)); K.text("the remaining tokens are renormalized, then sampled as usual", 60, 87, { size: 2.4, align: "center", color: C.accent, weight: 600 });
+    }
+    note("at each step the sampler picks from a probability over the whole vocabulary", 1.35, 2.05);
+    note("constrained decoding: mask what would break the format, then sample", 2.3, 3.05, C.accent);
+    // 4. the state machine
+    const s4 = vis(3.02, 4.05);
+    if (s4 > 0){
+      const nodes = [["start", 10, 24], ['{', 26, 24], ['"name"', 44, 24], [":", 60, 24], ["string", 76, 24], [",", 92, 24], ['"amount"', 92, 44], [":", 74, 44], ["number", 56, 44], ["}", 38, 44], ["done", 20, 44]];
+      const at = Math.min(nodes.length - 1, Math.floor(K.clamp((S - 3.12) / .7) * nodes.length));
+      K.alpha(s4); K.text('schema: { "name": string, "amount": number }  →  states', 60, 10, { size: 2.5, align: "center", weight: 600 });
+      nodes.forEach(([t, x, y], i) => {
+        if (i){ const [, px, py] = nodes[i - 1]; K.alpha(s4 * .9); K.arrow(px + (x > px ? 7 : x < px ? -7 : 0), py + (y > py ? 4 : 0), x - (x > px ? 7.2 : x < px ? -7.2 : 0), y - (y > py ? 4.2 : 0), { color: i <= at ? C.accent : C.strong, hs: .9 }); }
+        const cur = i === at, past = i < at;
+        K.alpha(s4); K.rect(x - 7, y - 4, 14, 8, 2, { fill: cur ? C.accent : C.surface, stroke: past || cur ? C.accent : C.strong, lw: cur ? .5 : .35 });
+        K.text(t, x, y, { size: 2.3, mono: true, align: "center", color: cur ? C.white : past ? C.accent : C.ink, weight: 600 });
+      });
+      const allowed = { 0: "{ or whitespace", 1: '" to open a key', 2: "the rest of “name”", 3: ":", 4: "any string characters, or \" to close", 5: ", or }", 6: "the rest of “amount”", 7: ":", 8: "digits, - or .", 9: "}", 10: "end of output" }[at];
+      K.alpha(s4 * K.seg(S, 3.15, 3.3));
+      K.rect(14, 56, 92, 12, 2, { fill: C.raised, stroke: C.accent, lw: .4 });
+      K.text("allowed next:", 18, 62, { size: 2.4, color: C.muted, weight: 600 });
+      K.text(allowed, 38, 62, { size: 2.5, mono: true, color: C.accent, weight: 700 });
+      K.alpha(s4 * K.seg(S, 3.55, 3.7));
+      K.text("a token can span characters (one token may be  \":  or  }\\n ), so each", 60, 76, { size: 2.3, align: "center", color: C.muted });
+      K.text("token is checked by the characters it would add; the masks are precomputed per state", 60, 80.5, { size: 2.3, align: "center", color: C.muted });
+    }
+    note("the schema becomes a grammar; its state says what may come next", 3.3, 4.05, C.accent);
+    // 5. valid is not correct
+    const s5 = vis(4.02, 5.2);
+    if (s5 > 0){
+      K.alpha(s5); K.text("input text", 8, 11, { size: 2.3, color: C.muted, weight: 600 });
+      K.rect(8, 14, 104, 9, 2, { fill: C.surface, stroke: C.strong });
+      K.text("“Ana paid twelve dollars, plus a 10% tip.”", 12, 18.5, { size: 2.6 });
+      K.alpha(s5 * K.seg(S, 4.12, 4.25)); K.text("constrained output", 8, 30, { size: 2.3, color: C.muted, weight: 600 });
+      K.rect(8, 33, 62, 9, 2, { fill: C.surface, stroke: C.strong });
+      K.text('{"name": "Ana", "amount": 10}', 12, 37.5, mono);
+      K.alpha(s5 * K.seg(S, 4.25, 4.35)); K.check(76, 37.5, 2.6, C.ok); K.text("parses", 80, 37.5, { size: 2.3, color: C.ok, weight: 600 });
+      K.alpha(s5 * K.seg(S, 4.35, 4.45)); cross(95, 37.5, 1.5); K.text("wrong", 98, 37.5, { size: 2.3, color: C.warn, weight: 600 });
+      K.alpha(s5 * K.seg(S, 4.5, 4.62)); K.text("give it room to think, then format", 8, 52, { size: 2.6, weight: 700 });
+      K.rect(8, 56, 104, 15, 2, { fill: C.surface, stroke: C.accent, lw: .45 });
+      K.text('{"reasoning": "paid twelve; the 10% is a tip",', 12, 61, { ...mono, size: 2.3 });
+      K.text(' "name": "Ana", "amount": 12}', 12, 66, { ...mono, size: 2.3 });
+      K.alpha(s5 * K.seg(S, 4.7, 4.82)); K.text("tight formats can hurt reasoning (Tam et al., 2024): a free-text field first,", 60, 79, { size: 2.3, align: "center", color: C.muted });
+      K.text("then validate the values in code, the same way you would for any input", 60, 83.5, { size: 2.3, align: "center", color: C.muted });
+    }
+    note("constrained decoding guarantees the shape, not the facts", 4.5, 5.2, C.warn);
+    K.alpha(1);
+  },
+  /* ---------- Long context vs RAG ---------- */
+  longctx(K, S, time){
+    const C = K.C, ctx = K.ctx;
+    const vis = (a, b) => K.seg(S, a, a + .15) * (1 - K.seg(S, b - .12, b));
+    const note = (t, a, b, col) => { K.alpha(K.seg(S, a, a + .2) * (1 - K.seg(S, b - .1, b))); K.text(t, 60, 94, { size: 2.7, align: "center", color: col || C.muted, weight: 600 }); };
+    const page = (x, y, w, h, col) => { K.rect(x, y, w, h, .6, { fill: C.surface, stroke: col || C.strong, lw: .25 }); for (let k = 0; k < 3; k++) K.rect(x + w * .15, y + h * (.25 + k * .22), w * (k === 2 ? .45 : .7), .5, .25, { fill: col || C.strong }); };
+    const curve = (fn, x0, x1, col, lw, dash) => { ctx.beginPath(); for (let i = 0; i <= 60; i++){ const t = i / 60, x = K.lerp(x0, x1, t), y = fn(t); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } ctx.setLineDash(dash || []); ctx.strokeStyle = col; ctx.lineWidth = lw || .6; ctx.stroke(); ctx.setLineDash([]); };
+    // 1. two ways
+    const s1 = vis(0, 1.05);
+    if (s1 > 0){
+      K.alpha(s1); K.text("long context: paste it all", 30, 10, { size: 2.5, align: "center", weight: 700 });
+      K.text("RAG: retrieve what matters", 90, 10, { size: 2.5, align: "center", weight: 700, color: C.accent });
+      K.line(60, 8, 60, 86, { color: C.line, dash: [.8, .8] });
+      // left: 40 pages flow into a tall window
+      const fill = K.ease(K.seg(S, .15, .7));
+      K.rect(8, 18, 44, 58, 2, { stroke: C.strong, lw: .35 });
+      for (let i = 0; i < 40; i++){ if (i / 40 > fill) break; page(10 + (i % 8) * 5.2, 20 + Math.floor(i / 8) * 11, 4.4, 9.5); }
+      K.alpha(s1 * K.seg(S, .6, .7)); K.text("context window", 30, 80, { size: 2.3, align: "center", color: C.muted });
+      K.text("≈ 150,000 tokens per question", 30, 85, { size: 2.4, align: "center", weight: 600 });
+      // right: library, retriever, 5 chunks in a small window
+      for (let i = 0; i < 24; i++){ K.alpha(s1 * K.seg(S, .05, .2) * .55); page(64 + (i % 12) * 4.2, 18 + Math.floor(i / 12) * 8, 3.6, 7); }
+      const pick = K.seg(S, .35, .75);
+      [3, 9, 14, 17, 22].forEach((i, k) => {
+        const sx = 64 + (i % 12) * 4.2, sy = 18 + Math.floor(i / 12) * 8, tx = 76 + k * 6, ty = 52, e = K.io(K.clamp(pick * 1.4 - k * .1));
+        K.alpha(s1); page(K.lerp(sx, tx, e), K.lerp(sy, ty, e), K.lerp(3.6, 4.8, e), K.lerp(7, 9, e), e > .05 ? C.accent : C.strong);
+      });
+      K.alpha(s1 * K.seg(S, .3, .4)); K.node(90, 40, 22, 6, "retriever", { size: 2.4, stroke: C.accent });
+      K.alpha(s1 * K.seg(S, .55, .65)); K.rect(73, 49, 34, 15, 2, { stroke: C.accent, lw: .35 });
+      K.alpha(s1 * K.seg(S, .6, .7)); K.text("context window", 90, 80, { size: 2.3, align: "center", color: C.muted });
+      K.text("≈ 3,000 tokens per question", 90, 85, { size: 2.4, align: "center", weight: 600, color: C.accent });
+    }
+    note("same documents, two very different prompts", .5, 1.05);
+    // 2. lost in the middle
+    const s2 = vis(1.02, 2.05);
+    if (s2 > 0){
+      const X0 = 16, X1 = 108, Y0 = 76, Y1 = 18, acc = t => K.lerp(Y0, Y1, .5 + .37 * Math.pow(2 * t - 1, 2) - (t > .5 ? .12 * (t - .5) * 2 : 0));
+      K.alpha(s2); K.text("accuracy by where the answer sits among 20 documents", 60, 10, { size: 2.5, align: "center", weight: 700 });
+      K.line(X0, Y0, X1, Y0, { color: C.strong }); K.line(X0, Y0, X0, Y1 - 2, { color: C.strong });
+      K.text("1st", X0, Y0 + 4, { size: 2.2, align: "center", color: C.muted }); K.text("10th", (X0 + X1) / 2, Y0 + 4, { size: 2.2, align: "center", color: C.muted }); K.text("20th", X1, Y0 + 4, { size: 2.2, align: "center", color: C.muted });
+      K.text("position of the relevant document", (X0 + X1) / 2, Y0 + 9, { size: 2.2, align: "center", color: C.muted });
+      K.text("accuracy", X0 - 2, Y1, { size: 2.2, align: "right", color: C.muted });
+      const draw = K.ease(K.seg(S, 1.12, 1.55));
+      ctx.save(); ctx.beginPath(); ctx.rect(X0, 0, (X1 - X0) * draw, 100); ctx.clip();
+      curve(acc, X0, X1, C.accent, .7); ctx.restore();
+      const cb = K.lerp(Y0, Y1, .56);
+      K.alpha(s2 * K.seg(S, 1.55, 1.7)); K.line(X0, cb, X1, cb, { color: C.warn, dash: [1, .8] });
+      K.text("no documents", X1, cb + 3.5, { size: 2.2, align: "right", color: C.warn, weight: 600, halo: true });
+      const mt = .5 + .45 * Math.sin(time * .9);
+      K.alpha(s2 * K.seg(S, 1.5, 1.6)); K.dot(K.lerp(X0, X1, mt), acc(mt), 1.4, { fill: C.accent });
+      K.alpha(s2 * K.seg(S, 1.7, 1.8)); K.text("illustrative shape of the result in Liu et al. (2024)", 60, Y0 + 12.5, { size: 2.2, align: "center", color: C.muted });
+    }
+    note("models use the start and end of a long context best, the middle worst", 1.4, 2.05, C.accent);
+    // 3. advertised vs effective length
+    const s3 = vis(2.02, 3.05);
+    if (s3 > 0){
+      const X0 = 16, X1 = 108, Y0 = 72, Y1 = 20, lens = ["4K", "8K", "16K", "32K", "64K", "128K"];
+      K.alpha(s3); K.text("accuracy as the context grows", 60, 10, { size: 2.5, align: "center", weight: 700 });
+      K.line(X0, Y0, X1, Y0, { color: C.strong }); K.line(X0, Y0, X0, Y1 - 2, { color: C.strong });
+      lens.forEach((l, i) => K.text(l, K.lerp(X0, X1, i / 5), Y0 + 4, { size: 2.2, align: "center", color: C.muted }));
+      K.text("tokens in the prompt", (X0 + X1) / 2, Y0 + 9, { size: 2.2, align: "center", color: C.muted });
+      const d1 = K.ease(K.seg(S, 2.1, 2.45)), d2 = K.ease(K.seg(S, 2.4, 2.8));
+      ctx.save(); ctx.beginPath(); ctx.rect(X0, 0, (X1 - X0) * d1, 100); ctx.clip();
+      curve(t => K.lerp(Y0, Y1, .97 - .04 * t), X0, X1, C.ok, .7); ctx.restore();
+      ctx.save(); ctx.beginPath(); ctx.rect(X0, 0, (X1 - X0) * d2, 100); ctx.clip();
+      curve(t => K.lerp(Y0, Y1, .88 - .55 * Math.pow(t, 1.4)), X0, X1, C.warn, .7); ctx.restore();
+      K.alpha(s3 * K.seg(S, 2.3, 2.4)); K.text("find one planted sentence (needle in a haystack)", X1, K.lerp(Y0, Y1, .97) - 3, { size: 2.2, align: "right", color: C.ok, weight: 600, halo: true });
+      K.alpha(s3 * K.seg(S, 2.7, 2.8)); K.text("track, combine or reason over many facts", X1, K.lerp(Y0, Y1, .33) + 4, { size: 2.2, align: "right", color: C.warn, weight: 600, halo: true });
+      K.alpha(s3 * K.seg(S, 2.75, 2.85)); K.text("RULER (Hsieh et al., 2024): of models claiming 32K or more, about half held up at 32K", 60, Y0 + 14, { size: 2.2, align: "center", color: C.muted });
+    }
+    note("the advertised window is the maximum, not the length that works well", 2.45, 3.05, C.warn);
+    // 4. cost and latency
+    const s4 = vis(3.02, 4.05);
+    if (s4 > 0){
+      K.alpha(s4); K.text("input tokens per question", 60, 10, { size: 2.5, align: "center", weight: 700 });
+      const rows = [["long context", 150000, C.strong], ["RAG, 5 chunks", 3000, C.accent]], BX = 36, BW = 60;
+      rows.forEach(([t, n, col], i) => {
+        const y = 22 + i * 12, w = BW * n / 150000 * K.ease(K.seg(S, 3.1 + i * .12, 3.4 + i * .12));
+        K.alpha(s4 * K.seg(S, 3.08 + i * .12, 3.18 + i * .12)); K.text(t, BX - 3, y, { size: 2.4, align: "right", weight: 600 });
+        K.rect(BX, y - 2.2, Math.max(.6, w), 4.4, 1, { fill: col });
+        K.text(n.toLocaleString("en-US"), BX + Math.max(.6, w) + 2, y, { size: 2.4, mono: true, color: col === C.strong ? C.ink : col, weight: 700 });
+      });
+      K.alpha(s4 * K.seg(S, 3.4, 3.5)); K.text("50× more tokens to read, on every question", 60, 44, { size: 2.6, align: "center", color: C.warn, weight: 700 });
+      const items = [["cost", "you pay for every input token, every time"], ["latency", "prefill grows with the prompt: slower first token"], ["memory", "the KV cache holds all 150,000 tokens"], ["caching", "a cached prefix cuts repeat cost, not the first read"]];
+      items.forEach(([h, t], i) => {
+        const a = s4 * K.seg(S, 3.5 + i * .08, 3.6 + i * .08), y = 54 + i * 7.5;
+        K.alpha(a); K.text(h, 30, y, { size: 2.4, align: "right", weight: 700, color: i === 3 ? C.ok : C.ink }); K.text(t, 34, y, { size: 2.4, color: C.muted });
+      });
+    }
+    note("long context is paid on every request", 3.5, 4.05, C.warn);
+    // 5. choosing
+    const s5 = vis(4.02, 5.2);
+    if (s5 > 0){
+      const card = (x, t, col, items, t0) => {
+        K.alpha(s5 * K.seg(S, t0, t0 + .12)); K.rect(x, 8, 52, 50, 2.4, { fill: C.surface, stroke: col, lw: .5 });
+        K.text(t, x + 4, 14, { size: 2.9, weight: 700, color: col });
+        items.forEach((it, i) => { K.alpha(s5 * K.seg(S, t0 + .06 + i * .05, t0 + .14 + i * .05)); K.dot(x + 5, 22 + i * 8.5, .7, { fill: col }); it.forEach((l, j) => K.text(l, x + 8, 22 + i * 8.5 + j * 3.6, { size: 2.3 })); });
+      };
+      card(5, "long context", C.ink, [["one long document or a", "small, fixed set"], ["the task needs all of it:", "summarize, compare sections"], ["a prototype, before", "building retrieval"], ["few questions per document"]], 4.05);
+      card(63, "RAG", C.accent, [["a large or changing corpus"], ["answers need sources and", "per-user access control"], ["many questions, tight", "cost or latency"], ["facts sit in a few passages"]], 4.25);
+      K.alpha(s5 * K.seg(S, 4.6, 4.72)); K.rect(5, 64, 110, 18, 2.4, { fill: C.raised, stroke: C.ok, lw: .45 });
+      K.text("often both", 9, 70, { size: 2.8, weight: 700, color: C.ok });
+      K.text("retrieve generously and let a long-context model read more of each hit,", 9, 75, { size: 2.3 });
+      K.text("or route each question to the cheaper path first (Li et al., 2024)", 9, 79, { size: 2.3 });
+    }
+    note("pick by corpus size, task and budget, then measure on your own questions", 4.6, 5.2, C.accent);
     K.alpha(1);
   },
 };

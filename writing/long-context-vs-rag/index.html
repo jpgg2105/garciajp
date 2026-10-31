@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Long context or RAG? What models actually use · Juan Pablo García</title>
+<meta name="description" content="Million-token windows didn&#x27;t make retrieval obsolete. Where models lose track of long prompts, what each approach costs, and how to choose.">
+<link rel="canonical" href="https://garciajp.com/writing/long-context-vs-rag/">
+<link rel="alternate" type="application/rss+xml" title="Juan Pablo García · Writing" href="/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Juan Pablo García">
+<meta property="og:url" content="https://garciajp.com/writing/long-context-vs-rag/">
+<meta property="og:title" content="Long context or RAG? What models actually use · Juan Pablo García">
+<meta property="og:description" content="Million-token windows didn&#x27;t make retrieval obsolete. Where models lose track of long prompts, what each approach costs, and how to choose.">
+<meta property="og:image" content="https://garciajp.com/writing/long-context-vs-rag/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Long context or RAG? What models actually use, an animated explainer by Juan Pablo García">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://garciajp.com/writing/long-context-vs-rag/og.png">
+<meta name="author" content="Juan Pablo García">
+<meta name="msvalidate.01" content="DEC2476C7613BDF59BE67C7E9087EA30">
+<script type="application/ld+json" id="ld">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "url": "https://garciajp.com/writing/long-context-vs-rag/", "headline": "Long context or RAG? What models actually use", "description": "Million-token windows didn't make retrieval obsolete. Where models lose track of long prompts, what each approach costs, and how to choose.", "datePublished": "2026-10-31", "author": {"@type": "Person", "@id": "https://garciajp.com/#person", "name": "Juan Pablo García", "url": "https://garciajp.com/", "image": "https://garciajp.com/og.png", "jobTitle": "AI Developer", "description": "Juan Pablo García, AI developer in Argentina. RAG pipelines and multi-agent systems, built for production and measured with evals.", "email": "mailto:jpgarcia2154@gmail.com", "address": {"@type": "PostalAddress", "addressLocality": "San Juan", "addressRegion": "San Juan", "addressCountry": "AR"}, "alumniOf": [{"@type": "CollegeOrUniversity", "name": "University of Pennsylvania"}, {"@type": "CollegeOrUniversity", "name": "Universidad de Palermo"}], "worksFor": {"@type": "Organization", "name": "Nodos Hub"}, "knowsAbout": ["Retrieval-augmented generation", "Multi-agent systems", "LLM evaluation", "Python", "FastAPI", "React", "PostgreSQL", "Vector search"], "sameAs": ["https://github.com/jpgg2105", "https://www.linkedin.com/in/juan-pablo-garcia-guerrero", "https://x.com/garciajpgg21"]}, "genre": "Explainers", "citation": [{"@type": "CreativeWork", "name": "Liu et al. (2024). Lost in the Middle: How Language Models Use Long Contexts. TACL.", "url": "https://arxiv.org/abs/2307.03172"}, {"@type": "CreativeWork", "name": "Hsieh et al. (2024). RULER: What's the Real Context Size of Your Long-Context Language Models? COLM.", "url": "https://arxiv.org/abs/2404.06654"}, {"@type": "CreativeWork", "name": "Kamradt (2023). Needle In A Haystack: pressure testing LLMs.", "url": "https://github.com/gkamradt/LLMTest_NeedleInAHaystack"}, {"@type": "CreativeWork", "name": "Modarressi et al. (2025). NoLiMa: Long-Context Evaluation Beyond Literal Matching.", "url": "https://arxiv.org/abs/2502.05167"}, {"@type": "CreativeWork", "name": "Xu et al. (2024). Retrieval meets Long Context Large Language Models. ICLR.", "url": "https://arxiv.org/abs/2310.03025"}, {"@type": "CreativeWork", "name": "Li et al. (2024). Retrieval Augmented Generation or Long-Context LLMs? A Comprehensive Study and Hybrid Approach.", "url": "https://arxiv.org/abs/2407.16833"}]}]}</script>
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0E0F12">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231D6B70'/%3E%3Ctext x='32' y='42' font-family='Helvetica,Arial,sans-serif' font-size='28' font-weight='700' fill='%23FFFFFF' text-anchor='middle'%3EJP%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@400;500;600;700&family=Instrument+Sans:wght@500&family=Funnel+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="/assets/site.css?v=cfd963c7cb">
+</head>
+<body>
+<a class="skip" href="#view">Skip to content</a>
+<header class="top" id="top">
+  <div class="wrap">
+    <a class="brand" href="/" data-nav>Juan Pablo García</a>
+    <nav class="nav" id="nav" aria-label="Main"><a href="/" data-k="home">Home</a><a href="/projects/" data-k="projects">Projects</a><a href="/writing/" data-k="writing" aria-current="page">Writing</a><a href="/resume/" data-k="resume">Resume</a><a href="/stack/" data-k="stack">Stack</a><a href="/services/" data-k="services">Services</a><a href="/book/" data-k="book">Contact</a></nav>
+  </div>
+</header>
+
+<main class="wrap" id="view" tabindex="-1">
+    <div class="page">
+      <section class="proj-head">
+        <a class="crumb" href="/writing/"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"></path></svg> All writing</a>
+        <div class="ex-meta"><span class="tag explainer">Explainer</span><span>5 steps · scroll to play</span></div>
+        <h1>Long context or RAG? What models actually use</h1>
+        <p class="lede">Context windows grew from a few thousand tokens to hundreds of thousands, so why retrieve at all? Because a model that can read a long prompt doesn't use all of it equally, and it pays for every token on every question. Scroll for what the research shows.</p>
+      </section>
+      
+      <section class="build explainer" id="ex" data-scene="longctx" aria-label="Long context or RAG? What models actually use, step by step">
+        <div class="build-track" style="height:450vh">
+          <div class="pin">
+            <ol class="steps"><li class="step on"><span class="n">1</span><h3>Two ways to give a model your documents</h3><p>With a long-context model you can paste everything into the prompt. With RAG you retrieve the few passages that match the question and send only those. Both answer from your documents; they differ in how much the model has to read.</p></li><li class="step"><span class="n">2</span><h3>Position matters</h3><p>Models don't use a long context evenly. In Liu et al.'s tests with 20 documents in the prompt, accuracy was highest when the answer sat in the first or last documents and fell in the middle, for one model below answering with no documents at all.</p></li><li class="step"><span class="n">3</span><h3>Advertised length isn't usable length</h3><p>Finding one planted sentence, the “needle in a haystack” test, stays easy for most models at long lengths. Tasks that track or combine many facts degrade much sooner: in RULER, only about half of the models that claimed 32K tokens or more held up at 32K.</p></li><li class="step"><span class="n">4</span><h3>Cost and latency</h3><p>A long prompt is read again on every question: 150,000 tokens instead of 3,000 is 50 times the input to pay for, a slower first token and a larger KV cache. Prompt caching lowers the cost of a repeated prefix, not of the first read.</p></li><li class="step"><span class="n">5</span><h3>Choosing</h3><p>Long context fits one long document, a small fixed set, or tasks that need the whole text. RAG fits large or changing corpora, answers with sources, access control and tight budgets. Many systems combine them: retrieve generously, then let a long-context model read more of each hit.</p></li></ol>
+            <div class="screen" aria-hidden="true">
+              <div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="file">Long context or RAG? What models actually use</span><span class="sample">Illustration</span></div>
+              <canvas width="532" height="476"></canvas>
+            </div>
+            <div class="ex-stills"><div class="ex-still"><h3>Two ways to give a model your documents</h3><p>With a long-context model you can paste everything into the prompt. With RAG you retrieve the few passages that match the question and send only those. Both answer from your documents; they differ in how much the model has to read.</p><canvas aria-hidden="true"></canvas></div><div class="ex-still"><h3>Position matters</h3><p>Models don't use a long context evenly. In Liu et al.'s tests with 20 documents in the prompt, accuracy was highest when the answer sat in the first or last documents and fell in the middle, for one model below answering with no documents at all.</p><canvas aria-hidden="true"></canvas></div><div class="ex-still"><h3>Advertised length isn't usable length</h3><p>Finding one planted sentence, the “needle in a haystack” test, stays easy for most models at long lengths. Tasks that track or combine many facts degrade much sooner: in RULER, only about half of the models that claimed 32K tokens or more held up at 32K.</p><canvas aria-hidden="true"></canvas></div><div class="ex-still"><h3>Cost and latency</h3><p>A long prompt is read again on every question: 150,000 tokens instead of 3,000 is 50 times the input to pay for, a slower first token and a larger KV cache. Prompt caching lowers the cost of a repeated prefix, not of the first read.</p><canvas aria-hidden="true"></canvas></div><div class="ex-still"><h3>Choosing</h3><p>Long context fits one long document, a small fixed set, or tasks that need the whole text. RAG fits large or changing corpora, answers with sources, access control and tight budgets. Many systems combine them: retrieve generously, then let a long-context model read more of each hit.</p><canvas aria-hidden="true"></canvas></div></div>
+            <div class="progress"><i style="transform: scaleX(0);"></i></div>
+          </div>
+        </div>
+      </section>
+      <section class="cv">
+        <h2>In short</h2><div><ul class="plain"><li>Retrieval helps long-context models too: Xu et al. (2024) found a 4K-context model with retrieval comparable to a 16K-context model without it on their long-context tasks, at much less computation, and retrieval improved the larger window as well.</li><li>Li et al. (2024) found long context ahead of RAG on average with strong models, at a much higher cost, and proposed Self-Route: answer from retrieved chunks first, and fall back to the full context only when the model says the chunks aren't enough.</li><li>Test on your own documents: put the answer at different depths, and ask questions that need several facts, not only one.</li><li>Newer models handle long prompts better than the ones in these papers, so re-measure before relying on either result.</li><li>The curves in the animation show the shape of the published results, not their exact numbers.</li></ul></div>
+        <h2>References</h2><div><ol class="refs"><li><a href="https://arxiv.org/abs/2307.03172" target="_blank" rel="noopener">Liu et al. (2024). Lost in the Middle: How Language Models Use Long Contexts. TACL.</a></li><li><a href="https://arxiv.org/abs/2404.06654" target="_blank" rel="noopener">Hsieh et al. (2024). RULER: What's the Real Context Size of Your Long-Context Language Models? COLM.</a></li><li><a href="https://github.com/gkamradt/LLMTest_NeedleInAHaystack" target="_blank" rel="noopener">Kamradt (2023). Needle In A Haystack: pressure testing LLMs.</a></li><li><a href="https://arxiv.org/abs/2502.05167" target="_blank" rel="noopener">Modarressi et al. (2025). NoLiMa: Long-Context Evaluation Beyond Literal Matching.</a></li><li><a href="https://arxiv.org/abs/2310.03025" target="_blank" rel="noopener">Xu et al. (2024). Retrieval meets Long Context Large Language Models. ICLR.</a></li><li><a href="https://arxiv.org/abs/2407.16833" target="_blank" rel="noopener">Li et al. (2024). Retrieval Augmented Generation or Long-Context LLMs? A Comprehensive Study and Hybrid Approach.</a></li></ol></div>
+        
+        <h2>Share</h2><div><div class="share">
+      <a class="btn line" href="https://x.com/intent/post?text=Long%20context%20or%20RAG%3F%20What%20models%20actually%20use%3A%20an%20animated%2C%20step-by-step%20explainer&amp;url=https%3A%2F%2Fgarciajp.com%2Fwriting%2Flong-context-vs-rag%2F" target="_blank" rel="noopener" data-ev="share/x/long-context-vs-rag"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.66l-5.21-6.82-5.97 6.82H1.67l7.73-8.84L1.25 2.25h6.83l4.71 6.23 5.45-6.23Zm-1.16 17.52h1.83L7.08 4.13H5.12l11.96 15.64Z"></path></svg> Post on X</a>
+      <a class="btn line" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fgarciajp.com%2Fwriting%2Flong-context-vs-rag%2F" target="_blank" rel="noopener" data-ev="share/linkedin/long-context-vs-rag"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"></path></svg> Share on LinkedIn</a>
+      <button class="btn line" type="button" data-share="https://garciajp.com/writing/long-context-vs-rag/" data-title="Long context or RAG? What models actually use"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.6 9.4a3 3 0 0 0 4.3 0l2.2-2.2a3 3 0 0 0-4.3-4.3l-.9.9"></path><path d="M9.4 6.6a3 3 0 0 0-4.3 0L2.9 8.8a3 3 0 0 0 4.3 4.3l.9-.9"></path></svg> <span>Copy link</span></button>
+    </div>
+    <p class="share-note">Teaching this to a class or a new teammate? Send them the link.</p></div>
+      </section>
+      
+      
+  <section class="cta">
+    <h2>Hiring, or need an AI feature built? Let's talk.</h2>
+    <div class="row" style="justify-content:space-between;gap:20px">
+      <div class="row" style="flex:1 1 320px"><a class="btn" href="mailto:jpgarcia2154@gmail.com">Email me <span class="arr"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"></path></svg></span></a><a class="btn line" href="/resume/">Read my resume</a><a class="btn line" href="/book/">Book a call</a></div>
+      <div class="socials"><a href="https://github.com/jpgg2105" target="_blank" rel="noopener" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.56-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.19-3.08-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.82 1.19 3.08 0 4.41-2.69 5.38-5.25 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"></path></svg></a><a href="https://www.linkedin.com/in/juan-pablo-garcia-guerrero" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"></path></svg></a><a href="https://x.com/garciajpgg21" target="_blank" rel="noopener" aria-label="X (Twitter)"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.66l-5.21-6.82-5.97 6.82H1.67l7.73-8.84L1.25 2.25h6.83l4.71 6.23 5.45-6.23Zm-1.16 17.52h1.83L7.08 4.13H5.12l11.96 15.64Z"></path></svg></a></div>
+    </div>
+  </section>
+    </div></main>
+<footer><div class="wrap"><span id="foot">© 2026 Juan Pablo García · San Juan, Argentina (UTC−3)</span><a id="footMail" href="mailto:jpgarcia2154@gmail.com">jpgarcia2154@gmail.com</a></div></footer>
+
+<!-- ===================== CONTENT =====================
+     Everything on the site comes from this JSON. Edit it, then run `python build.py`.
+     See README.md for what each field does. -->
+<script src="/assets/content.js?v=725b32a9e1"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/motion@11.11.13/dist/motion.js"></script>
+<script src="/assets/site.js?v=078499187f"></script>
+</body>
+</html>

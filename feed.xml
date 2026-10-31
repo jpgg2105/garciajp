@@ -15,6 +15,27 @@
     <description>On 100 multi-hop questions, my research agent answered 86% correctly against 74% for one retrieve-and-answer call, at about 6× the calls. Where the gain comes from, where it loses, and what I&#x27;d change.</description>
   </item>
   <item>
+    <title>How an LLM request is served: prefill, decode and the KV cache</title>
+    <link>https://garciajp.com/writing/how-llm-inference-works/</link>
+    <guid isPermaLink="true">https://garciajp.com/writing/how-llm-inference-works/</guid>
+    <pubDate>Sat, 31 Oct 2026 12:00:00 +0000</pubDate>
+    <description>Why the first token is slow and the rest stream, what fills GPU memory, and how batching and quantization make serving cheaper.</description>
+  </item>
+  <item>
+    <title>How structured outputs work: constrained decoding</title>
+    <link>https://garciajp.com/writing/how-structured-outputs-work/</link>
+    <guid isPermaLink="true">https://garciajp.com/writing/how-structured-outputs-work/</guid>
+    <pubDate>Sat, 31 Oct 2026 12:00:00 +0000</pubDate>
+    <description>Why “reply in JSON” sometimes fails, how a schema becomes a mask over the model&#x27;s next-token choices, and why valid JSON can still be wrong.</description>
+  </item>
+  <item>
+    <title>Long context or RAG? What models actually use</title>
+    <link>https://garciajp.com/writing/long-context-vs-rag/</link>
+    <guid isPermaLink="true">https://garciajp.com/writing/long-context-vs-rag/</guid>
+    <pubDate>Sat, 31 Oct 2026 12:00:00 +0000</pubDate>
+    <description>Million-token windows didn&#x27;t make retrieval obsolete. Where models lose track of long prompts, what each approach costs, and how to choose.</description>
+  </item>
+  <item>
     <title>How RLHF works</title>
     <link>https://garciajp.com/writing/how-rlhf-works/</link>
     <guid isPermaLink="true">https://garciajp.com/writing/how-rlhf-works/</guid>

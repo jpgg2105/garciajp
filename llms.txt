@@ -17,6 +17,9 @@ Profiles: https://github.com/jpgg2105 · https://www.linkedin.com/in/juan-pablo-
 - [Chatbots and an outreach pipeline](https://garciajp.com/projects/chatbots-and-outreach/): LLM chatbots that answer from client content, and a pipeline that finds leads and contacts them on WhatsApp.
 
 ## Explainers (animated, step by step, with references)
+- [How an LLM request is served: prefill, decode and the KV cache](https://garciajp.com/writing/how-llm-inference-works/): Why the first token is slow and the rest stream, what fills GPU memory, and how batching and quantization make serving cheaper.
+- [How structured outputs work: constrained decoding](https://garciajp.com/writing/how-structured-outputs-work/): Why “reply in JSON” sometimes fails, how a schema becomes a mask over the model's next-token choices, and why valid JSON can still be wrong.
+- [Long context or RAG? What models actually use](https://garciajp.com/writing/long-context-vs-rag/): Million-token windows didn't make retrieval obsolete. Where models lose track of long prompts, what each approach costs, and how to choose.
 - [How RLHF works](https://garciajp.com/writing/how-rlhf-works/): Reinforcement learning from human feedback, stage by stage: demonstrations, comparisons, a reward model, PPO with a KL leash, and reward hacking.
 - [How DPO works, and when to use it instead of RLHF](https://garciajp.com/writing/how-dpo-works/): Direct Preference Optimization turns RLHF's reward model and RL loop into one loss on preference pairs. The math, the trade-offs and when to choose it.
 - [How RAG works](https://garciajp.com/writing/how-rag-works/): Retrieval-augmented generation, step by step: from splitting documents to an answer with sources.
