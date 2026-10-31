@@ -356,7 +356,7 @@ const SCENES = {
       const ax = K.lerp(6.5, 34, split), ay = K.lerp(y0 + 8.5 + p.c * 4.6, y0 + 1 + p.c * 7.5, split);
       const x = K.lerp(ax, p.x - 1.2, fly), y = K.lerp(ay, p.y - 1.2, fly);
       const w = K.lerp(K.lerp(20, 14, split), 2.4, fly), h = K.lerp(3, 2.4, fly);
-      const near = D.order.indexOf(i) < 3;
+      const near = D.order.indexOf(i) < 5;   // top-k = 5 candidates go to the reranker
       const lit = near && S >= 3 ? K.seg(S, 3.3, 3.8) : 0;
       K.alpha(K.seg(S, .1, .4) * (fly > .5 ? space : 1));
       K.rect(x, y, w, h, 1.2, { fill: lit > 0 ? C.accent : (fly > .5 ? C.muted : C.strong) });
@@ -378,12 +378,10 @@ const SCENES = {
       K.text("question", D.q[0] + 3, D.q[1] - 3, { size: 2.6, color: C.accent, weight: 600 });
     }
     // nearest neighbours
-    const far = D.ragChunks[D.order[2]], r3 = Math.hypot(far.x - D.q[0], far.y - D.q[1]) + 2.5;
     const grow = K.ease(K.seg(S, 3, 3.6));
     if (grow > 0){
       K.alpha(space * .9);
-      K.ctx.setLineDash([1, 1]); K.dot(D.q[0], D.q[1], r3 * grow, { fill: false, stroke: C.accent, lw: .3 }); K.ctx.setLineDash([]);
-      D.order.slice(0, 3).forEach(i => { const p = D.ragChunks[i]; K.arrow(D.q[0], D.q[1], p.x, p.y, { p: K.seg(S, 3.4, 3.9), color: C.accent, head: false, lw: .3 }); });
+      D.order.slice(0, 5).forEach(i => { const p = D.ragChunks[i]; K.arrow(D.q[0], D.q[1], p.x, p.y, { p: K.seg(S, 3.4, 3.9), color: C.accent, head: false, lw: .3 }); });
     }
     // rerank list
     const listA = K.seg(S, 3.95, 4.05);
@@ -392,8 +390,8 @@ const SCENES = {
     const reranked = cand.map((c, i) => [i, c[2]]).sort((a, b) => b[1] - a[1]).map(a => a[0]);
     if (listA > 0){
       K.alpha(listA);
-      K.text("Reranked by relevance", 4, 30, { size: 2.8, color: C.muted, weight: 500 });
       const mv = K.io(K.seg(S, 4.25, 4.9));
+      K.text(mv < .5 ? "Top 5 by vector search" : "Reranked by the cross-encoder", 4, 30, { size: 2.8, color: mv < .5 ? C.muted : C.accent, weight: 500 });
       const drawOrder = cand.map((c, i) => i).sort((a, b) => (reranked.indexOf(b) - b) - (reranked.indexOf(a) - a));
       drawOrder.forEach(i => { const c = cand[i];
         const from = 36 + i * 10.5, to = 36 + reranked.indexOf(i) * 10.5, y = K.lerp(from, to, mv), sinks = reranked.indexOf(i) > i;
@@ -459,7 +457,7 @@ const SCENES = {
       K.arrow(47.5, 50, 40.5, 46, { p: K.seg(S, 1, 1.3), color: C.strong });
       plan.forEach((s, i) => {
         K.alpha(K.seg(S, 1.15 + i * .2, 1.35 + i * .2));
-        const done = K.seg(S, 4 + i * .15, 4.2 + i * .15), ia = K.seg(S, 1.15 + i * .2, 1.35 + i * .2);
+        const done = K.seg(S, [2.9, 3.5, 3.97][i], [3, 3.6, 4.05][i]), ia = K.seg(S, 1.15 + i * .2, 1.35 + i * .2);   // ticked as each tool result comes back
         K.text(s, 9.5, 41 + i * 6.5, { size: 2.9, weight: 500 });
         K.alpha(ia * (1 - done)); K.text(String(i + 1), 5, 41 + i * 6.5, { size: 2.9, weight: 600, color: C.muted });
         if (done > 0){ K.alpha(done); K.check(6, 41 + i * 6.5, 2.4, C.ok); }
@@ -482,6 +480,10 @@ const SCENES = {
       const used = S < 2.95 ? 1 : S < 3.5 ? 2 : 3;
       K.alpha(ba); K.text(`tool calls ${used} / 10`, 2, 68, { size: 2.6, mono: true, color: C.muted });
       K.rect(2, 71, 38, 1.6, .8, { fill: C.line }); K.rect(2, 71, 3.8 * used, 1.6, .8, { fill: C.accent });
+      // every tool result is appended to the context, so each loop costs more than the last
+      const back = K.seg(S, 2.75, 2.9) + K.seg(S, 3.4, 3.5) + K.seg(S, 3.88, 3.97), tok = 1.2 + back * 1.6;
+      K.text(`context ${tok.toFixed(1)}k tokens`, 2, 77, { size: 2.6, mono: true, color: C.muted });
+      K.rect(2, 80, 38, 1.6, .8, { fill: C.line }); K.rect(2, 80, 38 * tok / 6, 1.6, .8, { fill: C.warn });
     }
     // answer
     const aa = K.seg(S, 4.4, 4.7);
@@ -536,7 +538,7 @@ const SCENES = {
     const heads = [
       { q: 4, w: [.05, .7, .07, .05, .13, 0, 0], label: "head 1: who “it” refers to" },
       { prev: true, label: "head 2: the word just before" },
-      { q: 6, w: [.02, .1, .04, .03, .5, .27, .04], label: "head 3: what is said about “it”" },
+      { q: 6, w: [.02, .1, .04, .03, .5, .27, .04], label: "head 3: “tired” looks back at what it describes" },
     ];
     const arc = (i, j, wgt, a) => {
       if (i === j) return;
@@ -556,6 +558,21 @@ const SCENES = {
       }
       K.alpha(S < 3 ? K.seg(S, 2.1, 2.4) : a);
       K.text(S < 3 ? "attention from “it” (earlier tokens only)" : H.label, 60, 14, { size: 3, align: "center", color: C.muted, weight: 500 });
+      // one layer: the heads run side by side, then a feed-forward network; dozens of layers are stacked
+      if (S >= 3){
+        const la = K.seg(S, 3.05, 3.2);
+        ["head 1", "head 2", "head 3"].forEach((n, i) => {
+          const on = i === head, x = 22 + i * 17;
+          K.alpha(la); K.rect(x, 60, 14, 7, 1.6, { fill: on ? C.fill : C.surface, stroke: on ? C.fill : C.strong, lw: .35 });
+          K.text(n, x + 7, 63.5, { size: 2.5, align: "center", weight: 600, color: on ? C.white : C.muted });
+        });
+        K.alpha(la); K.arrow(74, 63.5, 79, 63.5, { color: C.strong, hs: 1 });
+        K.rect(80, 60, 22, 7, 1.6, { fill: C.surface, stroke: C.strong, lw: .35 });
+        K.text("feed-forward", 91, 63.5, { size: 2.5, align: "center", weight: 600, color: C.muted });
+        K.rect(18, 56, 88, 15, 2.4, { stroke: C.line, lw: .3 });
+        K.text("one layer, run in parallel", 20, 75, { size: 2.4, color: C.muted });
+        K.text("× 32 layers in an 8B model", 104, 75, { size: 2.4, align: "right", color: C.accent, weight: 600 });
+      }
     }
     // next-token prediction
     const pa = K.seg(S, 4, 4.25);
@@ -660,15 +677,21 @@ const SCENES = {
       const near = n => names.filter(m => m !== n).sort((a, b) => Math.hypot(P[a][0] - P[n][0], P[a][1] - P[n][1]) - Math.hypot(P[b][0] - P[n][0], P[b][1] - P[n][1])).slice(0, 2);
       K.alpha(gr * .55);
       names.forEach(n => near(n).forEach(m => K.line(P[n][0], P[n][1], P[m][0], P[m][1], { color: C.strong, lw: .25 })));
-      [["bike", "bread"], ["bread", "kitten"], ["bus", "horse"]].forEach(([a, b]) => K.line(P[a][0], P[a][1], P[b][0], P[b][1], { color: C.strong, lw: .25 }));
-      const path = ["truck", "bike", "bread", "kitten"];
-      const hp = K.seg(S, 3.3, 3.85) * (path.length - 1);
-      for (let i = 0; i < path.length - 1; i++){
-        const p = K.clamp(hp - i); if (p <= 0) break;
-        K.alpha(1); K.arrow(P[path[i]][0], P[path[i]][1], P[path[i + 1]][0], P[path[i + 1]][1], { p, color: C.accent, lw: .55, hs: 1.6 });
-      }
-      K.alpha(K.seg(S, 3.3, 3.45)); K.text("start", P.truck[0], P.truck[1] + 4.5, { size: 2.5, align: "center", color: C.accent, halo: true });
-      K.alpha(K.seg(S, 3.85, 4)); K.text("a few hops instead of checking every vector", 60, 95, { size: 2.8, align: "center", color: C.accent, weight: 600, halo: 1.4 });
+      // upper layer: a few nodes joined by long links; the search starts there, then drops to the full graph
+      const upper = [["truck", "bread"], ["bread", "cat"], ["truck", "horse"]];
+      K.alpha(gr * .8);
+      upper.forEach(([a, b]) => K.line(P[a][0], P[a][1], P[b][0], P[b][1], { color: C.warn, lw: .35, dash: [1.2, .9] }));
+      const path = [["truck", "bread", true], ["bread", "kitten", false], ["kitten", "dog", false]];
+      const hp = K.seg(S, 3.3, 3.85) * path.length;
+      path.forEach(([a, b, up], i) => {
+        const p = K.clamp(hp - i); if (p <= 0) return;
+        K.alpha(1); K.arrow(P[a][0], P[a][1], P[b][0], P[b][1], { p, color: up ? C.warn : C.accent, lw: .55, hs: 1.6, dash: up ? [1.2, .9] : undefined });
+      });
+      K.alpha(K.seg(S, 3.3, 3.45)); K.text("start", P.truck[0] - 2, P.truck[1] - 3.5, { size: 2.5, align: "center", color: C.warn, halo: true });
+      const la = gr * K.seg(S, 3.15, 3.3);
+      K.alpha(la); K.line(4, 4.5, 9, 4.5, { color: C.warn, lw: .45, dash: [1.2, .9] }); K.text("upper layer: few nodes, long links", 10.5, 4.5, { size: 2.3, color: C.muted });
+      K.line(4, 8.5, 9, 8.5, { color: C.strong, lw: .45 }); K.text("bottom layer: every vector, local links", 10.5, 8.5, { size: 2.3, color: C.muted });
+      K.alpha(K.seg(S, 3.85, 4)); K.text("a few hops instead of checking every vector", 4, 97, { size: 2.6, color: C.accent, weight: 600, halo: 1.4 });
     }
     // points
     names.forEach((n, i) => {
@@ -690,7 +713,7 @@ const SCENES = {
       K.alpha(K.seg(S, first ? 1.3 : 1.85, first ? 1.4 : 1.95));
       let lo = Math.min(a1, a2), hi = Math.max(a1, a2); if (hi - lo > Math.PI){ const t = lo; lo = hi; hi = t + Math.PI * 2; }
       K.ctx.beginPath(); K.ctx.arc(O[0], O[1], 7, lo, hi); K.ctx.strokeStyle = C.accent; K.ctx.lineWidth = .4; K.ctx.stroke();
-      K.text(`${pair[0]} vs ${pair[1]}: cosine ${sim}`, 60, 95, { size: 3, align: "center", color: C.accent, weight: 600, halo: 1.4 });
+      K.text(`${pair[0]} vs ${pair[1]}: cosine ${sim}`, 116, 5, { size: 2.9, align: "right", color: C.accent, weight: 600, halo: 1.4 });
       K.alpha(a); K.text("origin", O[0] + 2, O[1] + 3, { size: 2.4, color: C.muted, halo: true });
     }
     if (S >= 2 && S < 3){ K.alpha(1); K.dot(O[0], O[1], .9, { fill: C.muted }); K.arrow(O[0], O[1], Q[0], Q[1], { p: K.seg(S, 2.05, 2.3), color: C.accent, lw: .3, dash: [1, .8] }); }
@@ -703,11 +726,11 @@ const SCENES = {
       K.text("puppy", Q[0] + 2.6, Q[1] + 3.6, { size: 3, weight: 700, color: C.accent, halo: true });
       const ra = K.seg(S, 2.55, 2.8);
       if (ra > 0){
-        K.alpha(ra); K.rect(3, 68, 30, 25, 2.4, { fill: C.surface, stroke: C.strong });
-        K.text("closest to “puppy”", 6, 73, { size: 2.6, color: C.muted });
+        K.alpha(ra); K.rect(3, 68, 46, 25, 2.4, { fill: C.surface, stroke: C.strong });
+        K.text("closest to “puppy” (2-D sketch)", 5, 73, { size: 2.4, color: C.muted });
         ranked.forEach(([n, v], i) => {
           K.text(`${i + 1}  ${n}`, 6, 79 + i * 5, { size: 2.9, weight: 600 });
-          K.text(v.toFixed(2), 30.5, 79 + i * 5, { size: 2.6, mono: true, align: "right", color: C.accent });
+          K.text(v.toFixed(2), 46, 79 + i * 5, { size: 2.6, mono: true, align: "right", color: C.accent });
         });
       }
     }
@@ -763,8 +786,8 @@ const SCENES = {
     // 2. round robin
     [0, 1, 2].forEach(i => { K.alpha(1); K.packet(lbR, 50, sL, sy(i), K.seg(S, 1.05 + i * .28, 1.4 + i * .28)); });
     K.alpha(K.seg(S, 1.1, 1.3) * (1 - K.seg(S, 1.9, 2)));
-    K.text("round robin:", 2.5, 63, { size: 2.6, color: C.accent });
-    K.text("one request per server", 2.5, 67.5, { size: 2.6, color: C.accent });
+    K.text("spread across servers:", 2.5, 63, { size: 2.6, color: C.accent });
+    K.text("round robin or least connections", 2.5, 67.5, { size: 2.4, color: C.accent });
     // 3. cache hit
     K.alpha(1);
     along(toData(0, CA[1]), K.seg(S, 2.05, 2.4));
@@ -788,9 +811,15 @@ const SCENES = {
         K.alpha(four); K.packet(lbR, 50, sL, sy(srv), tt, { r: 1 });
         K.packet(clR, 50, lbL, 50, (tt * 2) % 1, { r: .8 });
       }
-      K.alpha(four);
-      K.rect(2.5, 80, 41, 10, 2.4, { fill: C.raised, stroke: C.strong });
-      K.text("p50 4 ms · p99 41 ms", 23, 85, { size: 2.6, mono: true, align: "center", color: C.ink, weight: 500 });
+      // latency is a distribution: most requests hit the cache, a slow tail goes to the database
+      const bins = [30, 22, 11, 5, 3, 2, 1.5, 1.2, 1, 1.4], bx0 = 4, bw = 3.6, base = 92;
+      K.alpha(four); K.text("request latency", bx0, 70, { size: 2.4, color: C.muted });
+      bins.forEach((v, i) => { K.alpha(four * K.seg(S, 4.2 + i * .03, 4.35 + i * .03)); K.rect(bx0 + i * bw, base - v * .55, bw - .5, v * .55, .3, { fill: i < 2 ? C.ok : i > 7 ? C.warn : C.strong }); });
+      K.alpha(four * K.seg(S, 4.5, 4.65));
+      K.line(bx0 + 1.5 * bw, base - 18, bx0 + 1.5 * bw, base, { color: C.ok, lw: .3, dash: [.7, .7] });
+      K.text("p50 4 ms", bx0 + 1.5 * bw + 1, base - 16.5, { size: 2.2, mono: true, color: C.ok });
+      K.line(bx0 + 9.6 * bw, base - 8, bx0 + 9.6 * bw, base, { color: C.warn, lw: .3, dash: [.7, .7] });
+      K.text("p99 41 ms", bx0 + 9.6 * bw, base - 9.5, { size: 2.2, mono: true, align: "right", color: C.warn });
     }
     K.alpha(1);
   },
@@ -837,12 +866,22 @@ const SCENES = {
       K.text("B", bx, wy - 7, { size: 3.6, weight: 700, display: true, color: C.accent });
       K.text("A", ax, ay - 7, { size: 3.6, weight: 700, display: true, color: C.accent });
       K.text("×", 67.5, wy + 2, { size: 3.6, align: "center", color: C.muted });
-      for (let i = 0; i < N; i++) if (i / N < grow){ K.alpha(.35 + Math.abs(b[i]) * .6); K.rect(bx, wy + i * cell, 3.1, cell - .5, .5, { fill: C.accent }); }
-      for (let j = 0; j < N; j++) if (j / N < grow){ K.alpha(.35 + Math.abs(a[j]) * .6); K.rect(ax + j * cell, ay, cell - .5, 3.1, .5, { fill: C.accent }); }
+      // several thin columns / rows: rank r > 1 (drawn 3 wide, really 8 of 4096, so not to scale)
+      const rr = exRng(77), bv = Array.from({ length: N * 3 }, () => rr()), av = Array.from({ length: N * 3 }, () => rr());
+      const learned = K.seg(S, 3.1, 3.7);   // B starts at zero and fills in as it trains
+      for (let i = 0; i < N; i++) if (i / N < grow) for (let c = 0; c < 3; c++){
+        K.alpha(.5); K.rect(bx + c * 1.15, wy + i * cell, .95, cell - .5, .3, { fill: false, stroke: C.accent, lw: .15 });
+        if (learned > 0){ K.alpha(learned * (.3 + bv[i * 3 + c] * .7)); K.rect(bx + c * 1.15, wy + i * cell, .95, cell - .5, .3, { fill: C.accent }); }
+      }
+      for (let j = 0; j < N; j++) if (j / N < grow) for (let c = 0; c < 3; c++){
+        K.alpha(.3 + av[j * 3 + c] * .7); K.rect(ax + j * cell, ay + c * 1.15, cell - .5, .95, .3, { fill: C.accent });
+      }
+      K.alpha(K.seg(S, 2.6, 2.9) * (1 - learned)); K.text("B = 0 at start", bx + 1.7, wy - 2.6, { size: 2.2, color: C.muted, align: "center" });
       K.alpha(K.seg(S, 2.6, 2.9));
       K.text("4096 × 8", bx + 1.5, wy + N * cell + 3.5, { size: 2.4, color: C.muted, align: "center" });
       K.text("8 × 4096", ax + N * cell / 2, ay + 6.5, { size: 2.4, color: C.muted, align: "center" });
       K.text("rank 8", 72, wy + 14, { size: 2.7, weight: 700, color: C.accent });
+      K.text("3 of 8 drawn, not to scale", bx + 1.7, wy + N * cell + 7.5, { size: 2.1, color: C.muted, align: "center" });
       K.text("65,536 trainable, 0.4% of W", 72, wy + 18.5, { size: 2.7, weight: 600, color: C.accent });
     }
     // training pulses
@@ -856,7 +895,7 @@ const SCENES = {
       K.alpha(tr);
       K.text("gradients update only A and B", 72, wy + 25, { size: 2.7, color: C.ok });
       const ls = K.lerp(2.31, 1.18, K.seg(S, 3.1, 3.95));
-      K.text(`loss ${ls.toFixed(2)}`, 72, wy + 30.5, { size: 2.7, mono: true, color: C.muted });
+      K.text(`loss 2.31 → ${ls.toFixed(2)}`, 72, wy + 30.5, { size: 2.7, mono: true, color: C.muted });
     }
     // merge and adapters
     if (merge > 0 || S >= 4){
@@ -884,10 +923,19 @@ const SCENES = {
       if (y > hill) return y > hill + 2 ? [38, 104, 78] : [62, 159, 120];
       return [26 + y * 3, 38 + y * 4, 72 + y * 5];
     };
-    const grid = (x0, y0, w, lvl, al = 1) => {
+    // the generated picture is a new one, not the training image: the model learns to denoise, not to copy
+    const gen = (x, y) => {
+      if ((x === 3 || x === 4) && (y === 2 || y === 3)) return [236, 232, 214];
+      if (x >= 11 && x <= 12 && y >= 3 && y < 9) return (y % 2 < 1) ? [214, 76, 62] : [236, 236, 230];
+      if (x >= 10.5 && x <= 12.5 && y >= 2 && y < 3) return [253, 214, 120];
+      if (y >= 9 && x >= 10 && x <= 13 && !(y === 9 && (x === 10 || x === 13))) return [52, 58, 66];
+      if (y >= 8) return (x + y) % 3 === 0 ? [40, 120, 140] : [24, 82, 104];
+      return [14 + y * 2, 20 + y * 3, 46 + y * 5];
+    };
+    const grid = (x0, y0, w, lvl, al = 1, pic = img) => {
       const c = w / GW;
       for (let y = 0; y < GH; y++) for (let x = 0; x < GW; x++){
-        const p = img(x, y), n = noise[y * GW + x], m = v => Math.round(v * (1 - lvl) + n * lvl);
+        const p = pic(x, y), n = noise[y * GW + x], m = v => Math.round(v * (1 - lvl) + n * lvl);
         K.alpha(al); ctx.fillStyle = `rgb(${m(p[0])},${m(p[1])},${m(p[2])})`; ctx.fillRect(x0 + x * c, y0 + y * c, c + .05, c + .05);
       }
       K.alpha(al); K.rect(x0, y0, w, GH * c, .6, { stroke: C.strong, lw: .3 });
@@ -931,18 +979,20 @@ const SCENES = {
       const steps = 50, k = S < 3 ? 0 : Math.min(steps, Math.floor(K.seg(S, 3.05, 3.9) * steps));
       const lvl = S < 3 ? 1 : 1 - k / steps;
       const top = K.lerp(16, 12, K.seg(S, 4, 4.3));
-      grid(28, top, 64, lvl, g);
+      grid(28, top, 64, lvl, g, gen);
       K.alpha(g);
-      const label = S < 3 ? "start: pure random noise" : S < 4 ? `denoising step ${k} of ${steps}` : "the text steers every step";
+      const label = S < 3 ? "start: pure random noise" : S < 4 ? `denoising step ${k} of ${steps}` : "guidance pushes every step toward the prompt";
       K.text(label, 60, top + 52, { size: 3, align: "center", mono: S >= 3 && S < 4, color: S >= 3 && S < 4 ? C.accent : C.muted, weight: 500 });
-      const pa = K.seg(S, 4, 4.3);
+      // the prompt is there from the first denoising step, not added at the end
+      const pa = K.seg(S, 2.6, 2.9);
       if (pa > 0){
+        const pt = "“a lighthouse by the sea at night”", pw = K.width(pt, { size: 3, weight: 600 });
         K.alpha(pa);
-        K.rect(20, 76, 80, 10, 2.4, { fill: C.raised, stroke: C.accent, lw: .4 });
-        K.typed(["“a sun over green hills”"], K.seg(S, 4.05, 4.5), 60 - K.width("“a sun over green hills”", { size: 3.2, weight: 600 }) / 2, 81, 0, { size: 3.2, weight: 600 });
-        K.arrow(60, 75.5, 60, top + 56, { p: K.seg(S, 4.45, 4.7), color: C.accent });
-        K.alpha(pa * K.seg(S, 4.6, 4.8));
-        K.text("text encoder", 62, 70, { size: 2.5, color: C.accent });
+        K.rect(60 - pw / 2 - 4, 76, pw + 8, 10, 2.4, { fill: C.raised, stroke: C.accent, lw: .4 });
+        K.typed([pt], K.seg(S, 2.65, 3), 60 - pw / 2, 81, 0, { size: 3, weight: 600 });
+        K.arrow(60, 75.5, 60, top + 56, { p: K.seg(S, 2.95, 3.1), color: C.accent });
+        K.alpha(pa * K.seg(S, 3, 3.15));
+        K.text("text encoder", 62, 71.5, { size: 2.5, color: C.accent });
       }
     }
     K.alpha(1);
@@ -993,7 +1043,7 @@ const SCENES = {
       K.alpha(focus * (1 - clear)); K.line(29, 50, 88, 50, { color: C.line, dash: [1, 1] });
       K.alpha(K.seg(S, 2.3, 2.45) * (1 - clear)); K.text("JSON-RPC over stdio or HTTP", 59, 41, { size: 2.5, align: "center", color: C.muted });
       msg("tools/list", 1, 2.3, 2.5); msg("2 tools", -1, 2.5, 2.75, C.ok);
-      const ta = K.seg(S, 2.85, 3) * (1 - clear);
+      const ta = K.seg(S, 2.6, 2.75) * (1 - clear);
       if (ta > 0){
         [["search_issues", "query: string"], ["create_issue", "title, body: string"]].forEach(([n, sig], i) => {
           K.alpha(ta); K.rect(4, 64 + i * 11, 44, 9, 2, { fill: C.surface, stroke: S >= 3.3 && i === 1 ? C.accent : C.strong, lw: .35 });
@@ -1037,6 +1087,11 @@ const SCENES = {
       K.alpha(K.seg(S, 0, .2));
       K.text(`${n}@mail.com`, tx + 2.5, y + .4, { size: 2.5, mono: true, color: hit ? C.white : C.ink });
     });
+    if (S >= 4.3){ // the new row lands in the table too
+      const y = ty + rows.length * rh + .2;
+      K.alpha(K.seg(S, 4.3, 4.45)); K.rect(tx, y - 2.6, 34, rh, 1.4, { fill: C.surface, stroke: C.warn, lw: .4 });
+      K.text("jon@mail.com", tx + 2.5, y + .4, { size: 2.5, mono: true, color: C.warn, weight: 600 });
+    }
     if (S < 1){ K.alpha(K.seg(S, .2, .3)); K.text(`find kai: ${Math.min(12, Math.ceil(Math.max(0, scan)))} of 12 rows read`, tx, ty + rows.length * rh + 4, { size: 2.6, mono: true, color: C.warn }); }
     // tree
     const split = K.io(K.seg(S, 4.3, 4.8));
@@ -1054,13 +1109,18 @@ const SCENES = {
       K.text("index on email", 80, 13, { size: 2.6, align: "center", color: C.muted });
       L.forEach((keys, i) => {
         const on = (S >= 2 && S < 3 && i === 1 && K.seg(S, 2.3, 2.4) > 0) || (S >= 3 && S < 4 && (i === 1 || i === 2) && K.seg(S, 3.2 + (i - 1) * .3, 3.3 + (i - 1) * .3) > 0);
-        const isNew = split > .5 && i === 2;
+        const isNew = split > .5 && (i === 1 || i === 2);
         K.alpha(ta * K.seg(S, 1.1 + i * .05, 1.3 + i * .05));
         K.line(80, 27, lx(i) + lw / 2, LY - 5, { color: (S >= 2 && S < 3 && i === 1) ? C.accent : C.line, lw: (S >= 2 && S < 3 && i === 1) ? .5 : .3 });
         K.rect(lx(i), LY - 5, lw, 14, 1.6, { fill: on ? C.fill : C.surface, stroke: isNew ? C.warn : (on ? C.fill : C.strong), lw: isNew ? .5 : .35 });
-        keys.forEach((k, j) => K.text(k, lx(i) + lw / 2, LY - 1.4 + j * 4, { size: 2.5, mono: true, align: "center", color: on ? C.white : C.ink }));
-        if (i < n - 1){ K.alpha(ta * K.seg(S, 2.95, 3.1)); K.arrow(lx(i) + lw + .3, LY, lx(i + 1) - .3, LY, { color: C.muted, hs: .9, lw: .25 }); }
+        keys.forEach((k, j) => K.text(k, lx(i) + lw / 2, LY - 1.4 + j * 4, { size: 2.5, mono: true, align: "center", color: on ? C.white : (k === "jon" ? C.warn : C.ink), weight: k === "jon" ? 700 : 400 }));
+        if (i < n - 1){ const rs = S >= 3 && S < 4; K.alpha(ta * K.seg(S, 2.95, 3.1)); K.arrow(lx(i) + lw + .3, LY, lx(i + 1) - .3, LY, { color: rs ? C.accent : C.muted, hs: rs ? 1.3 : .9, lw: rs ? .5 : .25 }); }
       });
+      const pa = ta * K.seg(S, 1.4, 1.6) * (1 - K.seg(S, 2, 2.1));
+      if (pa > 0) leaves4.forEach((keys, i) => i === 1 && keys.forEach((k, j) => {
+        const r = rows.indexOf(k), ky = LY - 1.4 + j * 4, ry = ty + r * rh + .2;
+        K.alpha(pa * .45); K.line(lx(i) - .3, ky, tx + 34.6, ry, { color: C.accent, lw: .2, dash: [.6, .6] });
+      }));
       K.alpha(ta * K.seg(S, 1.3, 1.5) * (1 - K.seg(S, 2, 2.1)));
       K.text("sorted keys in a tree, each pointing to its row", 80, 66, { size: 2.6, align: "center", color: C.muted });
     }
@@ -1141,7 +1201,11 @@ const SCENES = {
         const a = K.seg(S, 3.3 + i * .15, 3.5 + i * .15) * ha, x = 49 + i * 22.5;
         K.alpha(a); K.rect(x, 26, 20, 46, 2.4, { fill: C.surface, stroke: C.accent, lw: .45 });
         K.text(n, x + 10, 31, { size: 2.9, weight: 700, align: "center" });
-        ["own files", "own processes", "own network", "own limits"].forEach((t, k) => K.text(t, x + 10, 39 + k * 6.5, { size: 2.1, align: "center", color: C.muted }));
+        ["own files", "own processes", "own network", "own limits"].forEach((t, k) => K.text(t, x + 10, 38 + k * 5.6, { size: 2.1, align: "center", color: C.muted }));
+        K.rect(x + 1.5, 61, 17, 5, 1, { fill: "rgba(253,186,116,.12)", stroke: C.warn, lw: .3 });
+        K.text("writable layer", x + 10, 63.5, { size: 2, align: "center", color: C.warn });
+        K.rect(x + 1.5, 66.5, 17, 4, 1, { fill: C.raised });
+        K.text("image (shared)", x + 10, 68.5, { size: 1.9, align: "center", color: C.muted });
         K.alpha(ha); K.packet(40, sy - 14, x + 10, 26, K.seg(S, 3.15 + i * .15, 3.4 + i * .15), { r: 1 });
       });
       K.alpha(ha * K.seg(S, 3.7, 3.85)); K.text("isolated with namespaces, limited with cgroups", 82, 92.5, { size: 2.6, align: "center", color: C.accent });
@@ -1163,7 +1227,8 @@ const SCENES = {
   evals(K, S, time){
     const C = K.C;
     const cases = [["Refund on annual plans?", "30 days"], ["Do you ship to Chile?", "yes, 5 to 7 days"], ["Cancel a monthly plan?", "anytime, in settings"], ["Price for teams?", "volume discount"], ["Change my email?", "settings, account"]];
-    const outs = [["30 days", true, 5], ["yes, 5 to 7 days", true, 5], ["call support", false, 2], ["$10 per seat", false, 3], ["settings, account", true, 5]];
+    // exact checks where the answer is fixed, a pass/fail judge where it isn't
+    const outs = [["30 days", true, "exact match"], ["yes, 5 to 7 days", true, "judge: pass"], ["call support", false, "judge: fail"], ["$10 per seat", false, "judge: fail"], ["settings, account", true, "exact match"]];
     const chart = K.io(K.seg(S, 3.12, 3.4));
     const tab = 1 - K.seg(S, 3, 3.12);
     // cases
@@ -1200,15 +1265,15 @@ const SCENES = {
           K.alpha(sa);
           if (outs[i][1]) K.check(113.5, y, 2.4, C.ok);
           else { K.line(112.1, y - 1.4, 114.9, y + 1.4, { color: C.warn, lw: .55 }); K.line(114.9, y - 1.4, 112.1, y + 1.4, { color: C.warn, lw: .55 }); }
-          K.text(`judge ${outs[i][2]}/5`, 82.5, y + 2.8, { size: 2.2, mono: true, color: C.muted });
+          K.text(outs[i][2], 82.5, y + 2.8, { size: 2.2, mono: true, color: C.muted });
         });
         K.alpha(tab * K.seg(S, 2.7, 2.85));
-        K.text("3 of 5 correct · judge average 4.0 / 5", 66, 92, { size: 2.9, align: "center", color: C.accent, weight: 600 });
+        K.text("3 of 5 pass: 2 by exact match, 1 by the judge", 66, 92, { size: 2.9, align: "center", color: C.accent, weight: 600 });
       }
     }
     // compare versions
     if (chart > 0){
-      const metrics = [["accuracy", .72, .86, "%"], ["faithfulness", .78, .88, "/5"], ["p95 latency", 2.1, 1.6, "s"]];
+      const metrics = [["accuracy", .72, .86, "%"], ["faithful answers", .81, .9, "%"], ["p95 latency", 2.1, 1.6, "s"]];
       const X0 = 12, W = 96, gw = W / 3;
       K.alpha(chart);
       K.text("same 200 cases, two versions", 60, 12, { size: 2.9, align: "center", color: C.muted });
@@ -1233,7 +1298,12 @@ const SCENES = {
       const ga = K.seg(S, 4, 4.2);
       if (ga > 0){
         const ty = 70 - .8 * 48;
-        K.alpha(ga); K.line(X0, ty, X0 + gw, ty, { color: C.warn, dash: [1.2, .8], lw: .45 });
+        // v3's accuracy, well below the line: outside the noise of 200 cases
+        const cx0 = X0 + gw / 2, h3 = .71 * 48 * K.ease(K.seg(S, 4.05, 4.3));
+        K.alpha(ga); K.rect(cx0 + 11, 70 - h3, 8, h3, .8, { fill: C.warn });
+        K.alpha(ga * K.seg(S, 4.25, 4.35)); K.text("71%", cx0 + 15, 66.5, { size: 2.3, mono: true, align: "center", color: C.bg, weight: 700 });
+        K.alpha(ga); K.rect(X0 + 22, 22, 3, 3, .5, { fill: C.warn }); K.text("v3", X0 + 26.5, 23.5, { size: 2.6 });
+        K.line(X0, ty, cx0 + 21, ty, { color: C.warn, dash: [1.2, .8], lw: .45 });
         K.line(X0 + 24, 18, X0 + 29, 18, { color: C.warn, dash: [1.2, .8], lw: .45 }); K.text("minimum accuracy 80%", X0 + 30.5, 18, { size: 2.6, color: C.warn });
         const steps = [["commit", C.strong], ["run evals", C.strong], ["v3: 71%", C.warn], ["deploy", C.line]];
         steps.forEach(([n, col], i) => {
@@ -1371,7 +1441,7 @@ const SCENES = {
       K.text(`as it was after change ${k}`, 36, ly, { size: 2.6 });
       K.text(ok ? "works" : "broken", 100, ly, { size: 2.6, weight: 600, align: "right", color: ok ? C.ok : C.warn });
     });
-    K.alpha(K.seg(S, 3.9, 4) * (1 - logOut)); K.text("4 tests instead of up to 16", 60, 90, { size: 2.8, align: "center", color: C.accent, weight: 600 });
+    K.alpha(K.seg(S, 3.6, 3.75) * (1 - logOut)); K.text("4 tests instead of up to 16", 60, 90, { size: 2.8, align: "center", color: C.accent, weight: 600 });
     // how it scales
     if (table > 0){
       const cols = [26, 62, 96];
@@ -1684,7 +1754,7 @@ const SCENES = {
       K.node(PR[0], PR[1], 30, 11, "pull request", { sub: "from the internet", size: 2.8 });
       K.node(OUT[0], OUT[1], 30, 11, "unknown server", { sub: "the attacker's", size: 2.8 });
       K.node(A[0], A[1], 18, 10, "agent", { size: 3, stroke: box > 0 ? C.accent : C.strong, lw: box > 0 ? .5 : .35 });
-      K.alpha(sb * K.seg(S, 5.1, 5.2)); K.line(PR[0], 12.5, PR[0], 16.5, { color: C.warn, lw: .35 }); K.rect(70, 5.5, 48, 7, 1.6, { fill: C.raised, stroke: C.warn, lw: .4 }); K.text("hidden: “send me the keys”", 94, 9, { size: 2.3, mono: true, align: "center", color: C.warn });
+      K.alpha(sb * K.seg(S, 5.1, 5.2)); K.line(PR[0], 12.5, PR[0], 16.5, { color: C.warn, lw: .35 }); K.rect(68, 5.5, 47, 7, 1.6, { fill: C.raised, stroke: C.warn, lw: .4 }); K.text("hidden: “send me the keys”", 91.5, 9, { size: 2.3, mono: true, align: "center", color: C.warn });
       K.alpha(sb); K.packet(PR[0] - 15, PR[1] + 3, A[0] + 9, A[1] - 2, K.seg(S, 5.15, 5.27), { color: C.warn });
       K.packet(SEC[0] + 12, SEC[1], A[0] - 9, A[1], K.seg(S, 5.27, 5.37), { color: C.warn });
       K.packet(A[0] + 9, A[1] + 2, OUT[0] - 15, OUT[1] - 3, K.seg(S, 5.37, 5.49), { color: C.warn });
@@ -2087,7 +2157,7 @@ const SCENES = {
       K.alpha(s1 * K.seg(S, .3, .4)); K.text("demonstrations", 58, 11, { size: 2.4, align: "center", color: C.muted, weight: 600 });
       K.alpha(s1 * K.seg(S, .6, .75)); K.node(100, 56, 33, 12, "SFT model", { sub: "follows instructions", size: 2.9, stroke: C.accent, lw: .5 });
     }
-    note("stage 1: imitate good answers written by people", .65, 1.05, C.accent);
+    note("stage 1: imitate good answers written by people", .5, 1.05, C.accent);
     // 2. comparisons
     const s2 = vis(1.02, 2.05);
     if (s2 > 0){
@@ -2105,7 +2175,7 @@ const SCENES = {
       K.alpha(s2 * pick); K.arrow(56, 61, 36, 51.5, { color: C.ok, hs: 1.1, lw: .45 });
       K.alpha(s2 * K.seg(S, 1.7, 1.8)); K.text("A ≻ B", 60, 82, { size: 3.4, mono: true, align: "center", color: C.accent, weight: 600 });
     }
-    note("stage 2: people compare answers, which is easier than scoring them", 1.75, 2.05);
+    note("stage 2: people compare answers, which is easier than scoring them", 1.5, 2.05);
     // 3. reward model
     const s3 = vis(2.02, 3.05);
     if (s3 > 0){
@@ -2125,7 +2195,7 @@ const SCENES = {
       K.alpha(s3 * K.seg(S, 2.6, 2.72)); K.text(`= σ(${(rA - rB).toFixed(1)}) = ${p.toFixed(2)}`, 60, 71.5, { size: 2.9, mono: true, align: "center", color: C.accent });
       K.alpha(s3 * K.seg(S, 2.72, 2.84)); K.text(`loss = −log ${p.toFixed(2)} = ${loss.toFixed(2)}`, 60, 77, { size: 2.6, mono: true, align: "center", color: C.muted });
     }
-    note("stage 3: a model learns to score answers the way people rank them", 2.75, 3.05);
+    note("stage 3: a model learns to score answers the way people rank them", 2.5, 3.05);
     // 4. PPO with a KL leash
     const s4 = vis(3.02, 4.05);
     if (s4 > 0){
@@ -2144,7 +2214,7 @@ const SCENES = {
       K.text("maximize  r(x, y) − β · KL(π ‖ π_ref)", 42, 76, { size: 2.5, mono: true, color: C.ink });
       K.text("score high, stay close to the reference", 42, 81, { size: 2.3, color: C.muted });
     }
-    note("stage 4: generate, score, update, on a leash", 3.75, 4.05, C.accent);
+    note("stage 4: generate, score, update, on a leash", 3.5, 4.05, C.accent);
     // 5. reward hacking
     const s5 = vis(4.02, 5.2);
     if (s5 > 0){
@@ -2169,7 +2239,7 @@ const SCENES = {
       K.line(X0 + 4, 12, X0 + 9, 12, { color: C.accent, lw: .6 }); K.text("reward model score", X0 + 10.5, 12, { size: 2.4 });
       K.line(X0 + 50, 12, X0 + 55, 12, { color: C.ink, lw: .6, dash: [1.2, .8] }); K.text("true quality (human judgment)", X0 + 56.5, 12, { size: 2.4 });
     }
-    note("the proxy keeps rising after real quality starts falling", 4.75, 5.2, C.warn);
+    note("the proxy keeps rising after real quality starts falling", 4.5, 5.2, C.warn);
     K.alpha(1);
   },
 
@@ -2195,7 +2265,7 @@ const SCENES = {
       K.arrow(28.5, 63, 43.5, 63, { color: C.strong, hs: .9 }); K.arrow(70.5, 63, 86.5, 63, { color: C.strong, hs: .9 });
       K.alpha(db * K.seg(S, .8, .9)); K.text("2 models: policy and frozen reference", 60, 74, { size: 2.4, align: "center", color: C.accent });
     }
-    note("same preference pairs, no reward model, no RL loop", .8, 1.05, C.accent);
+    note("same preference pairs, no reward model, no RL loop", .5, 1.05, C.accent);
     // 2. the derivation
     const s2 = vis(1.02, 2.05);
     if (s2 > 0){
@@ -2214,7 +2284,7 @@ const SCENES = {
       K.alpha(s2 * K.seg(S, 1.65, 1.78)); K.text("Z(x) is the same for both answers to a prompt, so it cancels", 60, 70, { size: 2.5, align: "center", color: C.muted });
       K.alpha(s2 * K.seg(S, 1.75, 1.88)); K.text("the model's own probabilities define its reward", 60, 77, { size: 3, align: "center", color: C.accent, weight: 700 });
     }
-    note("Rafailov et al., 2023: “your language model is secretly a reward model”", 1.85, 2.05);
+    note("Rafailov et al., 2023: “your language model is secretly a reward model”", 1.5, 2.05);
     // 3. the loss on one pair
     const s3 = vis(2.02, 3.05);
     if (s3 > 0){
@@ -2238,10 +2308,10 @@ const SCENES = {
       K.text("margin β·(Δc − Δr)", X1, Y0 + 4.5, { size: 2.2, align: "right", color: C.muted });
       K.text("σ", X0 - 2, Y1, { size: 2.6, mono: true, color: C.muted, align: "right" });
       K.alpha(s3); K.dot(mx(m), my(sig(m)), 1.4, { fill: C.accent });
-      K.text(`P = ${sig(m).toFixed(2)} · loss ${L.toFixed(2)}`, mx(m) - 2, my(sig(m)) - 4, { size: 2.6, mono: true, align: "right", color: C.accent, weight: 700, halo: true });
+      K.text(`P = ${sig(m).toFixed(2)} · loss ${L.toFixed(2)}`, X1, Y1 - 6, { size: 2.6, mono: true, align: "right", color: C.accent, weight: 700, halo: true });
       K.alpha(s3 * K.seg(S, 2.2, 2.3)); K.text("loss = −log P, starts at log 2 ≈ 0.69", X0 + 25, 84, { size: 2.3, align: "center", color: C.muted });
     }
-    note("push the chosen answer up relative to the rejected one", 2.8, 3.05, C.accent);
+    note("push the chosen answer up relative to the rejected one", 2.5, 3.05, C.accent);
     // 4. beta and the offline catch
     const s4 = vis(3.02, 4.05);
     if (s4 > 0){
@@ -2250,7 +2320,7 @@ const SCENES = {
       K.alpha(s4); K.text("β", 18, 18.5, { size: 3, mono: true, color: C.muted, align: "right" });
       K.rect(22, 17.5, 66, 2, 1, { fill: C.raised }); const kx = K.lerp(80, 30, bt); K.dot(kx, 18.5, 2, { fill: C.accent });
       K.text(`β = ${beta.toFixed(2)}`, 92, 18.5, { size: 2.6, mono: true, color: C.accent, weight: 600 });
-      K.text("weak pull: model moves further", 22, 25, { size: 2.2, color: C.muted }); K.text("strong pull to the reference", 88, 25, { size: 2.2, color: C.muted, align: "right" });
+      K.text("weaker pull, more drift", 22, 25, { size: 2.2, color: C.muted }); K.text("stronger pull to reference", 88, 25, { size: 2.2, color: C.muted, align: "right" });
       K.line(AX0, Y0, AX1, Y0, { color: C.strong });
       const ref = bump(40, 26, 10), pol = bump(40 + shift, 26, 10);
       const draw = (fn, col, dash) => { ctx.beginPath(); for (let x = AX0; x <= AX1; x += 1){ const y = fn(x); x === AX0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); } ctx.setLineDash(dash || []); ctx.strokeStyle = col; ctx.lineWidth = .6; ctx.stroke(); ctx.setLineDash([]); };
@@ -2264,7 +2334,7 @@ const SCENES = {
       const ga = s4 * K.seg(S, 3.75, 3.88);
       if (ga > 0){ K.alpha(ga * .14); K.rect(62, 30, AX1 - 62, Y0 - 30, 0, { fill: C.warn }); K.alpha(ga); K.text("few or no pairs out here", 87, Y0 + 7, { size: 2.4, align: "center", color: C.warn, weight: 600 }); }
     }
-    note("offline data can't correct a model that drifts past it", 3.8, 4.05, C.warn);
+    note("offline data can't correct a model that drifts past it", 3.55, 4.05, C.warn);
     // 5. choosing
     const s5 = vis(4.02, 5.2);
     if (s5 > 0){
@@ -2282,7 +2352,7 @@ const SCENES = {
       });
       K.alpha(s5 * K.seg(S, 4.8, 4.9)); K.text("they change the loss or the data, not the need for good labels", 60, 82, { size: 2.5, align: "center", color: C.muted });
     }
-    note("pick by constraints, not by trend", 4.85, 5.2, C.accent);
+    note("pick by constraints, not by trend", 4.6, 5.2, C.accent);
     K.alpha(1);
   },
 };
@@ -2356,7 +2426,9 @@ const projRow = (p, i = 0) => `
     <span class="go">${ICONS.arrow}</span>
   </a>`;
 const tagHTML = k => `<span class="tag ${k}">${esc(SITE.labels[k].replace(/s$/,""))}</span>`;
-const sorted = () => [...SITE.posts].sort((a,b) => b.date.localeCompare(a.date));
+const rankOf = p => { const i = (SITE.writingOrder || []).indexOf(p.slug); return i < 0 ? 999 : i; };
+const sorted = () => [...SITE.posts].filter(p => !p.notes).sort((a,b) => rankOf(a) - rankOf(b) || b.date.localeCompare(a.date));
+const otherNotes = () => [...SITE.posts].filter(p => p.notes).sort((a,b) => b.date.localeCompare(a.date));
 const postHTML = p => `<a class="post" href="${url(`/writing/${p.slug}/`)}"><span class="d num">${p.kind === "explainer" ? `${p.steps.length} steps` : fmt(p.date)}</span><h3>${esc(p.title)}</h3>${tagHTML(p.kind)}<p>${esc(p.excerpt)}</p></a>`;
 const exStage = (scene, title, steps) => `
       <section class="build explainer" id="ex" data-scene="${esc(scene)}" aria-label="${esc(title)}, step by step">
@@ -2396,16 +2468,16 @@ const explainerHTML = p => {
 /* reading paths: after each explainer, the three that build on it */
 const NEXT = {
   rag: ["vectors", "evals", "agents"], agents: ["mcp", "rag", "evals"], transformer: ["neural", "lora", "rlhf"],
-  neural: ["transformer", "diffusion", "lora"], vectors: ["rag", "btree", "transformer"], web: ["btree", "docker", "bottleneck"],
+  neural: ["transformer", "diffusion", "lora"], vectors: ["rag", "btree", "transformer"], web: ["btree", "docker", "mcp"],
   lora: ["rlhf", "dpo", "transformer"], diffusion: ["neural", "transformer", "lora"], mcp: ["agents", "rag", "aidev"],
-  btree: ["vectors", "web", "bisect"], docker: ["web", "mcp", "experiments"], evals: ["rag", "dpo", "experiments"],
+  btree: ["vectors", "web", "rag"], docker: ["web", "mcp", "agents"], evals: ["rag", "dpo", "agents"],
   rlhf: ["dpo", "lora", "evals"], dpo: ["rlhf", "evals", "lora"], decompose: ["whys", "pareto", "experiments"],
-  whys: ["bisect", "decompose", "bottleneck"], bisect: ["whys", "experiments", "btree"], bottleneck: ["pareto", "web", "decompose"],
-  pareto: ["bottleneck", "decompose", "evals"], experiments: ["evals", "bisect", "whys"], aidev: ["agents", "mcp", "evals"],
+  whys: ["bisect", "decompose", "bottleneck"], bisect: ["whys", "experiments", "bottleneck"], bottleneck: ["pareto", "decompose", "bisect"],
+  pareto: ["bottleneck", "decompose", "experiments"], experiments: ["bisect", "whys", "decompose"], aidev: ["agents", "mcp", "evals"],
 };
 const moreHTML = p => {
   const list = (NEXT[p.scene] || []).map(sc => SITE.posts.find(x => x.scene === sc)).filter(Boolean);
-  return list.length ? `<section class="more"><div class="sh"><h2>Keep reading</h2><a href="${url("/writing/")}">All writing</a></div><div class="posts">${list.map(postHTML).join("")}</div></section>` : "";
+  return list.length ? `<section class="more"><div class="sh"><h2>${p.notes ? "More notes" : "Keep reading"}</h2><a href="${url("/writing/")}">All writing</a></div><div class="posts">${list.map(postHTML).join("")}</div></section>` : "";
 };
 const shareHTML = p => {
   const link = `${SITE.domain.replace(/\/$/, "")}/writing/${p.slug}/`, u = encodeURIComponent(link);
@@ -2431,8 +2503,8 @@ const V = {
   home: () => `
     <div class="page">
       <section class="hero">
-        <h1>I build AI systems that work <em>in production.</em></h1>
-        <p class="sub">I'm Juan Pablo, an AI developer in Argentina. I build <b>RAG pipelines and multi-agent systems</b>, and I measure whether they actually work.</p>
+        <h1>I build RAG and agent systems, <em>and measure whether they work.</em></h1>
+        <p class="sub">I'm Juan Pablo, an AI developer in Argentina. I've built products end to end as the only developer, and I run a <b>production dashboard used across hundreds of schools</b>.</p>
         <div class="row"><a class="btn" href="${url("/projects/")}">See my work <span class="arr">${ICONS.arrow}</span></a><a class="btn line" href="${url("/resume/")}">Resume</a><a class="btn line" href="mailto:${esc(SITE.email)}">Email me</a></div>
         <ul class="avail" aria-label="Availability"><li><b>Open to remote AI roles</b></li><li>UTC−3, overlaps US working hours</li><li>English C2 · Spanish native</li></ul>
       </section>
@@ -2441,7 +2513,7 @@ const V = {
         <div class="sh"><h2>Selected projects</h2><a href="${url("/projects/")}">All projects</a></div>
         <div class="plist">${SITE.projects.slice(0,3).map(projRow).join("")}</div>
       </section>
-      ${SITE.posts.length ? `<section><div class="sh"><h2>Recent writing</h2><a href="${url("/writing/")}">All articles, interviews and notes</a></div><div class="posts">${(SITE.featured || []).map(s => SITE.posts.find(p => p.slug === s)).filter(Boolean).concat(sorted()).filter((p, i, a) => a.indexOf(p) === i).slice(0,3).map(postHTML).join("")}</div></section>` : ""}
+      ${SITE.posts.length ? `<section><div class="sh"><h2>Recent writing</h2><a href="${url("/writing/")}">All writing</a></div><div class="posts">${(SITE.featured || []).map(s => SITE.posts.find(p => p.slug === s && !p.notes)).filter(Boolean).concat(sorted()).filter((p, i, a) => a.indexOf(p) === i).slice(0,3).map(postHTML).join("")}</div></section>` : ""}
       ${ctaHTML()}
     </div>`,
 
@@ -2533,17 +2605,19 @@ const V = {
     </div>`,
 
   writing: () => {
-    const counts = { all: SITE.posts.length };
-    SITE.posts.forEach(p => counts[p.kind] = (counts[p.kind]||0) + 1);
+    const main = sorted(), notes = otherNotes();
+    const counts = { all: main.length };
+    main.forEach(p => counts[p.kind] = (counts[p.kind]||0) + 1);
     const opts = [["all","All"], ...Object.entries(SITE.labels).filter(([k]) => counts[k])];
     const btns = tab => opts.map(([k,l]) => `<button type="button" ${tab ? `data-f="${k}" aria-pressed="${filter===k}"` : 'tabindex="-1" aria-hidden="true"'}>${l}<span class="num">${counts[k]||0}</span></button>`).join("");
     return `
     <div class="page">
       <section>
         <div class="sh"><h1 class="title">Writing</h1>
-          <div class="seg" id="seg" role="group" aria-label="Filter by label"><div class="seg-row">${btns(true)}</div><div class="over" id="segOver"><div class="seg-row">${btns(false)}</div></div></div></div>
+          ${opts.length > 2 ? `<div class="seg" id="seg" role="group" aria-label="Filter by label"><div class="seg-row">${btns(true)}</div><div class="over" id="segOver"><div class="seg-row">${btns(false)}</div></div></div>` : `<p>Animated, step-by-step explainers of how AI systems work, each with its sources.</p>`}</div>
         <div class="posts" id="posts">${listHTML()}</div>
       </section>
+      ${notes.length ? `<section><div class="sh"><h2>Other notes</h2><p>General problem-solving methods and a talk summary, outside the main AI set.</p></div><div class="posts">${notes.map(postHTML).join("")}</div></section>` : ""}
     </div>`;
   },
 
