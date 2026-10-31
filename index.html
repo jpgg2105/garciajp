@@ -27,7 +27,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@400;500;600;700&family=Instrument+Sans:wght@500&family=Funnel+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="/assets/site.css?v=6eb6f97866">
+<link rel="stylesheet" href="/assets/site.css?v=cfd963c7cb">
 </head>
 <body>
 <a class="skip" href="#view">Skip to content</a>
@@ -50,15 +50,15 @@
   <section class="build" aria-label="How I build an AI feature, from database to production">
     <div class="build-track" id="track">
       <div class="pin">
-        <ol class="steps" id="steps"><li class="step on"><span class="n">1</span><h3>Model the data</h3><p>Schemas that keep every customer's data apart and still make sense two years from now.</p></li><li class="step"><span class="n">2</span><h3>Retrieve the right context</h3><p>Hybrid search and reranking, so the model answers from the right passages.</p></li><li class="step"><span class="n">3</span><h3>Let agents check the work</h3><p>A planner, researcher and critic catch unsupported answers before users see them.</p></li><li class="step"><span class="n">4</span><h3>Ship it</h3><p>Deployed on a real server, tested, and handed over with docs.</p></li></ol>
+        <ol class="steps" id="steps"><li class="step on"><span class="n">1</span><h3>Model the data</h3><p>Schemas that keep every customer's data apart and still make sense two years from now.</p></li><li class="step"><span class="n">2</span><h3>Retrieve the right context</h3><p>Hybrid search and reranking, so the model answers from the right passages.</p></li><li class="step"><span class="n">3</span><h3>Let agents check the work</h3><p>A planner, researchers and a critic find the second fact a single search misses: 86% correct against 74% on 100 multi-hop questions.</p></li><li class="step"><span class="n">4</span><h3>Ship it</h3><p>Deployed on a real server, tested, and handed over with docs.</p></li></ol>
         <div class="screen" aria-hidden="true">
-          <div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="file" id="file">schema.sql</span><span class="sample">Sample data</span></div>
+          <div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="file" id="file">schema.sql</span><span class="sample" id="sampleTag">Sample data</span></div>
           <div class="layer on" data-l="0"><pre class="code" id="sql"><span class="caret"></span></pre></div>
           <div class="layer" data-l="1"><pre class="code" id="api"></pre></div>
           <div class="layer" data-l="2">
   <div class="run">
-    <div class="run-head"><div><h4>Agent run</h4><span class="muted" style="font-size:14px">4 agents · 5.7 s</span></div><div class="run-score num">6/6<small>claims cited</small></div></div>
-    <div class="agent" data-row=""><b>Planner</b><span class="t">Split the question into 3 sub-questions</span><span class="muted num" style="font-size:14px">0.8 s</span></div><div class="agent" data-row=""><b>Researcher</b><span class="t">Searched 214 passages, kept 9</span><span class="muted num" style="font-size:14px">2.1 s</span></div><div class="agent" data-row=""><b>Critic</b><span class="t">One claim had no source, sent it back<span class="flag">Revised</span></span><span class="muted num" style="font-size:14px">1.2 s</span></div><div class="agent" data-row=""><b>Synthesizer</b><span class="t">Wrote the answer with 6 citations</span><span class="muted num" style="font-size:14px">1.6 s</span></div>
+    <div class="run-head"><div><h4>Agent run</h4><span class="muted" style="font-size:14px">a real benchmark question · 5 calls</span></div><div class="run-score num">86%<small>correct on 100 questions vs 74%</small></div></div>
+    <div class="agent" data-row=""><b>Planner</b><span class="t">Split the question into 2 sub-questions</span><span class="muted num" style="font-size:14px">1 call</span></div><div class="agent" data-row=""><b>Researcher</b><span class="t">Where was Penn held? Tower of London</span><span class="muted num" style="font-size:14px">1 call</span></div><div class="agent" data-row=""><b>Researcher</b><span class="t">When did it stop being a prison? 1952</span><span class="muted num" style="font-size:14px">1 call</span></div><div class="agent" data-row=""><b>Critic</b><span class="t">Findings sufficient, no second round</span><span class="muted num" style="font-size:14px">1 call</span></div><div class="agent" data-row=""><b>Synthesizer</b><span class="t">Answered 1952, correct</span><span class="muted num" style="font-size:14px">1 call</span></div>
   </div></div>
           <div class="layer" data-l="3">
   <div class="ship">
@@ -85,10 +85,10 @@
   { <span class="str">"score"</span>: <span class="nm">0.92</span>, <span class="str">"text"</span>: <span class="str">"Annual plans are refundable within 30 days…"</span> },
   { <span class="str">"score"</span>: <span class="nm">0.81</span>, <span class="str">"text"</span>: <span class="str">"Refunds go back to the original card…"</span> },
   { <span class="str">"score"</span>: <span class="nm">0.64</span>, <span class="str">"text"</span>: <span class="str">"Monthly plans renew on the same day…"</span> }
-]</pre></div></div></div><div class="still" data-i="2"><h3>Let agents check the work</h3><p>A planner, researcher and critic catch unsupported answers before users see them.</p><div class="card"><div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="file">Agent run</span></div><div class="in">
+]</pre></div></div></div><div class="still" data-i="2"><h3>Let agents check the work</h3><p>A planner, researchers and a critic find the second fact a single search misses: 86% correct against 74% on 100 multi-hop questions.</p><div class="card"><div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="file">Agent run</span></div><div class="in">
   <div class="run">
-    <div class="run-head"><div><h4>Agent run</h4><span class="muted" style="font-size:14px">4 agents · 5.7 s</span></div><div class="run-score num">6/6<small>claims cited</small></div></div>
-    <div class="agent" data-row=""><b>Planner</b><span class="t">Split the question into 3 sub-questions</span><span class="muted num" style="font-size:14px">0.8 s</span></div><div class="agent" data-row=""><b>Researcher</b><span class="t">Searched 214 passages, kept 9</span><span class="muted num" style="font-size:14px">2.1 s</span></div><div class="agent" data-row=""><b>Critic</b><span class="t">One claim had no source, sent it back<span class="flag">Revised</span></span><span class="muted num" style="font-size:14px">1.2 s</span></div><div class="agent" data-row=""><b>Synthesizer</b><span class="t">Wrote the answer with 6 citations</span><span class="muted num" style="font-size:14px">1.6 s</span></div>
+    <div class="run-head"><div><h4>Agent run</h4><span class="muted" style="font-size:14px">a real benchmark question · 5 calls</span></div><div class="run-score num">86%<small>correct on 100 questions vs 74%</small></div></div>
+    <div class="agent" data-row=""><b>Planner</b><span class="t">Split the question into 2 sub-questions</span><span class="muted num" style="font-size:14px">1 call</span></div><div class="agent" data-row=""><b>Researcher</b><span class="t">Where was Penn held? Tower of London</span><span class="muted num" style="font-size:14px">1 call</span></div><div class="agent" data-row=""><b>Researcher</b><span class="t">When did it stop being a prison? 1952</span><span class="muted num" style="font-size:14px">1 call</span></div><div class="agent" data-row=""><b>Critic</b><span class="t">Findings sufficient, no second round</span><span class="muted num" style="font-size:14px">1 call</span></div><div class="agent" data-row=""><b>Synthesizer</b><span class="t">Answered 1952, correct</span><span class="muted num" style="font-size:14px">1 call</span></div>
   </div></div></div></div><div class="still" data-i="3"><h3>Ship it</h3><p>Deployed on a real server, tested, and handed over with docs.</p><div class="card"><div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="file">production</span></div><div class="in">
   <div class="ship">
     <div class="ship-url"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3 3 7-7"></path></svg> help.yourcompany.com/ask</div>
@@ -107,7 +107,7 @@
         <div class="plist">
   <a class="prow" href="/projects/research-agent/">
     <div><h3 class="shift" style="--i:0">Research agent with its own benchmark</h3><span class="meta">Personal project · 2026</span></div>
-    <p>A RAG service, a four-agent research loop and a benchmark that tests whether the loop beats a single LLM call.</p>
+    <p>A RAG service, a four-agent research loop and a benchmark that tests whether the loop beats a single LLM call. On 100 multi-hop questions it did: 86% correct against 74%.</p>
     <span class="go"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"></path></svg></span>
   </a>
   <a class="prow" href="/projects/chatbots-and-outreach/">
@@ -116,7 +116,7 @@
     <span class="go"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"></path></svg></span>
   </a></div>
       </section>
-      <section><div class="sh"><h2>Recent writing</h2><a href="/writing/">All writing</a></div><div class="posts"><a class="post" href="/writing/how-to-evaluate-llm-apps/"><span class="d num">5 steps</span><h3>How to evaluate an LLM app</h3><span class="tag explainer">Explainer</span><p>Test cases, scoring, version comparisons and a release gate: measuring quality instead of guessing.</p></a><a class="post" href="/writing/how-rag-works/"><span class="d num">6 steps</span><h3>How RAG works</h3><span class="tag explainer">Explainer</span><p>Retrieval-augmented generation, step by step: from splitting documents to an answer with sources.</p></a><a class="post" href="/writing/how-ai-agents-work/"><span class="d num">5 steps</span><h3>How AI agents work</h3><span class="tag explainer">Explainer</span><p>An agent is a language model in a loop: plan, call a tool, read the result, decide again.</p></a></div></section>
+      <section><div class="sh"><h2>Recent writing</h2><a href="/writing/">All writing</a></div><div class="posts"><a class="post" href="/writing/does-an-agent-beat-a-single-llm-call/"><span class="d num">Oct 31, 2026</span><h3>Does a four-agent loop beat a single LLM call? I measured it</h3><span class="tag article">Article</span><p>On 100 multi-hop questions, my research agent answered 86% correctly against 74% for one retrieve-and-answer call, at about 6× the calls. Where the gain comes from, where it loses, and what I'd change.</p></a><a class="post" href="/writing/how-to-evaluate-llm-apps/"><span class="d num">5 steps</span><h3>How to evaluate an LLM app</h3><span class="tag explainer">Explainer</span><p>Test cases, scoring, version comparisons and a release gate: measuring quality instead of guessing.</p></a><a class="post" href="/writing/how-rag-works/"><span class="d num">6 steps</span><h3>How RAG works</h3><span class="tag explainer">Explainer</span><p>Retrieval-augmented generation, step by step: from splitting documents to an answer with sources.</p></a></div></section>
       
   <section class="cta">
     <h2>Hiring, or need an AI feature built? Let's talk.</h2>
@@ -131,9 +131,9 @@
 <!-- ===================== CONTENT =====================
      Everything on the site comes from this JSON. Edit it, then run `python build.py`.
      See README.md for what each field does. -->
-<script src="/assets/content.js?v=bf01069a20"></script>
+<script src="/assets/content.js?v=c4a6cad8d9"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/motion@11.11.13/dist/motion.js"></script>
-<script src="/assets/site.js?v=2d31a2b64a"></script>
+<script src="/assets/site.js?v=3e589868ad"></script>
 </body>
 </html>

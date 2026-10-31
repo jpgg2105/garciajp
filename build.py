@@ -220,7 +220,10 @@ llms = [f"# {name}", "", f"> {site['resume']['summary']}", "",
 llms += [_line(p["title"], f"/projects/{p['slug']}/", p["summary"]) for p in site["projects"]]
 llms += ["", "## Explainers (animated, step by step, with references)"]
 llms += [_line(p["title"], f"/writing/{p['slug']}/", p.get("excerpt", "")) for p in posts_sorted if p.get("kind") == "explainer" and not p.get("notes")]
-other = [p for p in posts_sorted if p.get("kind") != "explainer" or p.get("notes")]
+arts = [p for p in posts_sorted if p.get("kind") == "article" and not p.get("notes")]
+if arts:
+    llms += ["", "## Articles (measured results)"] + [_line(p["title"], f"/writing/{p['slug']}/", p.get("excerpt", "")) for p in arts]
+other = [p for p in posts_sorted if p.get("notes") or p.get("kind") not in ("explainer", "article")]
 if other:
     llms += ["", "## Other notes"] + [_line(p["title"], f"/writing/{p['slug']}/", p.get("excerpt", "")) for p in other]
 (OUT / "llms.txt").write_text("\n".join(llms) + "\n", encoding="utf-8")

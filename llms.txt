@@ -12,7 +12,7 @@ Profiles: https://github.com/jpgg2105 · https://www.linkedin.com/in/juan-pablo-
 - [Stack](https://garciajp.com/stack/): languages, frameworks and AI tools in use
 
 ## Projects
-- [Research agent with its own benchmark](https://garciajp.com/projects/research-agent/): A RAG service, a four-agent research loop and a benchmark that tests whether the loop beats a single LLM call.
+- [Research agent with its own benchmark](https://garciajp.com/projects/research-agent/): A RAG service, a four-agent research loop and a benchmark that tests whether the loop beats a single LLM call. On 100 multi-hop questions it did: 86% correct against 74%.
 - [Analytics dashboard for hundreds of schools](https://garciajp.com/projects/schools-analytics-dashboard/): A React and FastAPI dashboard in production, following attendance, performance and risk across hundreds of schools.
 - [Chatbots and an outreach pipeline](https://garciajp.com/projects/chatbots-and-outreach/): LLM chatbots that answer from client content, and a pipeline that finds leads and contacts them on WhatsApp.
 
@@ -31,6 +31,9 @@ Profiles: https://github.com/jpgg2105 · https://www.linkedin.com/in/juan-pablo-
 - [How database indexes work](https://garciajp.com/writing/how-database-indexes-work/): Why an index turns a full table scan into a few reads, and what it costs on every write.
 - [How Docker containers work](https://garciajp.com/writing/how-docker-containers-work/): Dockerfile, layers, caching, containers and registries: how one image runs the same everywhere.
 - [How to evaluate an LLM app](https://garciajp.com/writing/how-to-evaluate-llm-apps/): Test cases, scoring, version comparisons and a release gate: measuring quality instead of guessing.
+
+## Articles (measured results)
+- [Does a four-agent loop beat a single LLM call? I measured it](https://garciajp.com/writing/does-an-agent-beat-a-single-llm-call/): On 100 multi-hop questions, my research agent answered 86% correctly against 74% for one retrieve-and-answer call, at about 6× the calls. Where the gain comes from, where it loses, and what I'd change.
 
 ## Other notes
 - [How to break down a big problem](https://garciajp.com/writing/how-to-break-down-a-problem/): Split a vague problem into parts that add up to the whole, until each part is small enough to check and fix.

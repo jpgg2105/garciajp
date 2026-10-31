@@ -107,15 +107,17 @@ function typed(toks, chars, caret){
   }
   return out + (caret ? '<span class="caret"></span>' : "");
 }
+// a real run from the benchmark (HotpotQA question h019, 31 Oct 2026)
 const AGENTS = [
-  ["Planner", "Split the question into 3 sub-questions", "0.8 s"],
-  ["Researcher", "Searched 214 passages, kept 9", "2.1 s"],
-  ["Critic", "One claim had no source, sent it back", "1.2 s", true],
-  ["Synthesizer", "Wrote the answer with 6 citations", "1.6 s"],
+  ["Planner", "Split the question into 2 sub-questions", "1 call"],
+  ["Researcher", "Where was Penn held? Tower of London", "1 call"],
+  ["Researcher", "When did it stop being a prison? 1952", "1 call"],
+  ["Critic", "Findings sufficient, no second round", "1 call"],
+  ["Synthesizer", "Answered 1952, correct", "1 call"],
 ];
 const RUN = `
   <div class="run">
-    <div class="run-head"><div><h4>Agent run</h4><span class="muted" style="font-size:14px">4 agents · 5.7 s</span></div><div class="run-score num">6/6<small>claims cited</small></div></div>
+    <div class="run-head"><div><h4>Agent run</h4><span class="muted" style="font-size:14px">a real benchmark question · 5 calls</span></div><div class="run-score num">86%<small>correct on 100 questions vs 74%</small></div></div>
     ${AGENTS.map(([n,t,s,f]) => `<div class="agent" data-row><b>${n}</b><span class="t">${t}${f ? '<span class="flag">Revised</span>' : ""}</span><span class="muted num" style="font-size:14px">${s}</span></div>`).join("")}
   </div>`;
 const SHIP = `
@@ -128,7 +130,7 @@ const SHIP = `
 const STEPS = [
   { t:"Model the data", d:"Schemas that keep every customer's data apart and still make sense two years from now.", file:"schema.sql" },
   { t:"Retrieve the right context", d:"Hybrid search and reranking, so the model answers from the right passages.", file:"POST /api/search" },
-  { t:"Let agents check the work", d:"A planner, researcher and critic catch unsupported answers before users see them.", file:"Agent run" },
+  { t:"Let agents check the work", d:"A planner, researchers and a critic find the second fact a single search misses: 86% correct against 74% on 100 multi-hop questions.", file:"Agent run", real: true },
   { t:"Ship it", d:"Deployed on a real server, tested, and handed over with docs.", file:"production" },
 ];
 
@@ -141,7 +143,7 @@ function buildStage(){
       <div class="pin">
         <ol class="steps" id="steps">${STEPS.map((s,i) => `<li class="step${i?"":" on"}"><span class="n">${i+1}</span><h3>${s.t}</h3><p>${s.d}</p></li>`).join("")}</ol>
         <div class="screen" aria-hidden="true">
-          <div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="file" id="file">${STEPS[0].file}</span><span class="sample">Sample data</span></div>
+          <div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="file" id="file">${STEPS[0].file}</span><span class="sample" id="sampleTag">Sample data</span></div>
           <div class="layer on" data-l="0"><pre class="code" id="sql"></pre></div>
           <div class="layer" data-l="1"><pre class="code" id="api"></pre></div>
           <div class="layer" data-l="2">${RUN}</div>
@@ -181,6 +183,7 @@ function initStage(){
     steps.forEach((s,i) => s.classList.toggle("on", i === idx));
     layers.forEach((l,i) => l.classList.toggle("on", i === idx));
     fileEl.textContent = STEPS[idx].file;
+    const tag = $("#sampleTag"); if (tag) tag.textContent = STEPS[idx].real ? "Real run" : "Sample data";
     if (idx === 2 && !rowsShown){
       rowsShown = true;
       if (M) M.animate(layers[2].querySelectorAll("[data-row]"), { opacity:[0,1], y:[14,0], scale:[.98,1] }, { delay: M.stagger(.12), type:"spring", duration:.5, bounce:.15 });
@@ -212,7 +215,7 @@ function initDeck(){
     if (i === cur) return; cur = i;
     cards.forEach((c,k) => c.classList.toggle("cur", k === i));
     pips.forEach((p,k) => p.setAttribute("aria-current", k === i));
-    counter.textContent = `${i+1} / ${cards.length} · Sample data`;
+    counter.textContent = `${i+1} / ${cards.length} · ${STEPS[i].real ? "Real run" : "Sample data"}`;
     if (M && !reduce && i === 2) M.animate(cards[2].querySelectorAll("[data-row]"), { opacity:[0,1], y:[10,0] }, { delay: M.stagger(.08), type:"spring", duration:.45, bounce:.12 });
   };
   const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting && e.intersectionRatio > .6) set(+e.target.dataset.i); }), { root: deck, threshold: [.6] });
@@ -1857,6 +1860,12 @@ const SCENES = {
         K.alpha(B * ra); K.line(93, 51, 96, 33 + k * 6, { color: C.line });
         K.text(`${qq} ${a}`, 98, 33 + k * 6, { size: 2.3, mono: true }); K.check(116, 33 + k * 6, 1.8, C.ok);
       });
+      // the measured result (100 HotpotQA questions, 31 Oct 2026)
+      const ra = B * K.seg(S, 3.7, 3.85);
+      if (ra > 0){
+        K.alpha(ra); K.rect(30, 79, 60, 9, 2, { fill: C.surface, stroke: C.accent, lw: .45 });
+        K.text("100 questions:  loop 86%  ·  one call 74%", 60, 83.5, { size: 2.6, align: "center", weight: 600, color: C.accent });
+      }
     }
     note("both approaches, the same questions, scored the same way", 3.6, 4.05, C.accent);
     // 5. anyone can rerun it
@@ -2475,13 +2484,20 @@ const NEXT = {
   whys: ["bisect", "decompose", "bottleneck"], bisect: ["whys", "experiments", "bottleneck"], bottleneck: ["pareto", "decompose", "bisect"],
   pareto: ["bottleneck", "decompose", "experiments"], experiments: ["bisect", "whys", "decompose"], aidev: ["agents", "mcp", "evals"],
 };
+const inl = t => esc(t).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/\*(.+?)\*/g, "<i>$1</i>")
+  .replace(/\[([^\]]+)\]\(((?:https?:\/\/|\/)[^)\s]+)\)/g, (m, a, h) => `<a href="${h}"${h.startsWith("http") ? ' target="_blank" rel="noopener"' : ""}>${a}</a>`);
+const articleBlock = b => typeof b === "string" ? `<p>${inl(b)}</p>`
+  : b.h ? `<h2>${inl(b.h)}</h2>`
+  : b.ul ? `<ul class="plain">${b.ul.map(x => `<li>${inl(x)}</li>`).join("")}</ul>`
+  : b.table ? `<div class="tbl"><table><thead><tr>${b.table.head.map(h => `<th>${inl(h)}</th>`).join("")}</tr></thead><tbody>${b.table.rows.map(r => `<tr>${r.map((c, i) => `<td${i ? ' class="num"' : ""}>${inl(c)}</td>`).join("")}</tr>`).join("")}</tbody></table>${b.table.note ? `<p class="tnote">${inl(b.table.note)}</p>` : ""}</div>`
+  : `<p class="q">${inl(b.q)}</p>`;
 const moreHTML = p => {
   const list = (NEXT[p.scene] || []).map(sc => SITE.posts.find(x => x.scene === sc)).filter(Boolean);
   return list.length ? `<section class="more"><div class="sh"><h2>${p.notes ? "More notes" : "Keep reading"}</h2><a href="${url("/writing/")}">All writing</a></div><div class="posts">${list.map(postHTML).join("")}</div></section>` : "";
 };
 const shareHTML = p => {
   const link = `${SITE.domain.replace(/\/$/, "")}/writing/${p.slug}/`, u = encodeURIComponent(link);
-  const text = encodeURIComponent(`${p.title}: an animated, step-by-step explainer`);
+  const text = encodeURIComponent(p.kind === "explainer" ? `${p.title}: an animated, step-by-step explainer` : p.title);
   return `<div class="share">
       <a class="btn line" href="https://x.com/intent/post?text=${text}&url=${u}" target="_blank" rel="noopener" data-ev="share/x/${esc(p.slug)}">${ICONS.x} Post on X</a>
       <a class="btn line" href="https://www.linkedin.com/sharing/share-offsite/?url=${u}" target="_blank" rel="noopener" data-ev="share/linkedin/${esc(p.slug)}">${ICONS.linkedin} Share on LinkedIn</a>
@@ -2631,8 +2647,9 @@ const V = {
       <div class="row">${tagHTML(p.kind)}<span class="muted num">${fmt(p.date)} · ${p.read} min read</span></div>
       <h1>${esc(p.title)}</h1>
       ${p.guest ? `<p class="muted" style="font-size:18px">A conversation with ${esc(p.guest)}</p>` : ""}
-      <div class="body">${p.body.map(b => typeof b === "string" ? `<p>${esc(b)}</p>` : `<p class="q">${esc(b.q)}</p>`).join("")}</div>
-    </article></div>`;
+      <div class="body">${p.body.map(articleBlock).join("")}</div>
+      <div class="cv" style="margin-top:12px"><h2>Share</h2><div>${shareHTML(p)}</div></div>
+    </article>${ctaHTML()}</div>`;
   },
 
   book: () => {

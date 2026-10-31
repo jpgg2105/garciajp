@@ -230,6 +230,15 @@ pre.code{margin:0;font:14px/1.75 var(--f-code);white-space:pre;color:var(--ink);
 .reader{max-width:68ch;display:flex;flex-direction:column;gap:24px}
 .reader h1{font-size:clamp(36px,5vw,58px);letter-spacing:-.03em}
 .reader .body{display:flex;flex-direction:column;gap:20px;font-size:18.5px;line-height:1.7}
+.reader .body h2{font-size:clamp(24px,3vw,30px);letter-spacing:-.02em;margin-top:18px}
+.reader .body ul.plain{padding-left:20px;display:flex;flex-direction:column;gap:8px;color:var(--ink)}
+.reader .body a{color:var(--accent);text-underline-offset:3px}
+.tbl{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tbl table{border-collapse:collapse;width:100%;font-size:15.5px;line-height:1.45;min-width:520px}
+.tbl th{text-align:left;font-weight:600;color:var(--muted);font-size:14px;padding:8px 12px;border-bottom:1px solid var(--line-strong)}
+.tbl td{padding:9px 12px;border-bottom:1px solid var(--line)}
+.tbl td.num{font-variant-numeric:tabular-nums}
+.tbl .tnote{font-size:14.5px;color:var(--muted);margin-top:10px;line-height:1.5}
 .reader .q{font-family:var(--f-display);font-weight:600;font-size:21px;letter-spacing:-.01em;line-height:1.35}
 
 /* resume */

@@ -260,6 +260,15 @@ pre.code{margin:0;font:14px/1.75 var(--f-code);white-space:pre;color:var(--ink);
 .reader{max-width:68ch;display:flex;flex-direction:column;gap:24px}
 .reader h1{font-size:clamp(36px,5vw,58px);letter-spacing:-.03em}
 .reader .body{display:flex;flex-direction:column;gap:20px;font-size:18.5px;line-height:1.7}
+.reader .body h2{font-size:clamp(24px,3vw,30px);letter-spacing:-.02em;margin-top:18px}
+.reader .body ul.plain{padding-left:20px;display:flex;flex-direction:column;gap:8px;color:var(--ink)}
+.reader .body a{color:var(--accent);text-underline-offset:3px}
+.tbl{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tbl table{border-collapse:collapse;width:100%;font-size:15.5px;line-height:1.45;min-width:520px}
+.tbl th{text-align:left;font-weight:600;color:var(--muted);font-size:14px;padding:8px 12px;border-bottom:1px solid var(--line-strong)}
+.tbl td{padding:9px 12px;border-bottom:1px solid var(--line)}
+.tbl td.num{font-variant-numeric:tabular-nums}
+.tbl .tnote{font-size:14.5px;color:var(--muted);margin-top:10px;line-height:1.5}
 .reader .q{font-family:var(--f-display);font-weight:600;font-size:21px;letter-spacing:-.01em;line-height:1.35}
 
 /* resume */
@@ -483,7 +492,7 @@ footer a{color:var(--muted)}
   "analytics": {
     "goatcounter": "jpgarcia2154"
   },
-  "writingOrder": ["how-rlhf-works", "how-dpo-works", "how-to-evaluate-llm-apps", "how-rag-works", "how-ai-agents-work", "how-mcp-works", "how-lora-fine-tuning-works", "how-transformers-work", "how-vector-search-works", "how-neural-networks-learn", "how-diffusion-models-work", "how-a-web-request-is-served", "how-database-indexes-work", "how-docker-containers-work"],
+  "writingOrder": ["does-an-agent-beat-a-single-llm-call", "how-rlhf-works", "how-dpo-works", "how-to-evaluate-llm-apps", "how-rag-works", "how-ai-agents-work", "how-mcp-works", "how-lora-fine-tuning-works", "how-transformers-work", "how-vector-search-works", "how-neural-networks-learn", "how-diffusion-models-work", "how-a-web-request-is-served", "how-database-indexes-work", "how-docker-containers-work"],
   "resumePdf": "resume.pdf?v=559e6efc",
   "booked": [
     "2026-10"
@@ -500,7 +509,7 @@ footer a{color:var(--muted)}
       "client": "Personal project",
       "role": "Author",
       "when": "2026",
-      "summary": "A RAG service, a four-agent research loop and a benchmark that tests whether the loop beats a single LLM call.",
+      "summary": "A RAG service, a four-agent research loop and a benchmark that tests whether the loop beats a single LLM call. On 100 multi-hop questions it did: 86% correct against 74%.",
       "problem": "Multi-agent systems are easy to demo. I wanted to know whether a multi-agent loop actually beats a single LLM call on the same questions.",
       "solution": "Three parts that build on each other: ai-document-analyst, a RAG service with hybrid retrieval; research-agent, a four-role agent that uses it as a tool; and agent-benchmark, a harness that runs both approaches on the same questions.",
       "flows": [
@@ -548,6 +557,7 @@ footer a{color:var(--muted)}
         }
       ],
       "notes": [
+        "The gain is concentrated in bridge questions (70% to 90%), where one search finds only one of the two facts needed.",
         "The benchmark harness runs the agent loop and a single-shot baseline on the same questions.",
         "CI and tests run without API keys, so anyone can reproduce the setup."
       ],
@@ -559,7 +569,7 @@ footer a{color:var(--muted)}
         "GitHub Actions",
         "pytest"
       ],
-      "result": "A reproducible way to compare the agent loop with a single LLM call, instead of judging it by a demo.",
+      "result": "On 100 HotpotQA multi-hop questions, with the same model and search index for both, the agent answered 86% correctly against 74% for a single call (+12 points, 95% CI +4 to +20), at about 6× the LLM calls. A second evaluator agreed with the automatic grader on 39 of 40 answers. Write-up: garciajp.com/writing/does-an-agent-beat-a-single-llm-call/",
       "code": "https://github.com/jpgg2105",
       "codeNote": "",
       "demo": "",
@@ -580,7 +590,7 @@ footer a{color:var(--muted)}
           ],
           [
             "The benchmark runs both",
-            "agent-benchmark sends the same questions to the agent loop and to a single-shot baseline, and scores every answer the same way."
+            "agent-benchmark sends the same questions to the agent loop and to a single-shot baseline, and scores every answer the same way. On 100 HotpotQA multi-hop questions the loop answered 86% correctly, the single call 74%."
           ],
           [
             "Anyone can rerun it",
@@ -1015,6 +1025,114 @@ footer a{color:var(--muted)}
     "explainer": "Scroll-driven visual guides to how AI and software techniques work."
   },
   "posts": [
+    {
+      "slug": "does-an-agent-beat-a-single-llm-call",
+      "kind": "article",
+      "date": "2026-10-31",
+      "read": 6,
+      "title": "Does a four-agent loop beat a single LLM call? I measured it",
+      "excerpt": "On 100 multi-hop questions, my research agent answered 86% correctly against 74% for one retrieve-and-answer call, at about 6× the calls. Where the gain comes from, where it loses, and what I'd change.",
+      "body": [
+        "Multi-agent systems demo well. I wanted to know whether mine actually beats the simple alternative, so I ran both on the same 100 questions, with the same model and the same search index, and compared them question by question.",
+        "**Short answer: yes, by 12 points, at about 6× the LLM calls.** The research agent (a planner, researchers, a critic and a synthesizer) answered 86% of the questions correctly. A single call that retrieves 10 paragraphs and answers got 74%. The paired difference is +12 points, with a 95% confidence interval of +4 to +20.",
+        {
+          "h": "The setup"
+        },
+        {
+          "ul": [
+            "**Questions:** 100 from HotpotQA (Yang et al., 2018), a dataset where each answer needs two Wikipedia paragraphs. Half are \"bridge\" questions (find A, then a fact about A), half compare two things.",
+            "**Retrieval:** one BM25 index over the roughly 1,000 paragraphs that come with those questions, including eight look-alike distractors per question. Both systems search the same index.",
+            "**Model:** Gemini 3.5 Flash-Lite for both systems and for the grader, on the free tier.",
+            "**Scoring:** a pass/fail LLM judge against the gold answer, exact match and F1 on the short answer, and how many of the two needed paragraphs each system retrieved. Every number has a 95% bootstrap interval."
+          ]
+        },
+        {
+          "h": "The results"
+        },
+        {
+          "table": {
+            "head": [
+              "",
+              "One call (10 paragraphs)",
+              "Agent",
+              "Difference"
+            ],
+            "rows": [
+              [
+                "Correct (judge)",
+                "74%",
+                "86%",
+                "+12 [+4, +20]"
+              ],
+              [
+                "Exact match",
+                "51%",
+                "61%",
+                "+10 [+2, +18]"
+              ],
+              [
+                "Bridge questions",
+                "70%",
+                "90%",
+                "+20 [+10, +32]"
+              ],
+              [
+                "Comparison questions",
+                "78%",
+                "82%",
+                "+4 [−6, +16]"
+              ],
+              [
+                "LLM calls per question",
+                "1",
+                "5.7",
+                ""
+              ],
+              [
+                "Tokens per question (in / out)",
+                "1,496 / 39",
+                "3,710 / 449",
+                ""
+              ]
+            ],
+            "note": "Differences are paired: the same questions for both systems, with 95% bootstrap intervals. Latency isn't compared because both ran under a free-tier rate limit, so most of the measured time was waiting."
+          }
+        },
+        {
+          "h": "Where the gain comes from"
+        },
+        "The agent won 15 questions, lost 3 and tied 82. In 13 of the 15 wins, the single call had answered that the sources were insufficient. In 11 of them, its one search had found only one of the two paragraphs it needed. The agent's searches found both in 14.",
+        "A typical case: \"What year did the prison where William Penn wrote *No Cross, No Crown* stop being used as a prison?\" The single call found the Tower of London but no date, and gave up. The agent split it into \"Where was Penn imprisoned?\" and \"When did that prison stop being used as one?\", and the second search found the answer: 1952.",
+        "The critic earned its place on the hardest questions. It accepted the first round 74 times and asked for a second round 26 times. On those 26 the single call managed 54% and the agent 77%.",
+        {
+          "h": "Where it loses"
+        },
+        {
+          "ul": [
+            "**It over-answers comparisons.** Asked whether Pueraria or Pleiospilos is a flowering plant, the single call said Pleiospilos; the agent said both. Longer answers invite claims the sources don't support.",
+            "**Its follow-ups can be vague.** The planner writes every sub-question before any search, so the second one can't name what the first one found. In the William Penn case it asked about \"this prison\" and got lucky because the search matched the word."
+          ]
+        },
+        {
+          "h": "Can the grader be trusted?"
+        },
+        "The same model answered and graded, so a second evaluator, different from the judge, graded 40 randomly chosen answers by hand against the gold answers, without knowing which system wrote them or what the judge said. It agreed with the judge on 39 of 40 (Cohen's κ = 0.92). The one disagreement was the judge being strict: the gold answer was \"Plymouth Gin\" and the agent said \"gin\".",
+        {
+          "h": "What I'd change next"
+        },
+        {
+          "ul": [
+            "**Sequential hops:** let each sub-question see what earlier ones found.",
+            "**Shorter answers** for comparison questions.",
+            "**Routing:** run the single call first and the agent only when it gives up. Simulated on these results it would score about 87% at about 2 calls per question. That's a hypothesis for the next run, not a result."
+          ]
+        },
+        {
+          "h": "Limits"
+        },
+        "One hundred questions give intervals of about ±9 points per system, so the overall gain is clear and the comparison-question gain isn't. It's one small model on Wikipedia-style questions with short answers. Everything is reproducible: the code, the question sample, every answer and the second evaluator's grades are in [agent-benchmark on GitHub](https://github.com/jpgg2105/agent-benchmark/blob/main/RESULTS.md)."
+      ]
+    },
     {
       "slug": "how-rag-works",
       "kind": "explainer",
@@ -2197,6 +2315,7 @@ footer a{color:var(--muted)}
     ]
   ],
   "featured": [
+    "does-an-agent-beat-a-single-llm-call",
     "how-to-evaluate-llm-apps",
     "how-rag-works",
     "how-ai-agents-work"
@@ -2315,15 +2434,17 @@ function typed(toks, chars, caret){
   }
   return out + (caret ? '<span class="caret"></span>' : "");
 }
+// a real run from the benchmark (HotpotQA question h019, 31 Oct 2026)
 const AGENTS = [
-  ["Planner", "Split the question into 3 sub-questions", "0.8 s"],
-  ["Researcher", "Searched 214 passages, kept 9", "2.1 s"],
-  ["Critic", "One claim had no source, sent it back", "1.2 s", true],
-  ["Synthesizer", "Wrote the answer with 6 citations", "1.6 s"],
+  ["Planner", "Split the question into 2 sub-questions", "1 call"],
+  ["Researcher", "Where was Penn held? Tower of London", "1 call"],
+  ["Researcher", "When did it stop being a prison? 1952", "1 call"],
+  ["Critic", "Findings sufficient, no second round", "1 call"],
+  ["Synthesizer", "Answered 1952, correct", "1 call"],
 ];
 const RUN = `
   <div class="run">
-    <div class="run-head"><div><h4>Agent run</h4><span class="muted" style="font-size:14px">4 agents · 5.7 s</span></div><div class="run-score num">6/6<small>claims cited</small></div></div>
+    <div class="run-head"><div><h4>Agent run</h4><span class="muted" style="font-size:14px">a real benchmark question · 5 calls</span></div><div class="run-score num">86%<small>correct on 100 questions vs 74%</small></div></div>
     ${AGENTS.map(([n,t,s,f]) => `<div class="agent" data-row><b>${n}</b><span class="t">${t}${f ? '<span class="flag">Revised</span>' : ""}</span><span class="muted num" style="font-size:14px">${s}</span></div>`).join("")}
   </div>`;
 const SHIP = `
@@ -2336,7 +2457,7 @@ const SHIP = `
 const STEPS = [
   { t:"Model the data", d:"Schemas that keep every customer's data apart and still make sense two years from now.", file:"schema.sql" },
   { t:"Retrieve the right context", d:"Hybrid search and reranking, so the model answers from the right passages.", file:"POST /api/search" },
-  { t:"Let agents check the work", d:"A planner, researcher and critic catch unsupported answers before users see them.", file:"Agent run" },
+  { t:"Let agents check the work", d:"A planner, researchers and a critic find the second fact a single search misses: 86% correct against 74% on 100 multi-hop questions.", file:"Agent run", real: true },
   { t:"Ship it", d:"Deployed on a real server, tested, and handed over with docs.", file:"production" },
 ];
 
@@ -2349,7 +2470,7 @@ function buildStage(){
       <div class="pin">
         <ol class="steps" id="steps">${STEPS.map((s,i) => `<li class="step${i?"":" on"}"><span class="n">${i+1}</span><h3>${s.t}</h3><p>${s.d}</p></li>`).join("")}</ol>
         <div class="screen" aria-hidden="true">
-          <div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="file" id="file">${STEPS[0].file}</span><span class="sample">Sample data</span></div>
+          <div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="file" id="file">${STEPS[0].file}</span><span class="sample" id="sampleTag">Sample data</span></div>
           <div class="layer on" data-l="0"><pre class="code" id="sql"></pre></div>
           <div class="layer" data-l="1"><pre class="code" id="api"></pre></div>
           <div class="layer" data-l="2">${RUN}</div>
@@ -2389,6 +2510,7 @@ function initStage(){
     steps.forEach((s,i) => s.classList.toggle("on", i === idx));
     layers.forEach((l,i) => l.classList.toggle("on", i === idx));
     fileEl.textContent = STEPS[idx].file;
+    const tag = $("#sampleTag"); if (tag) tag.textContent = STEPS[idx].real ? "Real run" : "Sample data";
     if (idx === 2 && !rowsShown){
       rowsShown = true;
       if (M) M.animate(layers[2].querySelectorAll("[data-row]"), { opacity:[0,1], y:[14,0], scale:[.98,1] }, { delay: M.stagger(.12), type:"spring", duration:.5, bounce:.15 });
@@ -2420,7 +2542,7 @@ function initDeck(){
     if (i === cur) return; cur = i;
     cards.forEach((c,k) => c.classList.toggle("cur", k === i));
     pips.forEach((p,k) => p.setAttribute("aria-current", k === i));
-    counter.textContent = `${i+1} / ${cards.length} · Sample data`;
+    counter.textContent = `${i+1} / ${cards.length} · ${STEPS[i].real ? "Real run" : "Sample data"}`;
     if (M && !reduce && i === 2) M.animate(cards[2].querySelectorAll("[data-row]"), { opacity:[0,1], y:[10,0] }, { delay: M.stagger(.08), type:"spring", duration:.45, bounce:.12 });
   };
   const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting && e.intersectionRatio > .6) set(+e.target.dataset.i); }), { root: deck, threshold: [.6] });
@@ -4065,6 +4187,12 @@ const SCENES = {
         K.alpha(B * ra); K.line(93, 51, 96, 33 + k * 6, { color: C.line });
         K.text(`${qq} ${a}`, 98, 33 + k * 6, { size: 2.3, mono: true }); K.check(116, 33 + k * 6, 1.8, C.ok);
       });
+      // the measured result (100 HotpotQA questions, 31 Oct 2026)
+      const ra = B * K.seg(S, 3.7, 3.85);
+      if (ra > 0){
+        K.alpha(ra); K.rect(30, 79, 60, 9, 2, { fill: C.surface, stroke: C.accent, lw: .45 });
+        K.text("100 questions:  loop 86%  ·  one call 74%", 60, 83.5, { size: 2.6, align: "center", weight: 600, color: C.accent });
+      }
     }
     note("both approaches, the same questions, scored the same way", 3.6, 4.05, C.accent);
     // 5. anyone can rerun it
@@ -4683,13 +4811,20 @@ const NEXT = {
   whys: ["bisect", "decompose", "bottleneck"], bisect: ["whys", "experiments", "bottleneck"], bottleneck: ["pareto", "decompose", "bisect"],
   pareto: ["bottleneck", "decompose", "experiments"], experiments: ["bisect", "whys", "decompose"], aidev: ["agents", "mcp", "evals"],
 };
+const inl = t => esc(t).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/\*(.+?)\*/g, "<i>$1</i>")
+  .replace(/\[([^\]]+)\]\(((?:https?:\/\/|\/)[^)\s]+)\)/g, (m, a, h) => `<a href="${h}"${h.startsWith("http") ? ' target="_blank" rel="noopener"' : ""}>${a}</a>`);
+const articleBlock = b => typeof b === "string" ? `<p>${inl(b)}</p>`
+  : b.h ? `<h2>${inl(b.h)}</h2>`
+  : b.ul ? `<ul class="plain">${b.ul.map(x => `<li>${inl(x)}</li>`).join("")}</ul>`
+  : b.table ? `<div class="tbl"><table><thead><tr>${b.table.head.map(h => `<th>${inl(h)}</th>`).join("")}</tr></thead><tbody>${b.table.rows.map(r => `<tr>${r.map((c, i) => `<td${i ? ' class="num"' : ""}>${inl(c)}</td>`).join("")}</tr>`).join("")}</tbody></table>${b.table.note ? `<p class="tnote">${inl(b.table.note)}</p>` : ""}</div>`
+  : `<p class="q">${inl(b.q)}</p>`;
 const moreHTML = p => {
   const list = (NEXT[p.scene] || []).map(sc => SITE.posts.find(x => x.scene === sc)).filter(Boolean);
   return list.length ? `<section class="more"><div class="sh"><h2>${p.notes ? "More notes" : "Keep reading"}</h2><a href="${url("/writing/")}">All writing</a></div><div class="posts">${list.map(postHTML).join("")}</div></section>` : "";
 };
 const shareHTML = p => {
   const link = `${SITE.domain.replace(/\/$/, "")}/writing/${p.slug}/`, u = encodeURIComponent(link);
-  const text = encodeURIComponent(`${p.title}: an animated, step-by-step explainer`);
+  const text = encodeURIComponent(p.kind === "explainer" ? `${p.title}: an animated, step-by-step explainer` : p.title);
   return `<div class="share">
       <a class="btn line" href="https://x.com/intent/post?text=${text}&url=${u}" target="_blank" rel="noopener" data-ev="share/x/${esc(p.slug)}">${ICONS.x} Post on X</a>
       <a class="btn line" href="https://www.linkedin.com/sharing/share-offsite/?url=${u}" target="_blank" rel="noopener" data-ev="share/linkedin/${esc(p.slug)}">${ICONS.linkedin} Share on LinkedIn</a>
@@ -4839,8 +4974,9 @@ const V = {
       <div class="row">${tagHTML(p.kind)}<span class="muted num">${fmt(p.date)} · ${p.read} min read</span></div>
       <h1>${esc(p.title)}</h1>
       ${p.guest ? `<p class="muted" style="font-size:18px">A conversation with ${esc(p.guest)}</p>` : ""}
-      <div class="body">${p.body.map(b => typeof b === "string" ? `<p>${esc(b)}</p>` : `<p class="q">${esc(b.q)}</p>`).join("")}</div>
-    </article></div>`;
+      <div class="body">${p.body.map(articleBlock).join("")}</div>
+      <div class="cv" style="margin-top:12px"><h2>Share</h2><div>${shareHTML(p)}</div></div>
+    </article>${ctaHTML()}</div>`;
   },
 
   book: () => {
