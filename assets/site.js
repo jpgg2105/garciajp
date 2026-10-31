@@ -2504,14 +2504,14 @@ const V = {
     <div class="page">
       <section class="hero">
         <h1>I build RAG and agent systems, <em>and measure whether they work.</em></h1>
-        <p class="sub">I'm Juan Pablo, an AI developer in Argentina. I've built products end to end as the only developer, and I run a <b>production dashboard used across hundreds of schools</b>.</p>
+        <p class="sub">I'm Juan Pablo, an AI developer in Argentina. I've built products end to end as the <b>only developer</b>, from the database to deployment.</p>
         <div class="row"><a class="btn" href="${url("/projects/")}">See my work <span class="arr">${ICONS.arrow}</span></a><a class="btn line" href="${url("/resume/")}">Resume</a><a class="btn line" href="mailto:${esc(SITE.email)}">Email me</a></div>
         <ul class="avail" aria-label="Availability"><li><b>Open to remote AI roles</b></li><li>UTC−3, overlaps US working hours</li><li>English C2 · Spanish native</li></ul>
       </section>
       ${buildStage()}
       <section>
         <div class="sh"><h2>Selected projects</h2><a href="${url("/projects/")}">All projects</a></div>
-        <div class="plist">${SITE.projects.slice(0,3).map(projRow).join("")}</div>
+        <div class="plist">${SITE.projects.filter(p => !p.hideOnHome).slice(0,3).map(projRow).join("")}</div>
       </section>
       ${SITE.posts.length ? `<section><div class="sh"><h2>Recent writing</h2><a href="${url("/writing/")}">All writing</a></div><div class="posts">${(SITE.featured || []).map(s => SITE.posts.find(p => p.slug === s && !p.notes)).filter(Boolean).concat(sorted()).filter((p, i, a) => a.indexOf(p) === i).slice(0,3).map(postHTML).join("")}</div></section>` : ""}
       ${ctaHTML()}
