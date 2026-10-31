@@ -421,7 +421,7 @@ const SCENES = {
       K.typed(["Yes, within 30 days of", "purchase [1]. The money", "goes back to the original", "card [2]."],
         K.seg(S, 5.2, 5.9), 58, 41, 5.6, { size: 3.4, weight: 500 });
       K.alpha(gen * K.seg(S, 5.85, 5.95));
-      K.text("[1] Refund policy · [2] Refund policy", 58, 69, { size: 2.4, color: C.accent, weight: 500 });
+      K.text("[1] Annual plans · [2] Refund method", 58, 69, { size: 2.4, color: C.accent, weight: 500 });
     }
     K.alpha(1);
   },
@@ -488,7 +488,7 @@ const SCENES = {
     if (aa > 0){
       K.alpha(aa); K.rect(2, 87, 114, 11, 2.4, { fill: C.raised, stroke: C.ok, lw: .45 });
       K.check(7, 92.5, 3, C.ok);
-      K.typed(["Booked: Friday 9:40, $342. Added to your calendar."], K.seg(S, 4.5, 4.9), 11, 92.5, 0, { size: 2.9, weight: 600 });
+      K.typed(["Found: Friday 9:40, $342. Added to your calendar."], K.seg(S, 4.5, 4.9), 11, 92.5, 0, { size: 2.9, weight: 600 });
     }
     K.alpha(1);
   },
@@ -616,7 +616,7 @@ const SCENES = {
       K.rect(80, 88, 30, 8, 2, { fill: C.raised, stroke: C.warn, lw: .4 });
       K.text("loss 0.34", 95, 92, { size: 3, mono: true, align: "center", color: C.warn, weight: 600 });
     }
-    if (S >= 3 && S < 4){ K.alpha(K.seg(S, 3.05, 3.3)); K.text("each weight gets a gradient: its share of the error", 60, 12, { size: 2.8, align: "center", color: C.warn }); }
+    if (S >= 3 && S < 4){ K.alpha(K.seg(S, 3.05, 3.3)); K.text("each weight gets a gradient: how the loss changes if it moves", 60, 12, { size: 2.8, align: "center", color: C.warn }); }
     // gradient descent plot
     const pa = K.seg(S, 4.1, 4.4);
     if (pa > 0){
@@ -668,7 +668,7 @@ const SCENES = {
         K.alpha(1); K.arrow(P[path[i]][0], P[path[i]][1], P[path[i + 1]][0], P[path[i + 1]][1], { p, color: C.accent, lw: .55, hs: 1.6 });
       }
       K.alpha(K.seg(S, 3.3, 3.45)); K.text("start", P.truck[0], P.truck[1] + 4.5, { size: 2.5, align: "center", color: C.accent, halo: true });
-      K.alpha(K.seg(S, 3.85, 4)); K.text("3 hops instead of 12 comparisons", 60, 95, { size: 2.8, align: "center", color: C.accent, weight: 600, halo: 1.4 });
+      K.alpha(K.seg(S, 3.85, 4)); K.text("a few hops instead of checking every vector", 60, 95, { size: 2.8, align: "center", color: C.accent, weight: 600, halo: 1.4 });
     }
     // points
     names.forEach((n, i) => {
@@ -992,8 +992,7 @@ const SCENES = {
     if (focus > 0 && clear < 1){
       K.alpha(focus * (1 - clear)); K.line(29, 50, 88, 50, { color: C.line, dash: [1, 1] });
       K.alpha(K.seg(S, 2.3, 2.45) * (1 - clear)); K.text("JSON-RPC over stdio or HTTP", 59, 41, { size: 2.5, align: "center", color: C.muted });
-      msg("initialize", 1, 2.3, 2.45); msg("capabilities", -1, 2.45, 2.6, C.ok);
-      msg("tools/list", 1, 2.6, 2.75); msg("2 tools", -1, 2.75, 2.88, C.ok);
+      msg("tools/list", 1, 2.3, 2.5); msg("2 tools", -1, 2.5, 2.75, C.ok);
       const ta = K.seg(S, 2.85, 3) * (1 - clear);
       if (ta > 0){
         [["search_issues", "query: string"], ["create_issue", "title, body: string"]].forEach(([n, sig], i) => {
@@ -1236,7 +1235,7 @@ const SCENES = {
         const ty = 70 - .8 * 48;
         K.alpha(ga); K.line(X0, ty, X0 + gw, ty, { color: C.warn, dash: [1.2, .8], lw: .45 });
         K.line(X0 + 24, 18, X0 + 29, 18, { color: C.warn, dash: [1.2, .8], lw: .45 }); K.text("minimum accuracy 80%", X0 + 30.5, 18, { size: 2.6, color: C.warn });
-        const steps = [["commit", C.strong], ["run evals", C.strong], ["v3: 78%", C.warn], ["deploy", C.line]];
+        const steps = [["commit", C.strong], ["run evals", C.strong], ["v3: 71%", C.warn], ["deploy", C.line]];
         steps.forEach(([n, col], i) => {
           const a = K.seg(S, 4.2 + i * .12, 4.35 + i * .12), x = 10 + i * 27;
           K.alpha(a); K.rect(x, 84, 23, 8, 1.8, { fill: C.surface, stroke: col, lw: i === 2 ? .55 : .35 });
@@ -1392,7 +1391,7 @@ const SCENES = {
     const C = K.C, X = [13, 43, 73, 103], Y = 40, W = 22;
     const prep = Math.round(K.lerp(12, 24, K.io(K.seg(S, 3.1, 3.4))));
     const pack = Math.round(K.lerp(25, 40, K.io(K.seg(S, 2.1, 2.4))));
-    const demand = 20, deliver = 20, out = Math.min(demand, prep, pack, deliver);
+    const demand = 30, deliver = 20, out = Math.min(demand, prep, pack, deliver);
     const st = [["Orders in", demand], ["Prepare", prep], ["Pack", pack], ["Deliver", deliver]];
     const a0 = K.seg(S, 0, .3);
     const note = (t, a, b, col) => { K.alpha(K.seg(S, a, a + .2) * (1 - K.seg(S, b, b + .1))); K.text(t, 60, 91, { size: 2.7, align: "center", color: col || C.muted, weight: 600 }); };
@@ -1568,7 +1567,7 @@ const SCENES = {
       K.arrow(47, 29, 53.5, 29, { color: C.strong, hs: 1 });
       K.node(62, 29, 16, 10, "agent", { size: 3, stroke: C.accent, lw: .45 });
       K.line(70, 29, 73, 29, { color: C.strong }); K.line(73, 22, 73, 49, { color: C.strong });
-      ["read the codebase", "write the code", "write and run tests", "merge the change"].forEach((t, i) => {
+      ["read the codebase", "write the code", "write and run tests", "open a pull request"].forEach((t, i) => {
         const y = 22 + i * 9, a = K.seg(S, .65 + i * .07, .72 + i * .07);
         K.alpha(f0 * a); K.line(73, y, 76, y, { color: C.strong });
         K.rect(76, y - 3.5, 40, 7, 1.6, { fill: C.surface, stroke: C.strong }); K.text(t, 79, y, { size: 2.5 });
@@ -2239,8 +2238,8 @@ const SCENES = {
       K.text("margin β·(Δc − Δr)", X1, Y0 + 4.5, { size: 2.2, align: "right", color: C.muted });
       K.text("σ", X0 - 2, Y1, { size: 2.6, mono: true, color: C.muted, align: "right" });
       K.alpha(s3); K.dot(mx(m), my(sig(m)), 1.4, { fill: C.accent });
-      K.text(`loss ${L.toFixed(2)}`, mx(m) - 2, my(sig(m)) - 4, { size: 2.6, mono: true, align: "right", color: C.accent, weight: 700, halo: true });
-      K.alpha(s3 * K.seg(S, 2.2, 2.3)); K.text("starts at log 2 ≈ 0.69", X0 + 25, 84, { size: 2.3, align: "center", color: C.muted });
+      K.text(`P = ${sig(m).toFixed(2)} · loss ${L.toFixed(2)}`, mx(m) - 2, my(sig(m)) - 4, { size: 2.6, mono: true, align: "right", color: C.accent, weight: 700, halo: true });
+      K.alpha(s3 * K.seg(S, 2.2, 2.3)); K.text("loss = −log P, starts at log 2 ≈ 0.69", X0 + 25, 84, { size: 2.3, align: "center", color: C.muted });
     }
     note("push the chosen answer up relative to the rejected one", 2.8, 3.05, C.accent);
     // 4. beta and the offline catch
@@ -2251,7 +2250,7 @@ const SCENES = {
       K.alpha(s4); K.text("β", 18, 18.5, { size: 3, mono: true, color: C.muted, align: "right" });
       K.rect(22, 17.5, 66, 2, 1, { fill: C.raised }); const kx = K.lerp(80, 30, bt); K.dot(kx, 18.5, 2, { fill: C.accent });
       K.text(`β = ${beta.toFixed(2)}`, 92, 18.5, { size: 2.6, mono: true, color: C.accent, weight: 600 });
-      K.text("strong pull to the reference", 22, 25, { size: 2.2, color: C.muted }); K.text("weak pull", 88, 25, { size: 2.2, color: C.muted, align: "right" });
+      K.text("weak pull: model moves further", 22, 25, { size: 2.2, color: C.muted }); K.text("strong pull to the reference", 88, 25, { size: 2.2, color: C.muted, align: "right" });
       K.line(AX0, Y0, AX1, Y0, { color: C.strong });
       const ref = bump(40, 26, 10), pol = bump(40 + shift, 26, 10);
       const draw = (fn, col, dash) => { ctx.beginPath(); for (let x = AX0; x <= AX1; x += 1){ const y = fn(x); x === AX0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); } ctx.setLineDash(dash || []); ctx.strokeStyle = col; ctx.lineWidth = .6; ctx.stroke(); ctx.setLineDash([]); };
@@ -2275,10 +2274,10 @@ const SCENES = {
         items.forEach((it, i) => { K.alpha(s5 * K.seg(S, t0 + .08 + i * .06, t0 + .16 + i * .06)); K.dot(x + 5, 24 + i * 7.5, .7, { fill: col }); K.text(it, x + 8, 24 + i * 7.5, { size: 2.4 }); });
       };
       card(5, "DPO", C.accent, ["fixed preference pairs", "modest compute", "no RL infrastructure", "simple, reproducible"], 4.05);
-      card(63, "RLHF / online RL", C.ok, ["fresh samples in training", "reusable reward model", "rich or verifiable rewards", "higher ceiling, more tuning"], 4.25);
-      K.alpha(s5 * K.seg(S, 4.55, 4.65)); K.text("variants", 6, 64, { size: 2.4, color: C.muted, weight: 600 });
-      ["IPO", "KTO", "ORPO", "SimPO", "online DPO", "GRPO"].forEach((t, i) => {
-        const w = K.width(t, { size: 2.5, weight: 600 }) + 5, x = 6 + [0, 12, 24, 38, 54, 76][i];
+      card(63, "RLHF / online RL", C.ok, ["fresh samples in training", "reusable reward model", "verifiable rewards (GRPO)", "higher ceiling, more tuning"], 4.25);
+      K.alpha(s5 * K.seg(S, 4.55, 4.65)); K.text("DPO-family variants", 6, 64, { size: 2.4, color: C.muted, weight: 600 });
+      ["IPO", "KTO", "ORPO", "SimPO", "online DPO"].forEach((t, i) => {
+        const w = K.width(t, { size: 2.5, weight: 600 }) + 5, x = 6 + [0, 12, 24, 38, 54][i];
         K.alpha(s5 * K.seg(S, 4.6 + i * .04, 4.68 + i * .04)); K.rect(x, 67.5, w, 6.5, 3.25, { fill: C.raised, stroke: C.strong }); K.text(t, x + w / 2, 70.75, { size: 2.5, align: "center", weight: 600 });
       });
       K.alpha(s5 * K.seg(S, 4.8, 4.9)); K.text("they change the loss or the data, not the need for good labels", 60, 82, { size: 2.5, align: "center", color: C.muted });

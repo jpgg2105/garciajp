@@ -61,7 +61,7 @@
         </div>
       </section>
       <section class="cv">
-        <h2>In short</h2><div><ul class="plain"><li>Index the columns you filter, join and sort on, and check the query plan (EXPLAIN) to confirm the index is used.</li><li>Real B-tree nodes hold hundreds of keys, so a million rows needs only about 3 or 4 levels.</li><li>A composite index on (a, b) helps queries on a, or on a and b together, but not on b alone.</li></ul></div>
+        <h2>In short</h2><div><ul class="plain"><li>Index the columns you filter, join and sort on, and check the query plan (EXPLAIN) to confirm the index is used.</li><li>Real B-tree nodes hold hundreds of keys, so a million rows needs only about 3 or 4 levels.</li><li>A composite index on (a, b) helps queries on a, or on a and b together, but usually not on b alone (a few engines can skip-scan the first column, at a cost).</li></ul></div>
         <h2>References</h2><div><ol class="refs"><li><a href="https://doi.org/10.1007/BF00288683" target="_blank" rel="noopener">Bayer &amp; McCreight (1972). Organization and Maintenance of Large Ordered Indexes. Acta Informatica 1.</a></li><li><a href="https://doi.org/10.1145/356770.356776" target="_blank" rel="noopener">Comer (1979). The Ubiquitous B-Tree. ACM Computing Surveys 11(2).</a></li><li><a href="https://www.postgresql.org/docs/current/indexes.html" target="_blank" rel="noopener">PostgreSQL documentation: Indexes.</a></li><li><a href="https://use-the-index-luke.com" target="_blank" rel="noopener">Winand. Use The Index, Luke.</a></li></ol></div>
         
         <h2>Share</h2><div><div class="share">
@@ -86,9 +86,9 @@
 <!-- ===================== CONTENT =====================
      Everything on the site comes from this JSON. Edit it, then run `python build.py`.
      See README.md for what each field does. -->
-<script src="/assets/content.js?v=d1026a12d0"></script>
+<script src="/assets/content.js?v=7e6f6f5af3"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/motion@11.11.13/dist/motion.js"></script>
-<script src="/assets/site.js?v=caf462ceca"></script>
+<script src="/assets/site.js?v=1880063b1c"></script>
 </body>
 </html>

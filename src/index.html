@@ -1140,7 +1140,7 @@ footer a{color:var(--muted)}
         ],
         [
           "Give each token a vector",
-          "Each token ID is looked up in a table of learned vectors, its embedding. Position information, today usually rotary embeddings, is added so word order counts."
+          "Each token ID is looked up in a table of learned vectors, its embedding. Word order enters through position information: today usually rotary embeddings, which rotate the queries and keys inside every attention layer."
         ],
         [
           "Attention: decide what to look at",
@@ -1203,7 +1203,7 @@ footer a{color:var(--muted)}
         ],
         [
           "Backpropagation",
-          "The error flows backward. Using the chain rule, backpropagation computes for every weight how much it contributed to the loss: its gradient."
+          "The error flows backward. Using the chain rule, backpropagation computes for every weight its gradient: how much the loss would change if that weight moved slightly."
         ],
         [
           "Gradient descent",
@@ -1359,11 +1359,11 @@ footer a{color:var(--muted)}
         ]
       ],
       "takeaways": [
-        "LoRA trains well under 1% of the parameters, so it fits on much smaller GPUs than full fine-tuning.",
+        "LoRA trains well under 1% of the parameters, so gradients and optimizer state shrink and it fits on smaller GPUs. The frozen weights still have to fit; QLoRA stores them in 4 bits.",
         "The rank (8 here) sets how much the adapter can change. Higher rank, more capacity and more memory.",
         "QLoRA goes further by storing the frozen base in 4-bit, so even larger models fit on one GPU.",
         "Try prompting and RAG first. Fine-tune when you need a consistent style, format or behavior that prompts can't hold.",
-        "It works because the weight changes needed to adapt a large model have low intrinsic rank (Aghajanyan et al., 2021)."
+        "It works because the weight change needed to adapt a large model appears to have low rank: Hu et al.'s hypothesis, motivated by the low intrinsic dimension Aghajanyan et al. (2021) measured."
       ],
       "refs": [
         [
@@ -1392,7 +1392,7 @@ footer a{color:var(--muted)}
       "steps": [
         [
           "Add noise, step by step",
-          "During training, real images are corrupted with a little Gaussian noise at each step, over many steps (often 1,000), until nothing of the image is left."
+          "Training defines a schedule that adds a little Gaussian noise per step over many steps (often 1,000) until nothing of the image is left; each example jumps straight to a random step in one closed-form shot."
         ],
         [
           "Learn to predict the noise",
@@ -1460,7 +1460,7 @@ footer a{color:var(--muted)}
         ],
         [
           "Discover what's available",
-          "The client connects and the two sides exchange capabilities. Then it asks the server which tools it offers, each with a name and an input schema."
+          "The client asks the server which tools it offers, each with a name and an input schema. Since the 2026-07-28 revision every request is self-contained: it carries the protocol version and the client's capabilities, so there is no session to set up."
         ],
         [
           "Call a tool",
@@ -1525,7 +1525,7 @@ footer a{color:var(--muted)}
       "takeaways": [
         "Index the columns you filter, join and sort on, and check the query plan (EXPLAIN) to confirm the index is used.",
         "Real B-tree nodes hold hundreds of keys, so a million rows needs only about 3 or 4 levels.",
-        "A composite index on (a, b) helps queries on a, or on a and b together, but not on b alone."
+        "A composite index on (a, b) helps queries on a, or on a and b together, but usually not on b alone (a few engines can skip-scan the first column, at a cost)."
       ],
       "refs": [
         [
@@ -1573,11 +1573,11 @@ footer a{color:var(--muted)}
         ],
         [
           "Ship the same image anywhere",
-          "Push the image to a registry and pull it on a laptop, in CI or on a server. It runs the same way in all of them."
+          "Push the image to a registry and pull it on a laptop, in CI or on a server. It runs the same way in all of them, as long as the image is built for that CPU architecture (amd64 or arm64)."
         ]
       ],
       "takeaways": [
-        "Containers share the host's kernel, so they start in seconds and use far less memory than virtual machines.",
+        "Containers share the host's kernel, so they start in well under a second and use far less memory than virtual machines.",
         "Copy dependency files and install them before copying your code, so code changes don't reinstall everything.",
         "Keep images small: slim base images and multi-stage builds cut size and attack surface.",
         "On macOS and Windows, Docker Desktop runs containers inside a lightweight Linux virtual machine.",
@@ -1621,7 +1621,7 @@ footer a{color:var(--muted)}
         ],
         [
           "Score each answer",
-          "Use exact checks where you can, and an LLM judge with a clear rubric where you can't. Judges favor the first answer shown, longer answers and their own outputs, so check them against human labels."
+          "Use exact checks where you can, and an LLM judge with a clear rubric where you can't. Judges favor one position, longer answers and their own outputs, so check them against human labels."
         ],
         [
           "Compare versions",
@@ -1629,7 +1629,7 @@ footer a{color:var(--muted)}
         ],
         [
           "Gate releases",
-          "Set minimums and run evals in CI. A version that drops below them is blocked before it reaches users."
+          "Set minimums and run evals in CI. A version that drops below them by more than the noise, or breaks cases that used to pass, is blocked before it reaches users."
         ]
       ],
       "takeaways": [
@@ -1967,7 +1967,7 @@ footer a{color:var(--muted)}
       "steps": [
         [
           "From autocomplete to whole features",
-          "AI used to suggest the next line, and fixing its output often took longer than writing the code yourself. Now coding agents take a whole feature: they read the codebase, write the code, run the tests and merge the change."
+          "AI used to suggest the next line, and fixing its output often took longer than writing the code yourself. Now coding agents take a whole feature: they read the codebase, write the code, run the tests and open a pull request for review."
         ],
         [
           "Write a spec, not a chat",
@@ -1995,7 +1995,7 @@ footer a{color:var(--muted)}
         "The video quotes Andrew Ng's line that AI is the new electricity: like the power grid, it will need engineers who keep it reliable, safe and available.",
         "Developers who are strong at architecture and critical thinking gain the most as coding agents improve.",
         "The three-part risk in step 6 is what Simon Willison calls the lethal trifecta for AI agents.",
-        "The memory figures match an 8-billion-parameter model like Llama 3 8B at 16-bit precision. The other examples in the animation are illustrative."
+        "The memory figures match an 8-billion-parameter model like Llama 3.1 8B at 16-bit precision. The other examples in the animation are illustrative."
       ],
       "source": {
         "text": "Based on a video on YouTube about how AI is changing software development.",
@@ -2037,7 +2037,7 @@ footer a{color:var(--muted)}
         ],
         [
           "Train a reward model",
-          "A copy of the model with a scalar output learns to score preferred answers higher. The Bradley–Terry model turns the score gap into a probability, P(A ≻ B) = σ(r(A) − r(B)), and training minimizes −log of it."
+          "A model initialized from the SFT checkpoint, often smaller than the policy, gets a scalar output and learns to score preferred answers higher. The Bradley–Terry model turns the score gap into a probability, P(A ≻ B) = σ(r(A) − r(B)), and training minimizes −log of it."
         ],
         [
           "Optimize with PPO on a KL leash",
@@ -2097,7 +2097,7 @@ footer a{color:var(--muted)}
       "steps": [
         [
           "One loss instead of two stages",
-          "RLHF trains a reward model, then runs PPO with four models in memory. DPO (Rafailov et al., 2023) optimizes the same objective with a single classification-style loss, using only the policy and a frozen reference."
+          "RLHF trains a reward model, then runs PPO with four models in memory. DPO (Rafailov et al., 2023) targets the same optimum with a single classification-style loss, using only the policy and a frozen reference."
         ],
         [
           "The policy is secretly a reward model",
@@ -2113,7 +2113,7 @@ footer a{color:var(--muted)}
         ],
         [
           "Choosing between them",
-          "Use DPO for a simple, stable pipeline on existing pairs. Use RLHF or online RL when you need fresh samples, a reusable reward model or verifiable rewards. Variants such as IPO, KTO, ORPO, SimPO and GRPO change the loss or the data."
+          "Use DPO for a simple, stable pipeline on existing pairs. Use RLHF or online RL when you need fresh samples, a reusable reward model or verifiable rewards. DPO-family variants such as IPO, KTO, ORPO and SimPO change the loss or the data. GRPO, behind recent reasoning models, is online RL without a value model, usually on verifiable rewards."
         ]
       ],
       "takeaways": [
@@ -2159,12 +2159,13 @@ footer a{color:var(--muted)}
         [
           "Hugging Face TRL documentation: DPO Trainer.",
           "https://huggingface.co/docs/trl/dpo_trainer"
-        ],
-        [
-          "Mercor (2026). DPO vs. RLHF: Comparison and when to use each.",
-          null
         ]
-      ]
+      ],
+      "source": {
+        "text": "Prompted by Mercor's article",
+        "link": "DPO vs. RLHF: Comparison and when to use each",
+        "url": "https://www.mercor.com/resources/experts/dpo-vs-rlhf/"
+      }
     }
   ],
   "servicesTour": [
@@ -2618,7 +2619,7 @@ const SCENES = {
       K.typed(["Yes, within 30 days of", "purchase [1]. The money", "goes back to the original", "card [2]."],
         K.seg(S, 5.2, 5.9), 58, 41, 5.6, { size: 3.4, weight: 500 });
       K.alpha(gen * K.seg(S, 5.85, 5.95));
-      K.text("[1] Refund policy · [2] Refund policy", 58, 69, { size: 2.4, color: C.accent, weight: 500 });
+      K.text("[1] Annual plans · [2] Refund method", 58, 69, { size: 2.4, color: C.accent, weight: 500 });
     }
     K.alpha(1);
   },
@@ -2685,7 +2686,7 @@ const SCENES = {
     if (aa > 0){
       K.alpha(aa); K.rect(2, 87, 114, 11, 2.4, { fill: C.raised, stroke: C.ok, lw: .45 });
       K.check(7, 92.5, 3, C.ok);
-      K.typed(["Booked: Friday 9:40, $342. Added to your calendar."], K.seg(S, 4.5, 4.9), 11, 92.5, 0, { size: 2.9, weight: 600 });
+      K.typed(["Found: Friday 9:40, $342. Added to your calendar."], K.seg(S, 4.5, 4.9), 11, 92.5, 0, { size: 2.9, weight: 600 });
     }
     K.alpha(1);
   },
@@ -2813,7 +2814,7 @@ const SCENES = {
       K.rect(80, 88, 30, 8, 2, { fill: C.raised, stroke: C.warn, lw: .4 });
       K.text("loss 0.34", 95, 92, { size: 3, mono: true, align: "center", color: C.warn, weight: 600 });
     }
-    if (S >= 3 && S < 4){ K.alpha(K.seg(S, 3.05, 3.3)); K.text("each weight gets a gradient: its share of the error", 60, 12, { size: 2.8, align: "center", color: C.warn }); }
+    if (S >= 3 && S < 4){ K.alpha(K.seg(S, 3.05, 3.3)); K.text("each weight gets a gradient: how the loss changes if it moves", 60, 12, { size: 2.8, align: "center", color: C.warn }); }
     // gradient descent plot
     const pa = K.seg(S, 4.1, 4.4);
     if (pa > 0){
@@ -2865,7 +2866,7 @@ const SCENES = {
         K.alpha(1); K.arrow(P[path[i]][0], P[path[i]][1], P[path[i + 1]][0], P[path[i + 1]][1], { p, color: C.accent, lw: .55, hs: 1.6 });
       }
       K.alpha(K.seg(S, 3.3, 3.45)); K.text("start", P.truck[0], P.truck[1] + 4.5, { size: 2.5, align: "center", color: C.accent, halo: true });
-      K.alpha(K.seg(S, 3.85, 4)); K.text("3 hops instead of 12 comparisons", 60, 95, { size: 2.8, align: "center", color: C.accent, weight: 600, halo: 1.4 });
+      K.alpha(K.seg(S, 3.85, 4)); K.text("a few hops instead of checking every vector", 60, 95, { size: 2.8, align: "center", color: C.accent, weight: 600, halo: 1.4 });
     }
     // points
     names.forEach((n, i) => {
@@ -3189,8 +3190,7 @@ const SCENES = {
     if (focus > 0 && clear < 1){
       K.alpha(focus * (1 - clear)); K.line(29, 50, 88, 50, { color: C.line, dash: [1, 1] });
       K.alpha(K.seg(S, 2.3, 2.45) * (1 - clear)); K.text("JSON-RPC over stdio or HTTP", 59, 41, { size: 2.5, align: "center", color: C.muted });
-      msg("initialize", 1, 2.3, 2.45); msg("capabilities", -1, 2.45, 2.6, C.ok);
-      msg("tools/list", 1, 2.6, 2.75); msg("2 tools", -1, 2.75, 2.88, C.ok);
+      msg("tools/list", 1, 2.3, 2.5); msg("2 tools", -1, 2.5, 2.75, C.ok);
       const ta = K.seg(S, 2.85, 3) * (1 - clear);
       if (ta > 0){
         [["search_issues", "query: string"], ["create_issue", "title, body: string"]].forEach(([n, sig], i) => {
@@ -3433,7 +3433,7 @@ const SCENES = {
         const ty = 70 - .8 * 48;
         K.alpha(ga); K.line(X0, ty, X0 + gw, ty, { color: C.warn, dash: [1.2, .8], lw: .45 });
         K.line(X0 + 24, 18, X0 + 29, 18, { color: C.warn, dash: [1.2, .8], lw: .45 }); K.text("minimum accuracy 80%", X0 + 30.5, 18, { size: 2.6, color: C.warn });
-        const steps = [["commit", C.strong], ["run evals", C.strong], ["v3: 78%", C.warn], ["deploy", C.line]];
+        const steps = [["commit", C.strong], ["run evals", C.strong], ["v3: 71%", C.warn], ["deploy", C.line]];
         steps.forEach(([n, col], i) => {
           const a = K.seg(S, 4.2 + i * .12, 4.35 + i * .12), x = 10 + i * 27;
           K.alpha(a); K.rect(x, 84, 23, 8, 1.8, { fill: C.surface, stroke: col, lw: i === 2 ? .55 : .35 });
@@ -3589,7 +3589,7 @@ const SCENES = {
     const C = K.C, X = [13, 43, 73, 103], Y = 40, W = 22;
     const prep = Math.round(K.lerp(12, 24, K.io(K.seg(S, 3.1, 3.4))));
     const pack = Math.round(K.lerp(25, 40, K.io(K.seg(S, 2.1, 2.4))));
-    const demand = 20, deliver = 20, out = Math.min(demand, prep, pack, deliver);
+    const demand = 30, deliver = 20, out = Math.min(demand, prep, pack, deliver);
     const st = [["Orders in", demand], ["Prepare", prep], ["Pack", pack], ["Deliver", deliver]];
     const a0 = K.seg(S, 0, .3);
     const note = (t, a, b, col) => { K.alpha(K.seg(S, a, a + .2) * (1 - K.seg(S, b, b + .1))); K.text(t, 60, 91, { size: 2.7, align: "center", color: col || C.muted, weight: 600 }); };
@@ -3765,7 +3765,7 @@ const SCENES = {
       K.arrow(47, 29, 53.5, 29, { color: C.strong, hs: 1 });
       K.node(62, 29, 16, 10, "agent", { size: 3, stroke: C.accent, lw: .45 });
       K.line(70, 29, 73, 29, { color: C.strong }); K.line(73, 22, 73, 49, { color: C.strong });
-      ["read the codebase", "write the code", "write and run tests", "merge the change"].forEach((t, i) => {
+      ["read the codebase", "write the code", "write and run tests", "open a pull request"].forEach((t, i) => {
         const y = 22 + i * 9, a = K.seg(S, .65 + i * .07, .72 + i * .07);
         K.alpha(f0 * a); K.line(73, y, 76, y, { color: C.strong });
         K.rect(76, y - 3.5, 40, 7, 1.6, { fill: C.surface, stroke: C.strong }); K.text(t, 79, y, { size: 2.5 });
@@ -4436,8 +4436,8 @@ const SCENES = {
       K.text("margin β·(Δc − Δr)", X1, Y0 + 4.5, { size: 2.2, align: "right", color: C.muted });
       K.text("σ", X0 - 2, Y1, { size: 2.6, mono: true, color: C.muted, align: "right" });
       K.alpha(s3); K.dot(mx(m), my(sig(m)), 1.4, { fill: C.accent });
-      K.text(`loss ${L.toFixed(2)}`, mx(m) - 2, my(sig(m)) - 4, { size: 2.6, mono: true, align: "right", color: C.accent, weight: 700, halo: true });
-      K.alpha(s3 * K.seg(S, 2.2, 2.3)); K.text("starts at log 2 ≈ 0.69", X0 + 25, 84, { size: 2.3, align: "center", color: C.muted });
+      K.text(`P = ${sig(m).toFixed(2)} · loss ${L.toFixed(2)}`, mx(m) - 2, my(sig(m)) - 4, { size: 2.6, mono: true, align: "right", color: C.accent, weight: 700, halo: true });
+      K.alpha(s3 * K.seg(S, 2.2, 2.3)); K.text("loss = −log P, starts at log 2 ≈ 0.69", X0 + 25, 84, { size: 2.3, align: "center", color: C.muted });
     }
     note("push the chosen answer up relative to the rejected one", 2.8, 3.05, C.accent);
     // 4. beta and the offline catch
@@ -4448,7 +4448,7 @@ const SCENES = {
       K.alpha(s4); K.text("β", 18, 18.5, { size: 3, mono: true, color: C.muted, align: "right" });
       K.rect(22, 17.5, 66, 2, 1, { fill: C.raised }); const kx = K.lerp(80, 30, bt); K.dot(kx, 18.5, 2, { fill: C.accent });
       K.text(`β = ${beta.toFixed(2)}`, 92, 18.5, { size: 2.6, mono: true, color: C.accent, weight: 600 });
-      K.text("strong pull to the reference", 22, 25, { size: 2.2, color: C.muted }); K.text("weak pull", 88, 25, { size: 2.2, color: C.muted, align: "right" });
+      K.text("weak pull: model moves further", 22, 25, { size: 2.2, color: C.muted }); K.text("strong pull to the reference", 88, 25, { size: 2.2, color: C.muted, align: "right" });
       K.line(AX0, Y0, AX1, Y0, { color: C.strong });
       const ref = bump(40, 26, 10), pol = bump(40 + shift, 26, 10);
       const draw = (fn, col, dash) => { ctx.beginPath(); for (let x = AX0; x <= AX1; x += 1){ const y = fn(x); x === AX0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); } ctx.setLineDash(dash || []); ctx.strokeStyle = col; ctx.lineWidth = .6; ctx.stroke(); ctx.setLineDash([]); };
@@ -4472,10 +4472,10 @@ const SCENES = {
         items.forEach((it, i) => { K.alpha(s5 * K.seg(S, t0 + .08 + i * .06, t0 + .16 + i * .06)); K.dot(x + 5, 24 + i * 7.5, .7, { fill: col }); K.text(it, x + 8, 24 + i * 7.5, { size: 2.4 }); });
       };
       card(5, "DPO", C.accent, ["fixed preference pairs", "modest compute", "no RL infrastructure", "simple, reproducible"], 4.05);
-      card(63, "RLHF / online RL", C.ok, ["fresh samples in training", "reusable reward model", "rich or verifiable rewards", "higher ceiling, more tuning"], 4.25);
-      K.alpha(s5 * K.seg(S, 4.55, 4.65)); K.text("variants", 6, 64, { size: 2.4, color: C.muted, weight: 600 });
-      ["IPO", "KTO", "ORPO", "SimPO", "online DPO", "GRPO"].forEach((t, i) => {
-        const w = K.width(t, { size: 2.5, weight: 600 }) + 5, x = 6 + [0, 12, 24, 38, 54, 76][i];
+      card(63, "RLHF / online RL", C.ok, ["fresh samples in training", "reusable reward model", "verifiable rewards (GRPO)", "higher ceiling, more tuning"], 4.25);
+      K.alpha(s5 * K.seg(S, 4.55, 4.65)); K.text("DPO-family variants", 6, 64, { size: 2.4, color: C.muted, weight: 600 });
+      ["IPO", "KTO", "ORPO", "SimPO", "online DPO"].forEach((t, i) => {
+        const w = K.width(t, { size: 2.5, weight: 600 }) + 5, x = 6 + [0, 12, 24, 38, 54][i];
         K.alpha(s5 * K.seg(S, 4.6 + i * .04, 4.68 + i * .04)); K.rect(x, 67.5, w, 6.5, 3.25, { fill: C.raised, stroke: C.strong }); K.text(t, x + w / 2, 70.75, { size: 2.5, align: "center", weight: 600 });
       });
       K.alpha(s5 * K.seg(S, 4.8, 4.9)); K.text("they change the loss or the data, not the need for good labels", 60, 82, { size: 2.5, align: "center", color: C.muted });

@@ -61,7 +61,7 @@
         </div>
       </section>
       <section class="cv">
-        <h2>In short</h2><div><ul class="plain"><li>LoRA trains well under 1% of the parameters, so it fits on much smaller GPUs than full fine-tuning.</li><li>The rank (8 here) sets how much the adapter can change. Higher rank, more capacity and more memory.</li><li>QLoRA goes further by storing the frozen base in 4-bit, so even larger models fit on one GPU.</li><li>Try prompting and RAG first. Fine-tune when you need a consistent style, format or behavior that prompts can't hold.</li><li>It works because the weight changes needed to adapt a large model have low intrinsic rank (Aghajanyan et al., 2021).</li></ul></div>
+        <h2>In short</h2><div><ul class="plain"><li>LoRA trains well under 1% of the parameters, so gradients and optimizer state shrink and it fits on smaller GPUs. The frozen weights still have to fit; QLoRA stores them in 4 bits.</li><li>The rank (8 here) sets how much the adapter can change. Higher rank, more capacity and more memory.</li><li>QLoRA goes further by storing the frozen base in 4-bit, so even larger models fit on one GPU.</li><li>Try prompting and RAG first. Fine-tune when you need a consistent style, format or behavior that prompts can't hold.</li><li>It works because the weight change needed to adapt a large model appears to have low rank: Hu et al.'s hypothesis, motivated by the low intrinsic dimension Aghajanyan et al. (2021) measured.</li></ul></div>
         <h2>References</h2><div><ol class="refs"><li><a href="https://arxiv.org/abs/2106.09685" target="_blank" rel="noopener">Hu et al. (2021). LoRA: Low-Rank Adaptation of Large Language Models. ICLR 2022.</a></li><li><a href="https://arxiv.org/abs/2305.14314" target="_blank" rel="noopener">Dettmers et al. (2023). QLoRA: Efficient Finetuning of Quantized LLMs. NeurIPS.</a></li><li><a href="https://arxiv.org/abs/2012.13255" target="_blank" rel="noopener">Aghajanyan et al. (2021). Intrinsic Dimensionality Explains the Effectiveness of Language Model Fine-Tuning. ACL.</a></li></ol></div>
         
         <h2>Share</h2><div><div class="share">
@@ -86,9 +86,9 @@
 <!-- ===================== CONTENT =====================
      Everything on the site comes from this JSON. Edit it, then run `python build.py`.
      See README.md for what each field does. -->
-<script src="/assets/content.js?v=d1026a12d0"></script>
+<script src="/assets/content.js?v=7e6f6f5af3"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/motion@11.11.13/dist/motion.js"></script>
-<script src="/assets/site.js?v=caf462ceca"></script>
+<script src="/assets/site.js?v=1880063b1c"></script>
 </body>
 </html>
