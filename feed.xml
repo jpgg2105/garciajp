@@ -15,6 +15,13 @@
     <description>I took my RAG service apart stage by stage on 1,008 labelled questions. The biggest gain was a one-line tokenizer fix, the reranker reorders more than it finds, and hybrid fusion added nothing until BM25 was fixed.</description>
   </item>
   <item>
+    <title>How prompt injection works, and what actually stops it</title>
+    <link>https://garciajp.com/writing/how-prompt-injection-works/</link>
+    <guid isPermaLink="true">https://garciajp.com/writing/how-prompt-injection-works/</guid>
+    <pubDate>Sun, 01 Nov 2026 12:00:00 +0000</pubDate>
+    <description>I planted 36 injections in a tool-using assistant&#x27;s documents and measured six defences. A warning in the prompt stopped most of them; one fake policy update beat everything; the safe defences cost answers.</description>
+  </item>
+  <item>
     <title>Does a four-agent loop beat a single LLM call? I measured it</title>
     <link>https://garciajp.com/writing/does-an-agent-beat-a-single-llm-call/</link>
     <guid isPermaLink="true">https://garciajp.com/writing/does-an-agent-beat-a-single-llm-call/</guid>

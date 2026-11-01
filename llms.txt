@@ -17,6 +17,7 @@ Profiles: https://github.com/jpgg2105 · https://www.linkedin.com/in/juan-pablo-
 - [Chatbots and an outreach pipeline](https://garciajp.com/projects/chatbots-and-outreach/): LLM chatbots that answer from client content, and a pipeline that finds leads and contacts them on WhatsApp.
 
 ## Explainers (animated, step by step, with references)
+- [How prompt injection works, and what actually stops it](https://garciajp.com/writing/how-prompt-injection-works/): I planted 36 injections in a tool-using assistant's documents and measured six defences. A warning in the prompt stopped most of them; one fake policy update beat everything; the safe defences cost answers.
 - [How an LLM request is served: prefill, decode and the KV cache](https://garciajp.com/writing/how-llm-inference-works/): Why the first token is slow and the rest stream, what fills GPU memory, and how batching and quantization make serving cheaper.
 - [How structured outputs work: constrained decoding](https://garciajp.com/writing/how-structured-outputs-work/): Why “reply in JSON” sometimes fails, how a schema becomes a mask over the model's next-token choices, and why valid JSON can still be wrong.
 - [Long context or RAG? What models actually use](https://garciajp.com/writing/long-context-vs-rag/): Million-token windows didn't make retrieval obsolete. Where models lose track of long prompts, what each approach costs, and how to choose.
