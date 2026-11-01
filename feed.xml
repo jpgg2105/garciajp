@@ -22,6 +22,13 @@
     <description>I planted 36 injections in a tool-using assistant&#x27;s documents and measured six defences. A warning in the prompt stopped most of them; one fake policy update beat everything; the safe defences cost answers.</description>
   </item>
   <item>
+    <title>How hybrid search and reranking work, measured on my RAG pipeline</title>
+    <link>https://garciajp.com/writing/how-hybrid-search-works/</link>
+    <guid isPermaLink="true">https://garciajp.com/writing/how-hybrid-search-works/</guid>
+    <pubDate>Sun, 01 Nov 2026 12:00:00 +0000</pubDate>
+    <description>BM25, dense vectors, Reciprocal Rank Fusion and a cross-encoder, one stage at a time, with what each one added on 1,008 labelled questions.</description>
+  </item>
+  <item>
     <title>Does a four-agent loop beat a single LLM call? I measured it</title>
     <link>https://garciajp.com/writing/does-an-agent-beat-a-single-llm-call/</link>
     <guid isPermaLink="true">https://garciajp.com/writing/does-an-agent-beat-a-single-llm-call/</guid>

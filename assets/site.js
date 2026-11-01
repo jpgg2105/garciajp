@@ -2827,6 +2827,135 @@ const SCENES = {
     note("architecture gives guarantees; prompts only lower the odds", 4.6, 5.2, C.ok);
     K.alpha(1);
   },
+  /* ---------- Hybrid search and reranking, measured ---------- */
+  retrieval(K, S, time){
+    const C = K.C, ctx = K.ctx;
+    const vis = (a, b) => K.seg(S, a, a + .15) * (1 - K.seg(S, b - .12, b));
+    const note = (t, a, b, col) => { K.alpha(K.seg(S, a, a + .2) * (1 - K.seg(S, b - .1, b))); K.text(t, 60, 94, { size: 2.7, align: "center", color: col || C.muted, weight: 600 }); };
+    const bar = (x, y, w, v, max, col, label, t0, fmt) => {
+      const a = K.seg(S, t0, t0 + .1), e = K.ease(K.seg(S, t0, t0 + .3));
+      K.alpha(a * vis.cur); K.text(label, x - 2, y, { size: 2.4, align: "right", weight: 600 });
+      K.rect(x, y - 2.2, w, 4.4, 1.1, { fill: C.raised });
+      K.rect(x, y - 2.2, w * v / max * e, 4.4, 1.1, { fill: col });
+      K.text(fmt ? fmt(v) : `${Math.round(v * 100)}%`, x + w + 2, y, { size: 2.4, mono: true, weight: 700, color: col === C.strong ? C.ink : col });
+    };
+    // 1. the pipeline
+    const s1 = vis(0, 1.05);
+    if (s1 > 0){
+      vis.cur = s1;
+      const n = (x, y, w, t, sub, col, t0) => { K.alpha(s1 * K.seg(S, t0, t0 + .1)); K.node(x, y, w, 11, t, { sub, size: 2.7, stroke: col || C.strong }); };
+      n(14, 46, 22, "question", "", C.accent, .02);
+      n(46, 30, 26, "BM25", "keyword match", C.strong, .1);
+      n(46, 62, 26, "dense vectors", "meaning match", C.strong, .16);
+      n(76, 46, 18, "RRF", "merge lists", C.strong, .24);
+      n(104, 46, 22, "reranker", "cross-encoder", C.strong, .32);
+      K.alpha(s1);
+      K.arrow(25.5, 44, 32.5, 32, { color: C.strong, p: K.seg(S, .1, .18), hs: .9 });
+      K.arrow(25.5, 48, 32.5, 60, { color: C.strong, p: K.seg(S, .16, .24), hs: .9 });
+      K.arrow(59.5, 32, 66.5, 44, { color: C.strong, p: K.seg(S, .24, .3), hs: .9 });
+      K.arrow(59.5, 60, 66.5, 48, { color: C.strong, p: K.seg(S, .24, .3), hs: .9 });
+      K.arrow(85.5, 46, 92.5, 46, { color: C.strong, p: K.seg(S, .32, .4), hs: .9 });
+      K.alpha(s1 * K.seg(S, .4, .5)); K.text("top 5 chunks", 104, 56.5, { size: 2.3, align: "center", color: C.accent, weight: 600 });
+      K.alpha(s1 * K.seg(S, .55, .65));
+      K.text("each stage measured alone, on 1,008 labelled questions", 60, 76, { size: 2.6, align: "center", weight: 700 });
+      K.text("60 over FastAPI's docs · 300 SciFact · 648 FiQA", 60, 81, { size: 2.3, align: "center", color: C.muted });
+    }
+    note("the textbook pipeline: does every stage earn its place?", .5, 1.05);
+    // 2. tokenization
+    const s2 = vis(1.02, 2.05);
+    if (s2 > 0){
+      vis.cur = s2;
+      K.alpha(s2); K.text("“Raise HTTPException(status_code=404), then return.”", 60, 10, { size: 2.5, align: "center", mono: true });
+      const rows = [["split on spaces (production)", ["raise", "httpexception(status_code=404),", "then", "return."], C.warn, 1.08],
+                    ["split on word characters", ["raise", "httpexception", "status_code", "404", "then", "return"], C.ok, 1.22]];
+      rows.forEach(([lab, toks, col, t0], r) => {
+        const y = 22 + r * 14; K.alpha(s2 * K.seg(S, t0, t0 + .1)); K.text(lab, 8, y - 4.5, { size: 2.3, color: col, weight: 600 });
+        let x = 8;
+        toks.forEach((t, i) => {
+          const w = K.width(t, { size: 2.2, mono: true }) + 3, hit = t === "httpexception";
+          K.alpha(s2 * K.seg(S, t0 + i * .02, t0 + .08 + i * .02));
+          K.rect(x, y - 2.6, w, 5.2, 1.2, { fill: hit ? C.ok : C.surface, stroke: col, lw: .3 });
+          K.text(t, x + w / 2, y, { size: 2.2, mono: true, align: "center", color: hit ? C.white : C.ink });
+          x += w + 1.5;
+        });
+      });
+      K.alpha(s2 * K.seg(S, 1.38, 1.48)); K.text("a query for “HTTPException” only matches the second", 60, 45, { size: 2.3, align: "center", color: C.muted });
+      bar(52, 58, 48, .55, 1, C.warn, "BM25, production tokenizer", 1.45);
+      bar(52, 66, 48, .783, 1, C.ok, "BM25, word tokenizer", 1.55);
+      bar(52, 74, 48, .767, 1, C.strong, "dense vectors", 1.65);
+      K.alpha(s2 * K.seg(S, 1.6, 1.7)); K.text("recall@5, FastAPI questions", 52, 51.5, { size: 2.2, color: C.muted });
+      K.alpha(s2 * K.seg(S, 1.75, 1.85)); K.text("on the 30 exact-term questions: word-token BM25 30 of 30, dense 26 of 30", 60, 84, { size: 2.3, align: "center", color: C.ok, weight: 600 });
+    }
+    note("the largest gain measured was a one-line tokenizer fix", 1.5, 2.05, C.ok);
+    // 3. fusion with a weak list
+    const s3 = vis(2.02, 3.05);
+    if (s3 > 0){
+      vis.cur = s3;
+      K.alpha(s3); K.text("RRF score = Σ 1 / (60 + rank in each list)", 60, 10, { size: 2.6, align: "center", mono: true });
+      // two ranked lists merging
+      const dl = ["A", "B", "C", "D", "E"], bl = ["Q", "A", "R", "S", "C"], fused = ["A", "C", "Q", "B", "R"];
+      const col = (x, title, items, t0, good) => {
+        K.alpha(s3 * K.seg(S, t0, t0 + .1)); K.text(title, x, 17, { size: 2.3, align: "center", color: C.muted, weight: 600 });
+        items.forEach((it, i) => { const ok = good.includes(it); K.alpha(s3 * K.seg(S, t0 + i * .03, t0 + .1 + i * .03)); K.rect(x - 7, 20 + i * 6, 14, 4.8, 1.2, { fill: ok ? C.fill : C.surface, stroke: ok ? C.accent : C.strong, lw: .3 }); K.text(`${i + 1}. ${it}`, x, 22.4 + i * 6, { size: 2.2, align: "center", mono: true }); });
+      };
+      col(20, "dense", dl, 2.08, ["A", "B", "C"]); col(44, "BM25 (weak)", bl, 2.16, ["A", "C"]); col(70, "fused", fused, 2.3, ["A", "B", "C"]);
+      K.alpha(s3 * K.seg(S, 2.3, 2.38)); K.arrow(52, 32, 61, 32, { color: C.strong, hs: .9 });
+      K.alpha(s3 * K.seg(S, 2.4, 2.5)); K.text("B falls out of", 98, 30, { size: 2.2, align: "center", color: C.warn }); K.text("the top 3", 98, 34, { size: 2.2, align: "center", color: C.warn });
+      bar(52, 62, 46, .767, 1, C.strong, "FastAPI: dense", 2.5); bar(52, 69, 46, .783, 1, C.accent, "hybrid", 2.55);
+      bar(52, 79, 46, .367, 1, C.strong, "FiQA: dense", 2.6); bar(52, 86, 46, .337, 1, C.warn, "hybrid", 2.65);
+    }
+    note("a weak keyword list dilutes a good dense one", 2.45, 3.05, C.warn);
+    // 4. the reranker
+    const s4 = vis(3.02, 4.05);
+    if (s4 > 0){
+      vis.cur = s4;
+      K.alpha(s4); K.text("what the reranker changed (hybrid → hybrid + reranker, FastAPI)", 60, 10, { size: 2.5, align: "center", weight: 700 });
+      bar(46, 20, 50, .124, .15, C.accent, "nDCG@10: is it near the top", 3.08, v => `+${Math.round(v * 100)} pts`);
+      bar(46, 28, 50, .017, .15, C.strong, "recall@10: is it found at all", 3.15, v => `+${Math.round(v * 100)} pts`);
+      K.alpha(s4 * K.seg(S, 3.3, 3.4)); K.text("time per query on a laptop CPU, one session", 60, 41, { size: 2.5, align: "center", weight: 700 });
+      const st = [["BM25", .4], ["dense", 36], ["RRF", .1], ["rerank 20", 2193]];
+      const tot = st.reduce((a, b) => a + b[1], 0);
+      let x = 10;
+      st.forEach(([t, ms], i) => {
+        const w = 100 * ms / tot * K.ease(K.seg(S, 3.4, 3.65));
+        K.alpha(s4 * K.seg(S, 3.4, 3.5)); K.rect(x, 46, Math.max(.4, w), 6, .8, { fill: i === 3 ? C.warn : C.accent });
+        x += Math.max(.4, w);
+      });
+      K.alpha(s4 * K.seg(S, 3.6, 3.7)); K.text("rerank: 2.2 s of a 2.23 s query; BM25 0.4 ms, dense 36 ms", 60, 57, { size: 2.3, align: "center", color: C.muted });
+      // depth: linear
+      const pts = [[10, 352], [20, 780], [50, 1578], [100, 2982]], X0 = 30, X1 = 90, Y0 = 84, Y1 = 64;
+      K.alpha(s4 * K.seg(S, 3.7, 3.8)); K.line(X0, Y0, X1, Y0, { color: C.strong }); K.text("candidates reranked", X1, Y0 + 3.5, { size: 2.1, align: "right", color: C.muted });
+      K.text("ms (SciFact)", X0 - 2, Y1, { size: 2.1, align: "right", color: C.muted });
+      pts.forEach(([n, ms], i) => { const px = K.lerp(X0, X1, n / 100), py = K.lerp(Y0, Y1, ms / 3000); K.alpha(s4 * K.seg(S, 3.72 + i * .04, 3.8 + i * .04)); K.dot(px, py, 1, { fill: C.warn }); K.text(`${n}: ${ms}`, i === 0 ? px - 1.5 : i === 3 ? px - 2 : px + 2, i === 0 ? py + 2.5 : py - 2.5, { size: 2, mono: true, align: i === 0 || i === 3 ? "right" : "left", color: C.warn }); });
+    }
+    note("it reorders more than it finds, and it is nearly all of the latency", 3.5, 4.05, C.accent);
+    // 5. chunk size
+    const s5 = vis(4.02, 5.2);
+    if (s5 > 0){
+      vis.cur = s5;
+      K.alpha(s5); K.text("a 512-token chunk, and what the embedder reads", 60, 10, { size: 2.6, align: "center", weight: 700 });
+      K.rect(10, 16, 100, 8, 1.5, { fill: C.surface, stroke: C.strong });
+      const rd = K.ease(K.seg(S, 4.1, 4.35));
+      K.rect(10, 16, 50 * rd, 8, 1.5, { fill: C.fill, stroke: C.accent, lw: .4 });
+      K.alpha(s5 * K.seg(S, 4.3, 4.4)); K.text("first 256 tokens: embedded", 35, 20, { size: 2.3, align: "center", color: C.accent, weight: 600 });
+      K.text("cut off: invisible to dense search", 85, 20, { size: 2.3, align: "center", color: C.warn, weight: 600 });
+      K.alpha(s5 * K.seg(S, 4.4, 4.5)); K.text("90% of production's chunks are longer than MiniLM's 256-token input", 60, 30, { size: 2.3, align: "center", color: C.muted });
+      const rows = [["128", .817, .683], ["256", .917, .75], ["512 (production)", .85, .783], ["1024", .717, .833]];
+      K.alpha(s5 * K.seg(S, 4.5, 4.6)); K.text("recall@5 by chunk size", 60, 39, { size: 2.4, align: "center", weight: 700 });
+      K.text("dense + reranker", 62, 44, { size: 2.2, color: C.accent, weight: 600 }); K.text("BM25 (words)", 92, 44, { size: 2.2, color: C.muted, weight: 600 });
+      rows.forEach(([t, d, b], i) => {
+        const y = 51 + i * 7, a = s5 * K.seg(S, 4.55 + i * .05, 4.65 + i * .05);
+        K.alpha(a); K.text(t, 56, y, { size: 2.4, align: "right", weight: 600 });
+        K.rect(62, y - 2, 24 * d * K.ease(K.seg(S, 4.55 + i * .05, 4.8 + i * .05)), 4, 1, { fill: i === 1 ? C.ok : C.accent });
+        K.text(`${Math.round(d * 100)}%`, 62 + 24 * d + 1.5, y, { size: 2.2, mono: true, color: C.muted });
+        K.rect(92, y - 2, 18 * b * K.ease(K.seg(S, 4.55 + i * .05, 4.8 + i * .05)), 4, 1, { fill: C.strong });
+        K.text(`${Math.round(b * 100)}%`, 92 + 18 * b + 1.5, y, { size: 2.2, mono: true, color: C.muted });
+      });
+      K.alpha(s5 * K.seg(S, 4.85, 4.95)); K.text("60 questions: a direction to test, not a significant result", 60, 82, { size: 2.2, align: "center", color: C.muted });
+    }
+    note("vectors want chunks that fit the model; keywords like longer ones", 4.6, 5.2, C.accent);
+    K.alpha(1);
+  },
 };
 
 /* stage controller */
