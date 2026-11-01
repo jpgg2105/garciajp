@@ -492,7 +492,7 @@ footer a{color:var(--muted)}
   "analytics": {
     "goatcounter": "jpgarcia2154"
   },
-  "writingOrder": ["does-an-agent-beat-a-single-llm-call", "how-llm-inference-works", "long-context-vs-rag", "how-structured-outputs-work", "how-rlhf-works", "how-dpo-works", "how-to-evaluate-llm-apps", "how-rag-works", "how-ai-agents-work", "how-mcp-works", "how-lora-fine-tuning-works", "how-transformers-work", "how-vector-search-works", "how-neural-networks-learn", "how-diffusion-models-work", "how-a-web-request-is-served", "how-database-indexes-work", "how-docker-containers-work"],
+  "writingOrder": ["does-hybrid-search-pay-for-itself", "does-an-agent-beat-a-single-llm-call", "how-llm-inference-works", "long-context-vs-rag", "how-structured-outputs-work", "how-rlhf-works", "how-dpo-works", "how-to-evaluate-llm-apps", "how-rag-works", "how-ai-agents-work", "how-mcp-works", "how-lora-fine-tuning-works", "how-transformers-work", "how-vector-search-works", "how-neural-networks-learn", "how-diffusion-models-work", "how-a-web-request-is-served", "how-database-indexes-work", "how-docker-containers-work"],
   "resumePdf": "resume.pdf?v=559e6efc",
   "booked": [
     "2026-10"
@@ -558,6 +558,7 @@ footer a{color:var(--muted)}
       ],
       "notes": [
         "The gain is concentrated in bridge questions (70% to 90%), where one search finds only one of the two facts needed.",
+        "A follow-up ablation of the RAG service found its BM25 tokenizer was the weak point: splitting on word characters lifted keyword recall@5 from 55% to 78%. Write-up: garciajp.com/writing/does-hybrid-search-pay-for-itself/",
         "The benchmark harness runs the agent loop and a single-shot baseline on the same questions.",
         "CI and tests run without API keys, so anyone can reproduce the setup."
       ],
@@ -1025,6 +1026,126 @@ footer a{color:var(--muted)}
     "explainer": "Scroll-driven visual guides to how AI and software techniques work."
   },
   "posts": [
+    {
+      "slug": "does-hybrid-search-pay-for-itself",
+      "kind": "article",
+      "date": "2026-11-01",
+      "read": 6,
+      "title": "Does hybrid search plus reranking pay for itself? I measured my RAG pipeline",
+      "excerpt": "I took my RAG service apart stage by stage on 1,008 labelled questions. The biggest gain was a one-line tokenizer fix, the reranker reorders more than it finds, and hybrid fusion added nothing until BM25 was fixed.",
+      "body": [
+        "My RAG service, ai-document-analyst, retrieves the way most guides recommend: BM25 keyword search plus dense vectors, merged with Reciprocal Rank Fusion, then reranked by a cross-encoder. Its README said each piece helps. I wanted to know how much each one adds and what it costs, so I rebuilt the pipeline in memory with production's exact settings and measured it one stage at a time.",
+        "**Short answer: the biggest gain was a one-line fix.** Production's BM25 splits text on whitespace, so “HTTPException,” and “HTTPException” count as different words. Splitting on word characters raised BM25's recall@5 from 55% to 78%, and to 30 of 30 on questions with an exact term. With the original tokenizer, hybrid fusion added nothing significant over dense retrieval alone.",
+        {
+          "h": "The setup"
+        },
+        {
+          "ul": [
+            "**Questions:** 60 I wrote over FastAPI's documentation, 30 with an exact term (a parameter, a header, a CLI flag) and 30 paraphrased, each labelled with the passage that answers it. Plus two public benchmarks with human labels: SciFact (300 scientific claims) and FiQA (648 financial questions).",
+            "**Pipeline:** production's settings: 512-token chunks, 20 candidates from each retriever, fused to 20, reranked, 5 returned. all-MiniLM-L6-v2 embeddings and the ms-marco-MiniLM-L-6-v2 cross-encoder, on a laptop CPU.",
+            "**Metrics:** recall@5 (is the answer in what production returns), recall@10, nDCG@10 (is it near the top) and MRR, with 95% bootstrap intervals and paired differences on the same questions.",
+            "**Written down before running:** four hypotheses, the metrics and the comparisons, in the repository's README."
+          ]
+        },
+        {
+          "h": "The results"
+        },
+        {
+          "table": {
+            "head": [
+              "Recall@5",
+              "FastAPI (60)",
+              "SciFact (300)",
+              "FiQA (648)"
+            ],
+            "rows": [
+              [
+                "BM25, production tokenizer",
+                "55%",
+                "62%",
+                "16%"
+              ],
+              [
+                "BM25, word tokenizer",
+                "78%",
+                "73%",
+                "22%"
+              ],
+              [
+                "Dense vectors",
+                "77%",
+                "74%",
+                "37%"
+              ],
+              [
+                "Hybrid (production)",
+                "78%",
+                "72%",
+                "34%"
+              ],
+              [
+                "Dense + reranker",
+                "85%",
+                "74%",
+                "38%"
+              ],
+              [
+                "Hybrid + reranker (production)",
+                "87%",
+                "74%",
+                "38%"
+              ],
+              [
+                "Fixed hybrid + reranker",
+                "90%",
+                "74%",
+                "38%"
+              ]
+            ],
+            "note": "Recall@5: share of questions whose answer is among the 5 results production returns. The last row was an extra run, added after seeing the first results. FiQA is hard for every system here; the ordering is what matters."
+          }
+        },
+        {
+          "h": "Where BM25 earns its place"
+        },
+        "On the 30 FastAPI questions with an exact term, word-tokenized BM25 found the answer in all 30, against 26 for dense retrieval. On the 30 paraphrased ones it found 17 and dense found 20. That is the case for hybrid search in one table: keyword search for identifiers, vectors for meaning. But production's whitespace tokenizer threw most of that away, and a weak keyword list mostly diluted the dense one in the fusion: on FiQA, hybrid was 3 points worse than dense alone, a significant difference.",
+        {
+          "h": "The reranker reorders more than it finds"
+        },
+        "The cross-encoder raised nDCG@10 by 12 points on FastAPI and about 4 on the benchmarks, while recall@10 moved by 2 points or less. It puts the right passage first more often; it rarely finds one that wasn't already in the candidates. It is also nearly all of the cost: over 95% of query time on CPU, growing in proportion to the candidates. Reranking 10 instead of 20 halved that time and lost nothing significant.",
+        {
+          "h": "A chunk-size mismatch"
+        },
+        "MiniLM reads 256 tokens; 90% of the 512-token chunks are longer, so the dense side never sees their second half. With 256-token chunks the reranked pipelines reached 92% recall@5 against 85 to 87% at 512. On 60 questions that difference is within noise, so it's a direction to test, not a finding.",
+        {
+          "h": "What I'd change"
+        },
+        {
+          "ul": [
+            "**Tokenize BM25 on word characters.** One line, the largest gain measured.",
+            "**Rerank 10 candidates, not 20.** About half the latency for the same quality here.",
+            "**Build the BM25 index once.** Production rebuilds it from every chunk on each query: 24 ms at 358 chunks, growing with the corpus.",
+            "**Try 256-token chunks,** measured on real documents first.",
+            "**If latency matters most, drop the fusion:** dense + reranker stayed within 2 points of the full pipeline on every dataset."
+          ]
+        },
+        {
+          "h": "How the hypotheses did"
+        },
+        {
+          "ul": [
+            "**Hybrid beats both retrievers:** only partly. It always beat BM25, but never dense by a significant margin, and lost on FiQA.",
+            "**The reranker helps ranking more than recall:** true on all three datasets.",
+            "**BM25 matters most for exact terms:** false with production's tokenizer, true once it was fixed.",
+            "**The reranker dominates latency, linear in candidates:** true."
+          ]
+        },
+        {
+          "h": "Limits"
+        },
+        "Sixty questions over one documentation site give wide intervals, and that corpus is full of identifiers, which favours keyword search; the two benchmarks cover other kinds of text. Both models are small. The fixed-hybrid run was added after the first results, so it tests an obvious fix rather than a pre-registered one. Everything is reproducible, with every per-query score, in [retrieval-ablation on GitHub](https://github.com/jpgg2105/retrieval-ablation/blob/main/RESULTS.md)."
+      ]
+    },
     {
       "slug": "does-an-agent-beat-a-single-llm-call",
       "kind": "article",
@@ -2518,6 +2639,7 @@ footer a{color:var(--muted)}
     ]
   ],
   "featured": [
+    "does-hybrid-search-pay-for-itself",
     "does-an-agent-beat-a-single-llm-call",
     "how-to-evaluate-llm-apps",
     "how-rag-works",

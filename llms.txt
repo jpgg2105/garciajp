@@ -36,6 +36,7 @@ Profiles: https://github.com/jpgg2105 · https://www.linkedin.com/in/juan-pablo-
 - [How to evaluate an LLM app](https://garciajp.com/writing/how-to-evaluate-llm-apps/): Test cases, scoring, version comparisons and a release gate: measuring quality instead of guessing.
 
 ## Articles (measured results)
+- [Does hybrid search plus reranking pay for itself? I measured my RAG pipeline](https://garciajp.com/writing/does-hybrid-search-pay-for-itself/): I took my RAG service apart stage by stage on 1,008 labelled questions. The biggest gain was a one-line tokenizer fix, the reranker reorders more than it finds, and hybrid fusion added nothing until BM25 was fixed.
 - [Does a four-agent loop beat a single LLM call? I measured it](https://garciajp.com/writing/does-an-agent-beat-a-single-llm-call/): On 100 multi-hop questions, my research agent answered 86% correctly against 74% for one retrieve-and-answer call, at about 6× the calls. Where the gain comes from, where it loses, and what I'd change.
 
 ## Other notes
