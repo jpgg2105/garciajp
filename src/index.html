@@ -1827,7 +1827,7 @@ footer a{color:var(--muted)}
         {
           "h": "Limits"
         },
-        "One hundred questions give intervals of about ±9 points per system, so the overall gain is clear and the comparison-question gain isn't. It's one small model on Wikipedia-style questions with short answers. Everything is reproducible: the code, the question sample, every answer and the second evaluator's grades are in [agent-benchmark on GitHub](https://github.com/jpgg2105/agent-benchmark/blob/main/RESULTS.md)."
+        "One hundred questions give intervals of about ±9 points per system, so the overall gain is clear and the comparison-question gain isn't. It's one small model on Wikipedia-style questions with short answers. The prompts also weren't symmetric: the single call was told to say so when the sources were insufficient, and the agent's synthesizer wasn't. Since 13 of the 15 wins are questions where the single call gave up, part of the gap may come from that instruction; rerunning with matching prompts is the fair test. Everything is reproducible: the code, the question sample, every answer and the second evaluator's grades are in [agent-benchmark on GitHub](https://github.com/jpgg2105/agent-benchmark/blob/main/RESULTS.md)."
       ]
     },
     {
