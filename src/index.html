@@ -608,7 +608,7 @@ footer a{color:var(--muted)}
         "pytest"
       ],
       "result": "On 100 HotpotQA multi-hop questions, with the same model and search index for both, the agent answered 86% correctly against 74% for a single call (+12 points, 95% CI +4 to +20), at about 6× the LLM calls. A second evaluator agreed with the automatic grader on 39 of 40 answers. Write-up: [Does a four-agent loop beat a single LLM call? I measured it](/writing/does-an-agent-beat-a-single-llm-call/)",
-      "code": "https://github.com/jpgg2105",
+      "code": "https://github.com/jpgg2105/research-agent",
       "codeNote": "",
       "demo": "",
       "tour": {
@@ -635,7 +635,21 @@ footer a{color:var(--muted)}
             "CI and tests run without API keys, so anyone can clone the project and reproduce the setup."
           ]
         ]
-      }
+      },
+      "repos": [
+        [
+          "research-agent",
+          "https://github.com/jpgg2105/research-agent"
+        ],
+        [
+          "agent-benchmark",
+          "https://github.com/jpgg2105/agent-benchmark"
+        ],
+        [
+          "ai-document-analyst",
+          "https://github.com/jpgg2105/ai-document-analyst"
+        ]
+      ]
     },
     {
       "slug": "retrieval-ablation",
@@ -6566,7 +6580,7 @@ const V = {
     const p = SITE.projects[i], prev = SITE.projects[i-1], next = SITE.projects[i+1];
     const flow = f => `<div><h3 class="flow-title">${esc(f.title)}</h3><ol class="flow">${f.steps.map(([n,d],k) => `<li>${k ? `<span class="arrow">${ICONS.arrow}</span>` : ""}<div class="node">${esc(n)}${d ? `<small>${esc(d)}</small>` : ""}</div></li>`).join("")}</ol></div>`;
     const links = [
-      p.code ? `<a class="btn line" href="${esc(p.code)}" target="_blank" rel="noopener">${ICONS.github.replace('viewBox','width="16" height="16" viewBox')} See the code</a>` : "",
+      ...(p.repos || (p.code ? [["See the code", p.code]] : [])).map(([label, href]) => `<a class="btn line" href="${esc(href)}" target="_blank" rel="noopener">${ICONS.github.replace('viewBox','width="16" height="16" viewBox')} ${esc(label)}</a>`),
       p.demo ? `<a class="btn" href="${esc(p.demo)}" target="_blank" rel="noopener">Try the live demo <span class="arr">${ICONS.ext}</span></a>` : "",
     ].join("");
     return `

@@ -35,7 +35,7 @@ GitHub Pages publishes it in about a minute. Preview first with `python -m http.
 | `calUser` | Your cal.com username. Empty: "Book a call" opens an email with the meeting and day filled in. |
 | `links.x` | Your X profile URL. Empty hides the icon. |
 | `person` | Facts used in the structured data Google reads (job title, city, schools, topics). |
-| `projects` | One entry per project page. `slug` becomes the address. `flows` are the architecture diagrams: each step is `["Name", "detail"]`. `code` and `demo` are optional links; when `code` is empty, `codeNote` is shown instead. |
+| `projects` | One entry per project page. `slug` becomes the address. `flows` are the architecture diagrams: each step is `["Name", "detail"]`. `code` and `demo` are optional links; when `code` is empty, `codeNote` is shown instead. A project spread over several repositories lists them in `repos` as `["label", "url"]`, one button each. |
 | `posts` | Blog entries. `kind` is `"article"`, `"interview"` or `"note"`. `body` is a list of paragraphs; in interviews, a question is `{"q": "..."}`. |
 | `shipped` | Stack items marked as used in client work. |
 

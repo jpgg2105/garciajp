@@ -3208,7 +3208,7 @@ const V = {
     const p = SITE.projects[i], prev = SITE.projects[i-1], next = SITE.projects[i+1];
     const flow = f => `<div><h3 class="flow-title">${esc(f.title)}</h3><ol class="flow">${f.steps.map(([n,d],k) => `<li>${k ? `<span class="arrow">${ICONS.arrow}</span>` : ""}<div class="node">${esc(n)}${d ? `<small>${esc(d)}</small>` : ""}</div></li>`).join("")}</ol></div>`;
     const links = [
-      p.code ? `<a class="btn line" href="${esc(p.code)}" target="_blank" rel="noopener">${ICONS.github.replace('viewBox','width="16" height="16" viewBox')} See the code</a>` : "",
+      ...(p.repos || (p.code ? [["See the code", p.code]] : [])).map(([label, href]) => `<a class="btn line" href="${esc(href)}" target="_blank" rel="noopener">${ICONS.github.replace('viewBox','width="16" height="16" viewBox')} ${esc(label)}</a>`),
       p.demo ? `<a class="btn" href="${esc(p.demo)}" target="_blank" rel="noopener">Try the live demo <span class="arr">${ICONS.ext}</span></a>` : "",
     ].join("");
     return `
