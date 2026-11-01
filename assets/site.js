@@ -69,6 +69,10 @@ const ICONS = {
 };
 
 $("#nav").innerHTML = TABS.map(([p,l,k]) => `<a href="${url(p)}" data-k="${k}">${l}</a>`).join("");
+{
+  const nav = $("#nav"), more = () => nav.classList.toggle("more", nav.scrollLeft + nav.clientWidth < nav.scrollWidth - 4);
+  nav.addEventListener("scroll", more, { passive: true }); addEventListener("resize", more); requestAnimationFrame(more);
+}
 $(".brand").href = url("/");
 $("#foot").textContent = "© " + new Date().getFullYear() + " " + SITE.name + " · " + SITE.location;
 $("#footMail").textContent = SITE.email; $("#footMail").href = "mailto:" + SITE.email;
@@ -129,8 +133,8 @@ const SHIP = `
   </div>`;
 const STEPS = [
   { t:"Model the data", d:"Schemas that keep every customer's data apart and still make sense two years from now.", file:"schema.sql" },
-  { t:"Retrieve the right context", d:"Hybrid search and reranking, so the model answers from the right passages.", file:"POST /api/search" },
-  { t:"Let agents check the work", d:"A planner, researchers and a critic find the second fact a single search misses: 86% correct against 74% on 100 multi-hop questions.", file:"Agent run", real: true },
+  { t:"Retrieve the right context", d:"Keyword and vector search, a reranker, and every stage measured, so the model answers from the right passages.", file:"POST /api/search" },
+  { t:"Let agents split the question", d:"A planner breaks a question into searches, so the agent finds the second fact a single search misses: 86% correct against 74% on 100 multi-hop questions.", file:"Agent run", real: true },
   { t:"Ship it", d:"Deployed on a real server, tested, and handed over with docs.", file:"production" },
 ];
 
@@ -2784,10 +2788,10 @@ const SCENES = {
       K.alpha(s3 * K.seg(S, 2.7, 2.8)); K.text("remove any one leg and the worst case goes away", 60, 84, { size: 2.5, align: "center", color: C.ok, weight: 600 });
     }
     note("Willison's “lethal trifecta”", 2.45, 3.05);
-    // 4. prompt-level defences, measured
+    // 4. prompt-level defenses, measured
     const s4 = vis(3.02, 4.05);
     if (s4 > 0){
-      const rows = [["no defence", R.none], ["warning in the prompt", R.warning], ["spotlighting", R.spotlight], ["screening model", R.screen]];
+      const rows = [["no defense", R.none], ["warning in the prompt", R.warning], ["spotlighting", R.spotlight], ["screening model", R.screen]];
       K.alpha(s4); K.text(`attacks that worked, out of ${R.n} planted in documents`, 60, 10, { size: 2.6, align: "center", weight: 700 });
       const BX = 44, BW = 60;
       rows.forEach(([t, v], i) => {
@@ -2799,10 +2803,10 @@ const SCENES = {
       });
       K.alpha(s4 * K.seg(S, 3.5, 3.6)); K.text("screening blocked 35 of 36 poisoned documents, and the answer with them:", 60, 74, { size: 2.3, align: "center", color: C.muted });
       K.text(`only ${R.screenAnswered} of ${R.n} attacked questions still got answered`, 60, 78.5, { size: 2.3, align: "center", color: C.muted });
-      K.alpha(s4 * K.seg(S, 3.62, 3.72)); K.text("one attack beat every defence: a fake “policy update” with no instruction in it", 60, 85, { size: 2.3, align: "center", color: C.warn, weight: 600 });
+      K.alpha(s4 * K.seg(S, 3.62, 3.72)); K.text("one attack beat every defense tested: a fake “policy update” with no instruction", 60, 85, { size: 2.3, align: "center", color: C.warn, weight: 600 });
     }
     note("against fixed attacks, a warning or spotlighting cut it to a few percent", 3.45, 4.05, C.accent);
-    // 5. design-level defences
+    // 5. design-level defenses
     const s5 = vis(4.02, 5.2);
     if (s5 > 0){
       K.alpha(s5); K.text("take away the way out", 30, 10, { size: 2.7, align: "center", weight: 700, color: C.ok });
@@ -2857,7 +2861,7 @@ const SCENES = {
       K.arrow(85.5, 46, 92.5, 46, { color: C.strong, p: K.seg(S, .32, .4), hs: .9 });
       K.alpha(s1 * K.seg(S, .4, .5)); K.text("top 5 chunks", 104, 56.5, { size: 2.3, align: "center", color: C.accent, weight: 600 });
       K.alpha(s1 * K.seg(S, .55, .65));
-      K.text("each stage measured alone, on 1,008 labelled questions", 60, 76, { size: 2.6, align: "center", weight: 700 });
+      K.text("each stage measured alone, on 1,008 labeled questions", 60, 76, { size: 2.6, align: "center", weight: 700 });
       K.text("60 over FastAPI's docs · 300 SciFact · 648 FiQA", 60, 81, { size: 2.3, align: "center", color: C.muted });
     }
     note("the textbook pipeline: does every stage earn its place?", .5, 1.05);
@@ -2974,7 +2978,7 @@ const SCENES = {
       const m = [["a big model, prompted", "Gemini Flash-Lite + 10 retrieved examples", C.warn], ["a small model, prompted", "Qwen2.5-1.5B + 10 retrieved examples", C.strong], ["a small model, fine-tuned", "Qwen2.5-1.5B + LoRA, short instruction", C.ok]];
       m.forEach(([t, sub, col], i) => { K.alpha(s1 * K.seg(S, .6 + i * .08, .7 + i * .08)); K.dot(24, 66 + i * 8.5, 1.1, { fill: col }); K.text(t, 28, 66 + i * 8.5, { size: 2.5, weight: 700 }); K.text(sub, 28, 69.8 + i * 8.5, { size: 2.2, color: C.muted }); });
     }
-    note("same labelled examples for all three: 100, 500 or 2,000", .6, 1.05);
+    note("same labeled examples for all three: 100, 500 or 2,000", .6, 1.05);
     // 2 + 3. the curve
     const s23 = vis(1.02, 3.05);
     if (s23 > 0){
@@ -2982,7 +2986,7 @@ const SCENES = {
       const px = n => K.lerp(X0, X1, Math.log10(n / 100) / Math.log10(20)), py = v => K.lerp(Y0, Y1, v / .8);
       K.alpha(s23); K.line(X0, Y0, X1, Y0, { color: C.strong }); K.line(X0, Y0, X0, Y1, { color: C.strong });
       xs.forEach(n => K.text(n.toLocaleString("en-US"), px(n), Y0 + 4, { size: 2.3, align: "center", color: C.muted }));
-      K.text("labelled examples", (X0 + X1) / 2, Y0 + 9, { size: 2.2, align: "center", color: C.muted });
+      K.text("labeled examples", (X0 + X1) / 2, Y0 + 9, { size: 2.2, align: "center", color: C.muted });
       [0, .2, .4, .6, .8].forEach(v => { K.text(`${Math.round(v * 100)}%`, X0 - 2, py(v), { size: 2.1, align: "right", color: C.muted }); if (v) K.line(X0, py(v), X1, py(v), { color: C.line, dash: [.6, .8] }); });
       K.text("exact record", X0, Y1 - 4, { size: 2.2, color: C.muted });
       const lines = [["Gemini, prompted", [.553, .64, .66], C.warn, 1.1, 0], ["Qwen, prompted", [.31, .397, .487], C.strong, 2.1, 1], ["Qwen + LoRA", [.319, .513, .637], C.ok, 2.35, 2]];
@@ -3044,7 +3048,7 @@ function initExplainer(){
   let C = exColors(), lastC = 0;
   if (reduce){
     host.classList.add("static");
-    host.querySelectorAll(".ex-still canvas").forEach((cv, i) => exDraw(cv, scene, i + .999, 0, C));
+    host.querySelectorAll(".ex-still canvas").forEach((cv, i) => exDraw(cv, scene, i + .92, 0, C));
     return;
   }
   const canvas = host.querySelector(".screen canvas"), steps = [...host.querySelectorAll(".steps .step")], bar = host.querySelector(".progress i");
@@ -3117,7 +3121,7 @@ const explainerHTML = p => {
     <div class="page">
       <section class="proj-head">
         <a class="crumb" href="${url("/writing/")}">${ICONS.arrow} All writing</a>
-        <div class="ex-meta">${tagHTML(p.kind)}<span>${n} steps · scroll to play</span></div>
+        <div class="ex-meta">${tagHTML(p.kind)}<span>${n} steps${reduce ? "" : " · scroll to play"}</span></div>
         <h1>${esc(p.title)}</h1>
         <p class="lede">${esc(p.intro)}</p>
       </section>
@@ -3216,13 +3220,13 @@ const V = {
         <div class="facts"><span><b>${esc(p.client)}</b></span><span>${esc(p.role)}</span><span class="num">${esc(p.when)}</span>${!p.code && p.codeNote ? `<span>${esc(p.codeNote)}</span>` : ""}</div>
         ${links ? `<div class="row">${links}</div>` : ""}
       </section>
-      ${p.tour ? `<div class="tour-head"><h2>See it work</h2><span>${p.tour.steps.length} steps · scroll to play</span></div>${exStage(p.tour.scene, p.title, p.tour.steps)}` : ""}
+      ${p.tour ? `<div class="tour-head"><h2>See it work</h2><span>${p.tour.steps.length} steps${reduce ? "" : " · scroll to play"}</span></div>${exStage(p.tour.scene, p.title, p.tour.steps)}` : ""}
       <section class="cv">
         <h2>Problem</h2><div><p class="lede">${esc(p.problem)}</p></div>
         <h2>Solution</h2><div><p style="max-width:62ch">${esc(p.solution)}</p></div>
-        <h2>Architecture</h2><div><div class="flows">${p.flows.map(flow).join("")}</div>${p.notes.length ? `<ul class="notes" style="margin-top:22px">${p.notes.map(n => `<li>${esc(n)}</li>`).join("")}</ul>` : ""}</div>
+        <h2>Architecture</h2><div><div class="flows">${p.flows.map(flow).join("")}</div>${p.notes.length ? `<ul class="notes" style="margin-top:22px">${p.notes.map(n => `<li>${inl(n)}</li>`).join("")}</ul>` : ""}</div>
         <h2>Stack</h2><div><div class="chips">${p.stack.map(s => `<span class="chip prod">${esc(s)}</span>`).join("")}</div></div>
-        <h2>Result</h2><div><p class="lede">${esc(p.result)}</p></div>
+        <h2>Result</h2><div><p class="lede">${inl(p.result)}</p></div>
       </section>
       <nav class="pnext" aria-label="More projects">
         ${prev ? `<a href="${url(`/projects/${prev.slug}/`)}"><span>Previous</span><b>${esc(prev.title)}</b></a>` : ""}
@@ -3238,7 +3242,7 @@ const V = {
         <div class="sh"><h1 class="title">Services</h1><p>Every project starts with a free 15-minute call. You get a written plan and a price before any work begins.</p></div>
         <div style="margin:0 0 40px">${schedule()}</div>
       </section>
-      <div class="tour-head"><h2>What each service looks like</h2><span>${SITE.servicesTour.length} steps · scroll to play</span></div>
+      <div class="tour-head"><h2>What each service looks like</h2><span>${SITE.servicesTour.length} steps${reduce ? "" : " · scroll to play"}</span></div>
       ${exStage("services", "How I work", SITE.servicesTour)}
       <section>
         <div class="offers">${SITE.offers.map((o, i) => `<div class="offer"><div><h3 class="shift" style="--i:${i}">${esc(o.name)}</h3><p>${esc(o.text)}</p><ul>${o.items.map(i => `<li>${esc(i)}</li>`).join("")}</ul></div><div class="terms"><span>Scope and price agreed after a first call</span><a class="btn line" href="${url("/book/")}" data-meet="${o.meeting}">Talk about this <span class="arr">${ICONS.arrow}</span></a></div></div>`).join("")}</div>

@@ -12,35 +12,35 @@
     <link>https://garciajp.com/writing/lora-vs-prompting/</link>
     <guid isPermaLink="true">https://garciajp.com/writing/lora-vs-prompting/</guid>
     <pubDate>Sun, 01 Nov 2026 12:00:00 +0000</pubDate>
-    <description>A 1.5B model fine-tuned with LoRA against a larger model prompted with examples, on the same 100, 500 and 2,000 labelled examples. The prompt won easily at 100; at 2,000 the small model was within 2 points at 1/29 of the input.</description>
+    <description>A 1.5B model fine-tuned with LoRA against a larger model prompted with examples, on the same 100, 500 and 2,000 labeled examples. The prompt won easily at 100; at 2,000 the small model was 2 points behind, within noise, at 1/29 of the input.</description>
   </item>
   <item>
-    <title>What actually stops prompt injection? I tested six defences</title>
+    <title>What actually stops prompt injection? I tested four defenses</title>
     <link>https://garciajp.com/writing/what-stops-prompt-injection/</link>
     <guid isPermaLink="true">https://garciajp.com/writing/what-stops-prompt-injection/</guid>
     <pubDate>Sun, 01 Nov 2026 12:00:00 +0000</pubDate>
-    <description>I planted 36 injections in the documents a tool-using assistant reads. Undefended, 42% worked; a one-paragraph warning cut that to 6%. One fake policy update beat every defence, and the strongest filter cost the answers.</description>
+    <description>I planted 36 injections in the documents a tool-using assistant reads. Undefended, 42% worked; a one-paragraph warning cut that to 6%. One fake policy update beat every defense I tested, and the strongest filter cost the answers.</description>
   </item>
   <item>
     <title>Does hybrid search plus reranking pay for itself? I measured my RAG pipeline</title>
     <link>https://garciajp.com/writing/does-hybrid-search-pay-for-itself/</link>
     <guid isPermaLink="true">https://garciajp.com/writing/does-hybrid-search-pay-for-itself/</guid>
     <pubDate>Sun, 01 Nov 2026 12:00:00 +0000</pubDate>
-    <description>I took my RAG service apart stage by stage on 1,008 labelled questions. The biggest gain was a one-line tokenizer fix, the reranker reorders more than it finds, and hybrid fusion added nothing until BM25 was fixed.</description>
+    <description>I took my RAG service apart stage by stage on 1,008 labeled questions. The biggest gain was a one-line tokenizer fix, the reranker reorders more than it finds, and hybrid fusion added nothing significant until BM25 was fixed, and even then only at depth 10.</description>
   </item>
   <item>
     <title>How prompt injection works, and what actually stops it</title>
     <link>https://garciajp.com/writing/how-prompt-injection-works/</link>
     <guid isPermaLink="true">https://garciajp.com/writing/how-prompt-injection-works/</guid>
     <pubDate>Sun, 01 Nov 2026 12:00:00 +0000</pubDate>
-    <description>I planted 36 injections in a tool-using assistant&#x27;s documents and measured six defences. A warning in the prompt stopped most of them; one fake policy update beat everything; the safe defences cost answers.</description>
+    <description>I planted 36 injections in a tool-using assistant&#x27;s documents and measured four defenses, alone and together. A warning in the prompt stopped most of them; one fake policy update beat all of them; the safest designs cost answers.</description>
   </item>
   <item>
     <title>How hybrid search and reranking work, measured on my RAG pipeline</title>
     <link>https://garciajp.com/writing/how-hybrid-search-works/</link>
     <guid isPermaLink="true">https://garciajp.com/writing/how-hybrid-search-works/</guid>
     <pubDate>Sun, 01 Nov 2026 12:00:00 +0000</pubDate>
-    <description>BM25, dense vectors, Reciprocal Rank Fusion and a cross-encoder, one stage at a time, with what each one added on 1,008 labelled questions.</description>
+    <description>BM25, dense vectors, Reciprocal Rank Fusion and a cross-encoder, one stage at a time, with what each one added on 1,008 labeled questions.</description>
   </item>
   <item>
     <title>Does a four-agent loop beat a single LLM call? I measured it</title>

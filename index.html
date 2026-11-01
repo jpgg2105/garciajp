@@ -27,7 +27,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@400;500;600;700&family=Instrument+Sans:wght@500&family=Funnel+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="/assets/site.css?v=229ed948ef">
+<link rel="stylesheet" href="/assets/site.css?v=27af2ce93c">
 </head>
 <body>
 <a class="skip" href="#view">Skip to content</a>
@@ -50,7 +50,7 @@
   <section class="build" aria-label="How I build an AI feature, from database to production">
     <div class="build-track" id="track">
       <div class="pin">
-        <ol class="steps" id="steps"><li class="step on"><span class="n">1</span><h3>Model the data</h3><p>Schemas that keep every customer's data apart and still make sense two years from now.</p></li><li class="step"><span class="n">2</span><h3>Retrieve the right context</h3><p>Hybrid search and reranking, so the model answers from the right passages.</p></li><li class="step"><span class="n">3</span><h3>Let agents check the work</h3><p>A planner, researchers and a critic find the second fact a single search misses: 86% correct against 74% on 100 multi-hop questions.</p></li><li class="step"><span class="n">4</span><h3>Ship it</h3><p>Deployed on a real server, tested, and handed over with docs.</p></li></ol>
+        <ol class="steps" id="steps"><li class="step on"><span class="n">1</span><h3>Model the data</h3><p>Schemas that keep every customer's data apart and still make sense two years from now.</p></li><li class="step"><span class="n">2</span><h3>Retrieve the right context</h3><p>Keyword and vector search, a reranker, and every stage measured, so the model answers from the right passages.</p></li><li class="step"><span class="n">3</span><h3>Let agents split the question</h3><p>A planner breaks a question into searches, so the agent finds the second fact a single search misses: 86% correct against 74% on 100 multi-hop questions.</p></li><li class="step"><span class="n">4</span><h3>Ship it</h3><p>Deployed on a real server, tested, and handed over with docs.</p></li></ol>
         <div class="screen" aria-hidden="true">
           <div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="file" id="file">schema.sql</span><span class="sample" id="sampleTag">Sample data</span></div>
           <div class="layer on" data-l="0"><pre class="code" id="sql"><span class="caret"></span></pre></div>
@@ -77,7 +77,7 @@
   updated_at  <span class="kw">timestamptz default </span>now()
 );
 
-<span class="kw">create index on </span>documents (tenant_id);</pre></div></div></div><div class="still" data-i="1"><h3>Retrieve the right context</h3><p>Hybrid search and reranking, so the model answers from the right passages.</p><div class="card"><div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="file">POST /api/search</span></div><div class="in"><pre class="code"><span class="kw">POST </span>/api/search
+<span class="kw">create index on </span>documents (tenant_id);</pre></div></div></div><div class="still" data-i="1"><h3>Retrieve the right context</h3><p>Keyword and vector search, a reranker, and every stage measured, so the model answers from the right passages.</p><div class="card"><div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="file">POST /api/search</span></div><div class="in"><pre class="code"><span class="kw">POST </span>/api/search
 { <span class="str">"query"</span>: <span class="str">"Can I get a refund on an annual plan?"</span>, <span class="str">"top_k"</span>: <span class="nm">3</span> }
 
 <span class="dim">200 OK · bm25 + dense · reranked
@@ -85,7 +85,7 @@
   { <span class="str">"score"</span>: <span class="nm">0.92</span>, <span class="str">"text"</span>: <span class="str">"Annual plans are refundable within 30 days…"</span> },
   { <span class="str">"score"</span>: <span class="nm">0.81</span>, <span class="str">"text"</span>: <span class="str">"Refunds go back to the original card…"</span> },
   { <span class="str">"score"</span>: <span class="nm">0.64</span>, <span class="str">"text"</span>: <span class="str">"Monthly plans renew on the same day…"</span> }
-]</pre></div></div></div><div class="still" data-i="2"><h3>Let agents check the work</h3><p>A planner, researchers and a critic find the second fact a single search misses: 86% correct against 74% on 100 multi-hop questions.</p><div class="card"><div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="file">Agent run</span></div><div class="in">
+]</pre></div></div></div><div class="still" data-i="2"><h3>Let agents split the question</h3><p>A planner breaks a question into searches, so the agent finds the second fact a single search misses: 86% correct against 74% on 100 multi-hop questions.</p><div class="card"><div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="file">Agent run</span></div><div class="in">
   <div class="run">
     <div class="run-head"><div><h4>Agent run</h4><span class="muted" style="font-size:14px">a real benchmark question · 5 calls</span></div><div class="run-score num">86%<small>correct on 100 questions vs 74%</small></div></div>
     <div class="agent" data-row=""><b>Planner</b><span class="t">Split the question into 2 sub-questions</span><span class="muted num" style="font-size:14px">1 call</span></div><div class="agent" data-row=""><b>Researcher</b><span class="t">Where was Penn held? Tower of London</span><span class="muted num" style="font-size:14px">1 call</span></div><div class="agent" data-row=""><b>Researcher</b><span class="t">When did it stop being a prison? 1952</span><span class="muted num" style="font-size:14px">1 call</span></div><div class="agent" data-row=""><b>Critic</b><span class="t">Findings sufficient, no second round</span><span class="muted num" style="font-size:14px">1 call</span></div><div class="agent" data-row=""><b>Synthesizer</b><span class="t">Answered 1952, correct</span><span class="muted num" style="font-size:14px">1 call</span></div>
@@ -96,7 +96,7 @@
     <div class="mini-app"><div class="ask"><span>Can I get a refund on an annual plan?</span><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"></path></svg></div>
       <p class="ans">Yes, within 30 days of purchase<sup>1</sup>. The money goes back to the original card<sup>2</sup>.</p></div>
   </div></div></div></div></div>
-          <div class="deck-nav"><div class="pips" id="pips"><button type="button" data-pip="0" aria-label="Step 1: Model the data" aria-current="true"><i></i></button><button type="button" data-pip="1" aria-label="Step 2: Retrieve the right context" aria-current="false"><i></i></button><button type="button" data-pip="2" aria-label="Step 3: Let agents check the work" aria-current="false"><i></i></button><button type="button" data-pip="3" aria-label="Step 4: Ship it" aria-current="false"><i></i></button></div><span class="counter num" id="counter">1 / 4 · Sample data</span></div>
+          <div class="deck-nav"><div class="pips" id="pips"><button type="button" data-pip="0" aria-label="Step 1: Model the data" aria-current="true"><i></i></button><button type="button" data-pip="1" aria-label="Step 2: Retrieve the right context" aria-current="false"><i></i></button><button type="button" data-pip="2" aria-label="Step 3: Let agents split the question" aria-current="false"><i></i></button><button type="button" data-pip="3" aria-label="Step 4: Ship it" aria-current="false"><i></i></button></div><span class="counter num" id="counter">1 / 4 · Sample data</span></div>
         </div>
         <div class="progress"><i id="bar" style="transform: scaleX(0);"></i></div>
       </div>
@@ -112,16 +112,16 @@
   </a>
   <a class="prow" href="/projects/retrieval-ablation/">
     <div><h3 class="shift" style="--i:1">Retrieval ablation of my RAG pipeline</h3><span class="meta">Personal project · 2026</span></div>
-    <p>Each stage of my RAG service's retrieval measured on 1,008 labelled questions. A one-line tokenizer fix beat hybrid fusion, and the reranker took over 95% of query time.</p>
+    <p>Each stage of my RAG service's retrieval measured on 1,008 labeled questions. The biggest gain was a one-line tokenizer fix; fusion only helped once BM25 was fixed, and the reranker took over 95% of query time.</p>
     <span class="go"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"></path></svg></span>
   </a>
   <a class="prow" href="/projects/agent-injection-lab/">
     <div><h3 class="shift" style="--i:2">Prompt injection lab</h3><span class="meta">Personal project · 2026</span></div>
-    <p>36 prompt injections planted in a tool-using assistant's documents, against six defences. A warning cut attacks from 42% to 6%; one fake policy update beat every defence.</p>
+    <p>36 prompt injections planted in a tool-using assistant's documents, against four defenses, alone and combined. A warning cut attacks from 42% to 6%; one fake policy update beat every defense I tested.</p>
     <span class="go"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"></path></svg></span>
   </a></div>
       </section>
-      <section><div class="sh"><h2>Recent writing</h2><a href="/writing/">All writing</a></div><div class="posts"><a class="post" href="/writing/lora-vs-prompting/"><span class="d num">Nov 1, 2026</span><h3>When does LoRA fine-tuning beat a good prompt? I measured the crossover</h3><span class="tag article">Article</span><p>A 1.5B model fine-tuned with LoRA against a larger model prompted with examples, on the same 100, 500 and 2,000 labelled examples. The prompt won easily at 100; at 2,000 the small model was within 2 points at 1/29 of the input.</p></a><a class="post" href="/writing/what-stops-prompt-injection/"><span class="d num">Nov 1, 2026</span><h3>What actually stops prompt injection? I tested six defences</h3><span class="tag article">Article</span><p>I planted 36 injections in the documents a tool-using assistant reads. Undefended, 42% worked; a one-paragraph warning cut that to 6%. One fake policy update beat every defence, and the strongest filter cost the answers.</p></a><a class="post" href="/writing/does-hybrid-search-pay-for-itself/"><span class="d num">Nov 1, 2026</span><h3>Does hybrid search plus reranking pay for itself? I measured my RAG pipeline</h3><span class="tag article">Article</span><p>I took my RAG service apart stage by stage on 1,008 labelled questions. The biggest gain was a one-line tokenizer fix, the reranker reorders more than it finds, and hybrid fusion added nothing until BM25 was fixed.</p></a></div></section>
+      <section><div class="sh"><h2>Recent writing</h2><a href="/writing/">All writing</a></div><div class="posts"><a class="post" href="/writing/lora-vs-prompting/"><span class="d num">Nov 1, 2026</span><h3>When does LoRA fine-tuning beat a good prompt? I measured the crossover</h3><span class="tag article">Article</span><p>A 1.5B model fine-tuned with LoRA against a larger model prompted with examples, on the same 100, 500 and 2,000 labeled examples. The prompt won easily at 100; at 2,000 the small model was 2 points behind, within noise, at 1/29 of the input.</p></a><a class="post" href="/writing/what-stops-prompt-injection/"><span class="d num">Nov 1, 2026</span><h3>What actually stops prompt injection? I tested four defenses</h3><span class="tag article">Article</span><p>I planted 36 injections in the documents a tool-using assistant reads. Undefended, 42% worked; a one-paragraph warning cut that to 6%. One fake policy update beat every defense I tested, and the strongest filter cost the answers.</p></a><a class="post" href="/writing/does-hybrid-search-pay-for-itself/"><span class="d num">Nov 1, 2026</span><h3>Does hybrid search plus reranking pay for itself? I measured my RAG pipeline</h3><span class="tag article">Article</span><p>I took my RAG service apart stage by stage on 1,008 labeled questions. The biggest gain was a one-line tokenizer fix, the reranker reorders more than it finds, and hybrid fusion added nothing significant until BM25 was fixed, and even then only at depth 10.</p></a></div></section>
       
   <section class="cta">
     <h2>Hiring, or need an AI feature built? Let's talk.</h2>
@@ -136,9 +136,9 @@
 <!-- ===================== CONTENT =====================
      Everything on the site comes from this JSON. Edit it, then run `python build.py`.
      See README.md for what each field does. -->
-<script src="/assets/content.js?v=900c2878e6"></script>
+<script src="/assets/content.js?v=e5e2fb3eb7"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/motion@11.11.13/dist/motion.js"></script>
-<script src="/assets/site.js?v=df59417aed"></script>
+<script src="/assets/site.js?v=998d75d4df"></script>
 </body>
 </html>
