@@ -96,8 +96,8 @@ pages = {
         {"@type": "CollectionPage", "url": f"{domain}/projects/", "name": "Projects", "author": person,
          "hasPart": [{"@type": "CreativeWork", "name": p["title"], "url": f"{domain}/projects/{p['slug']}/"} for p in site["projects"]]},
     ]),
-    "/services/": (f"Services · {name}", "Add AI to your product, build the whole product, or automate a workflow.", [
-        {"@type": "WebPage", "url": f"{domain}/services/", "name": "Services", "author": person},
+    "/services/": (f"How I work · {name}", "What I build, from AI features to whole products and automated workflows, and how a project runs.", [
+        {"@type": "WebPage", "url": f"{domain}/services/", "name": "How I work", "author": person},
     ]),
     "/resume/": (f"Resume · {name}", site["resume"]["summary"], [
         {"@type": "ProfilePage", "url": f"{domain}/resume/", "name": "Resume", "mainEntity": person},
@@ -108,7 +108,7 @@ pages = {
     "/writing/": (f"Writing · {name}", "Articles, interviews and notes on building with AI.", [
         {"@type": "Blog", "url": f"{domain}/writing/", "name": f"{name} · Writing", "author": person},
     ]),
-    "/book/": (f"Book a call · {name}", "Book a 15-minute intro call, a project scoping session or a technical consult.", [
+    "/book/": (f"Let's talk · {name}", "Schedule a 15-minute intro call, a longer conversation or a technical deep dive.", [
         {"@type": "ContactPage", "url": f"{domain}/book/", "name": "Book a call", "about": person},
     ]),
 }
@@ -213,7 +213,7 @@ llms = [f"# {name}", "", f"> {site['resume']['summary']}", "",
         "Profiles: " + " · ".join(u for u in site["links"].values() if u), "",
         "## Main pages",
         _line("Projects", "/projects/", "client work and personal projects, each with the problem, the system and the result"),
-        _line("Services", "/services/", "adding AI to a product, building a whole product, or automating a workflow"),
+        _line("How I work", "/services/", "adding AI to a product, building a whole product, or automating a workflow"),
         _line("Resume", "/resume/", "experience, education and skills"),
         _line("Stack", "/stack/", "languages, frameworks and AI tools in use"),
         "", "## Projects"]

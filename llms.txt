@@ -7,7 +7,7 @@ Profiles: https://github.com/jpgg2105 · https://www.linkedin.com/in/juan-pablo-
 
 ## Main pages
 - [Projects](https://garciajp.com/projects/): client work and personal projects, each with the problem, the system and the result
-- [Services](https://garciajp.com/services/): adding AI to a product, building a whole product, or automating a workflow
+- [How I work](https://garciajp.com/services/): adding AI to a product, building a whole product, or automating a workflow
 - [Resume](https://garciajp.com/resume/): experience, education and skills
 - [Stack](https://garciajp.com/stack/): languages, frameworks and AI tools in use
 
