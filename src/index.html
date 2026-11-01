@@ -677,7 +677,7 @@ footer a{color:var(--muted)}
         "Production split text on spaces, so punctuation stuck to words. Splitting on word characters raised BM25's recall@5 from 55% to 78%, and to 30 of 30 on questions with an exact term.",
         "With the original tokenizer, hybrid search was never significantly better than dense retrieval alone, and on FiQA it was 3 points worse.",
         "The reranker raised nDCG@10 by 4 to 12 points but recall by 2 or less, and reranking 10 candidates instead of 20 halved its time at the same quality.",
-        "The fixes are in a pull request to the service, with CI passing."
+        "The first three fixes (tokenizer, 10 rerank candidates, a BM25 index built once) are merged into the service."
       ],
       "stack": [
         "Python",
@@ -1642,6 +1642,7 @@ footer a{color:var(--muted)}
             "**If latency matters most, drop the fusion:** dense + reranker stayed within 2 points of the full pipeline on every dataset."
           ]
         },
+        "The first three are now merged into ai-document-analyst, with the before-and-after numbers in its README.",
         {
           "h": "How the hypotheses did"
         },
@@ -1876,7 +1877,7 @@ footer a{color:var(--muted)}
         "If latency matters, dense retrieval plus a reranker stayed within 2 points of the full hybrid pipeline on every dataset.",
         "Rerank fewer candidates: 10 instead of 20 halved the reranking time with no significant loss.",
         "Match the chunk size to the embedder's input length, then confirm on your own documents.",
-        "The fixes are in a pull request to ai-document-analyst, and every per-query score is in retrieval-ablation. The full write-up is the article “Does hybrid search plus reranking pay for itself?”."
+        "The tokenizer fix, 10 rerank candidates and a BM25 index built once are now merged into ai-document-analyst; every per-query score is in retrieval-ablation, and the full write-up is the article “Does hybrid search plus reranking pay for itself?”."
       ],
       "refs": [
         [
