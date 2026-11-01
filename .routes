@@ -1,8 +1,10 @@
 /
 /book/
 /projects/
+/projects/agent-injection-lab/
 /projects/chatbots-and-outreach/
 /projects/research-agent/
+/projects/retrieval-ablation/
 /projects/schools-analytics-dashboard/
 /resume/
 /services/
@@ -36,3 +38,4 @@
 /writing/how-transformers-work/
 /writing/how-vector-search-works/
 /writing/long-context-vs-rag/
+/writing/what-stops-prompt-injection/

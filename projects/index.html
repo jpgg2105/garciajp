@@ -20,7 +20,7 @@
 <meta name="twitter:image" content="https://garciajp.com/og.png">
 <meta name="author" content="Juan Pablo García">
 <meta name="msvalidate.01" content="DEC2476C7613BDF59BE67C7E9087EA30">
-<script type="application/ld+json" id="ld">{"@context": "https://schema.org", "@graph": [{"@type": "CollectionPage", "url": "https://garciajp.com/projects/", "name": "Projects", "author": {"@type": "Person", "@id": "https://garciajp.com/#person", "name": "Juan Pablo García", "url": "https://garciajp.com/", "image": "https://garciajp.com/og.png", "jobTitle": "AI Developer", "description": "Juan Pablo García, AI developer in Argentina. RAG pipelines and multi-agent systems, built for production and measured with evals.", "email": "mailto:jpgarcia2154@gmail.com", "address": {"@type": "PostalAddress", "addressLocality": "San Juan", "addressRegion": "San Juan", "addressCountry": "AR"}, "alumniOf": [{"@type": "CollegeOrUniversity", "name": "University of Pennsylvania"}, {"@type": "CollegeOrUniversity", "name": "Universidad de Palermo"}], "worksFor": {"@type": "Organization", "name": "Nodos Hub"}, "knowsAbout": ["Retrieval-augmented generation", "Multi-agent systems", "LLM evaluation", "Python", "FastAPI", "React", "PostgreSQL", "Vector search"], "sameAs": ["https://github.com/jpgg2105", "https://www.linkedin.com/in/juan-pablo-garcia-guerrero", "https://x.com/garciajpgg21"]}, "hasPart": [{"@type": "CreativeWork", "name": "Research agent with its own benchmark", "url": "https://garciajp.com/projects/research-agent/"}, {"@type": "CreativeWork", "name": "Analytics dashboard for hundreds of schools", "url": "https://garciajp.com/projects/schools-analytics-dashboard/"}, {"@type": "CreativeWork", "name": "Chatbots and an outreach pipeline", "url": "https://garciajp.com/projects/chatbots-and-outreach/"}]}]}</script>
+<script type="application/ld+json" id="ld">{"@context": "https://schema.org", "@graph": [{"@type": "CollectionPage", "url": "https://garciajp.com/projects/", "name": "Projects", "author": {"@type": "Person", "@id": "https://garciajp.com/#person", "name": "Juan Pablo García", "url": "https://garciajp.com/", "image": "https://garciajp.com/og.png", "jobTitle": "AI Developer", "description": "Juan Pablo García, AI developer in Argentina. RAG pipelines and multi-agent systems, built for production and measured with evals.", "email": "mailto:jpgarcia2154@gmail.com", "address": {"@type": "PostalAddress", "addressLocality": "San Juan", "addressRegion": "San Juan", "addressCountry": "AR"}, "alumniOf": [{"@type": "CollegeOrUniversity", "name": "University of Pennsylvania"}, {"@type": "CollegeOrUniversity", "name": "Universidad de Palermo"}], "worksFor": {"@type": "Organization", "name": "Nodos Hub"}, "knowsAbout": ["Retrieval-augmented generation", "Multi-agent systems", "LLM evaluation", "Python", "FastAPI", "React", "PostgreSQL", "Vector search"], "sameAs": ["https://github.com/jpgg2105", "https://www.linkedin.com/in/juan-pablo-garcia-guerrero", "https://x.com/garciajpgg21"]}, "hasPart": [{"@type": "CreativeWork", "name": "Research agent with its own benchmark", "url": "https://garciajp.com/projects/research-agent/"}, {"@type": "CreativeWork", "name": "Retrieval ablation of my RAG pipeline", "url": "https://garciajp.com/projects/retrieval-ablation/"}, {"@type": "CreativeWork", "name": "Prompt injection lab", "url": "https://garciajp.com/projects/agent-injection-lab/"}, {"@type": "CreativeWork", "name": "Analytics dashboard for hundreds of schools", "url": "https://garciajp.com/projects/schools-analytics-dashboard/"}, {"@type": "CreativeWork", "name": "Chatbots and an outreach pipeline", "url": "https://garciajp.com/projects/chatbots-and-outreach/"}]}]}</script>
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#0E0F12">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231D6B70'/%3E%3Ctext x='32' y='42' font-family='Helvetica,Arial,sans-serif' font-size='28' font-weight='700' fill='%23FFFFFF' text-anchor='middle'%3EJP%3C/text%3E%3C/svg%3E">
@@ -47,13 +47,23 @@
     <p>A RAG service, a four-agent research loop and a benchmark that tests whether the loop beats a single LLM call. On 100 multi-hop questions it did: 86% correct against 74%.</p>
     <span class="go"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"></path></svg></span>
   </a>
+  <a class="prow" href="/projects/retrieval-ablation/">
+    <div><h3 class="shift" style="--i:1">Retrieval ablation of my RAG pipeline</h3><span class="meta">Personal project · 2026</span></div>
+    <p>Each stage of my RAG service's retrieval measured on 1,008 labelled questions. A one-line tokenizer fix beat hybrid fusion, and the reranker took over 95% of query time.</p>
+    <span class="go"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"></path></svg></span>
+  </a>
+  <a class="prow" href="/projects/agent-injection-lab/">
+    <div><h3 class="shift" style="--i:2">Prompt injection lab</h3><span class="meta">Personal project · 2026</span></div>
+    <p>36 prompt injections planted in a tool-using assistant's documents, against six defences. A warning cut attacks from 42% to 6%; one fake policy update beat every defence.</p>
+    <span class="go"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"></path></svg></span>
+  </a>
   <a class="prow" href="/projects/schools-analytics-dashboard/">
-    <div><h3 class="shift" style="--i:1">Analytics dashboard for hundreds of schools</h3><span class="meta">Nodos Hub · 2025 to now</span></div>
+    <div><h3 class="shift" style="--i:3">Analytics dashboard for hundreds of schools</h3><span class="meta">Nodos Hub · 2025 to now</span></div>
     <p>A React and FastAPI dashboard in production, following attendance, performance and risk across hundreds of schools.</p>
     <span class="go"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"></path></svg></span>
   </a>
   <a class="prow" href="/projects/chatbots-and-outreach/">
-    <div><h3 class="shift" style="--i:2">Chatbots and an outreach pipeline</h3><span class="meta">Nodos Hub · 2025</span></div>
+    <div><h3 class="shift" style="--i:4">Chatbots and an outreach pipeline</h3><span class="meta">Nodos Hub · 2025</span></div>
     <p>LLM chatbots that answer from client content, and a pipeline that finds leads and contacts them on WhatsApp.</p>
     <span class="go"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"></path></svg></span>
   </a></div></section>
@@ -71,7 +81,7 @@
 <!-- ===================== CONTENT =====================
      Everything on the site comes from this JSON. Edit it, then run `python build.py`.
      See README.md for what each field does. -->
-<script src="/assets/content.js?v=75f9cbba62"></script>
+<script src="/assets/content.js?v=69f08c5257"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/motion@11.11.13/dist/motion.js"></script>
 <script src="/assets/site.js?v=634cd5baf9"></script>

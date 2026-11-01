@@ -8,6 +8,13 @@
   <language>en</language>
   <lastBuildDate>Sun, 01 Nov 2026 12:00:00 +0000</lastBuildDate>
   <item>
+    <title>What actually stops prompt injection? I tested six defences</title>
+    <link>https://garciajp.com/writing/what-stops-prompt-injection/</link>
+    <guid isPermaLink="true">https://garciajp.com/writing/what-stops-prompt-injection/</guid>
+    <pubDate>Sun, 01 Nov 2026 12:00:00 +0000</pubDate>
+    <description>I planted 36 injections in the documents a tool-using assistant reads. Undefended, 42% worked; a one-paragraph warning cut that to 6%. One fake policy update beat every defence, and the strongest filter cost the answers.</description>
+  </item>
+  <item>
     <title>Does hybrid search plus reranking pay for itself? I measured my RAG pipeline</title>
     <link>https://garciajp.com/writing/does-hybrid-search-pay-for-itself/</link>
     <guid isPermaLink="true">https://garciajp.com/writing/does-hybrid-search-pay-for-itself/</guid>
