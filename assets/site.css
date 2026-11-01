@@ -227,7 +227,7 @@ pre.code{margin:0;font:14px/1.75 var(--f-code);white-space:pre;color:var(--ink);
 .empty dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px 16px;align-content:start}
 .empty dt{justify-self:start}
 .empty dd{margin:0;color:var(--muted);font-size:16px}
-.reader{max-width:68ch;display:flex;flex-direction:column;gap:24px}
+.reader{width:100%;max-width:760px;margin-inline:auto;display:flex;flex-direction:column;gap:24px}
 .reader h1{font-size:clamp(36px,5vw,58px);letter-spacing:-.03em}
 .reader .body{display:flex;flex-direction:column;gap:20px;font-size:18.5px;line-height:1.7}
 .reader .body h2{font-size:clamp(24px,3vw,30px);letter-spacing:-.02em;margin-top:18px}
