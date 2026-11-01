@@ -493,6 +493,7 @@ footer a{color:var(--muted)}
     "goatcounter": "jpgarcia2154"
   },
   "writingOrder": [
+    "lora-vs-prompting",
     "what-stops-prompt-injection",
     "how-prompt-injection-works",
     "does-hybrid-search-pay-for-itself",
@@ -810,6 +811,96 @@ footer a{color:var(--muted)}
           [
             "Design-level defences",
             "An approval gate stopped every hijacking email, but leaks through the answer still went through."
+          ]
+        ]
+      }
+    },
+    {
+      "slug": "lora-vs-prompting",
+      "title": "LoRA vs prompting: where fine-tuning catches up",
+      "client": "Personal project",
+      "role": "Author",
+      "when": "2026",
+      "summary": "A 1.5B model fine-tuned with LoRA against a larger model prompted with examples, on the same labelled data. The prompt won by 22 points at 100 examples; at 2,000 the small model was within 2.",
+      "problem": "Teams keep asking whether to fine-tune a small model or prompt a large one, and the answer depends on how much labelled data they have. I wanted the actual crossover point for one realistic task.",
+      "solution": "Structured extraction on MASSIVE (intent and slots as JSON), with pools of 100, 500 and 2,000 labelled examples. LoRA trains on each pool; the prompts retrieve their examples from the same pool. GPU runs in a Colab notebook, the API baseline locally, scored with paired intervals.",
+      "flows": [
+        {
+          "title": "Three ways to use the same examples",
+          "steps": [
+            [
+              "Labelled pool",
+              "100 / 500 / 2,000"
+            ],
+            [
+              "Prompt a big model",
+              "10 retrieved examples"
+            ],
+            [
+              "Prompt a small model",
+              "same 10 examples"
+            ],
+            [
+              "Fine-tune a small model",
+              "LoRA on the whole pool"
+            ]
+          ]
+        },
+        {
+          "title": "How it was run",
+          "steps": [
+            [
+              "Colab T4",
+              "Qwen2.5-1.5B + PEFT"
+            ],
+            [
+              "Gemini API",
+              "free tier"
+            ],
+            [
+              "300 test requests",
+              "paired bootstrap"
+            ]
+          ]
+        }
+      ],
+      "notes": [
+        "On the same small model, LoRA beat prompting by 12 points at 500 examples and 15 at 2,000.",
+        "Every method produced valid JSON almost always; at 100 examples the fine-tuned model failed by inventing labels it had never seen.",
+        "The fine-tuned model reads 31 input tokens per request against about 900 for the prompts, and trained in 3 minutes on a free GPU.",
+        "Hypotheses, metrics and LoRA settings were written down before the run."
+      ],
+      "stack": [
+        "Python",
+        "PyTorch",
+        "Hugging Face PEFT",
+        "Transformers",
+        "Google Colab",
+        "Gemini API",
+        "pytest"
+      ],
+      "result": "Exact-record accuracy at 100 / 500 / 2,000 labelled examples: Gemini Flash-Lite prompted 55 / 64 / 66%, Qwen 1.5B with LoRA 32 / 51 / 64%, the same Qwen prompted 31 / 40 / 49%. At 2,000 examples the fine-tuned model matched the larger one on whole records and intents, at 1/29 of the input tokens. Write-up: garciajp.com/writing/lora-vs-prompting/",
+      "code": "https://github.com/jpgg2105/lora-vs-prompting",
+      "codeNote": "",
+      "demo": "",
+      "tour": {
+        "scene": "proj_lvp",
+        "steps": [
+          [
+            "One task, three approaches",
+            "Requests to a voice assistant become JSON. A big model and a small model are prompted with 10 retrieved examples; the small model is also fine-tuned with LoRA on all of them."
+          ],
+          [
+            "With 100 examples",
+            "The prompted big model gets 55% of records right; the fine-tuned small model 32%."
+          ],
+          [
+            "With more examples",
+            "The fine-tuned model keeps climbing, to 64% at 2,000, while the prompted models flatten."
+          ],
+          [
+            "What it costs to run",
+            "The fine-tuned model reads 29× fewer tokens per request and needs about half the GPU time of the same model prompted."
           ]
         ]
       }
@@ -1240,6 +1331,101 @@ footer a{color:var(--muted)}
     "explainer": "Scroll-driven visual guides to how AI and software techniques work."
   },
   "posts": [
+    {
+      "slug": "lora-vs-prompting",
+      "kind": "article",
+      "date": "2026-11-01",
+      "read": 5,
+      "title": "When does LoRA fine-tuning beat a good prompt? I measured the crossover",
+      "excerpt": "A 1.5B model fine-tuned with LoRA against a larger model prompted with examples, on the same 100, 500 and 2,000 labelled examples. The prompt won easily at 100; at 2,000 the small model was within 2 points at 1/29 of the input.",
+      "body": [
+        "“Should we fine-tune a small model or prompt a big one?” comes up on every team that builds with LLMs. The honest answer is “it depends on how much labelled data you have”, so I measured how much, on one concrete task.",
+        "**Short answer: with 100 examples, prompt the big model; with 2,000, the fine-tuned small model catches up.** Gemini 3.5 Flash-Lite with 10 retrieved examples got 55% of records exactly right at 100 labelled examples, against 32% for Qwen2.5-1.5B fine-tuned with LoRA on the same 100. At 2,000 examples it was 66% against 64%, a difference within noise, with the fine-tuned model reading 29 times fewer input tokens.",
+        {
+          "h": "The setup"
+        },
+        {
+          "ul": [
+            "**Task:** turn a request to a voice assistant into JSON with its intent and slots, using MASSIVE (60 intents, 55 slot types, human labels). “wake me up at five am this week” becomes alarm_set with time “five am” and date “this week”.",
+            "**Same data for every method:** pools of 100, 500 and 2,000 labelled examples. LoRA trains on the pool; the prompts get the 10 pool examples most similar to each request, plus the full label lists.",
+            "**Models:** Qwen2.5-1.5B-Instruct, prompted and fine-tuned with LoRA (rank 16, settings fixed before running) on a free Colab T4; Gemini 3.5 Flash-Lite through the API, prompted.",
+            "**Scoring:** 300 test requests; exact record (intent and every slot right), slot F1, intent accuracy, valid JSON and schema compliance, with paired bootstrap intervals. Three hypotheses were written before the run."
+          ]
+        },
+        {
+          "h": "The results"
+        },
+        {
+          "table": {
+            "head": [
+              "Exact record",
+              "100 examples",
+              "500",
+              "2,000"
+            ],
+            "rows": [
+              [
+                "Gemini Flash-Lite, 10 retrieved examples",
+                "55%",
+                "64%",
+                "66%"
+              ],
+              [
+                "Qwen 1.5B + LoRA",
+                "32%",
+                "51%",
+                "64%"
+              ],
+              [
+                "Qwen 1.5B, 10 retrieved examples",
+                "31%",
+                "40%",
+                "49%"
+              ]
+            ],
+            "note": "300 test requests. At 2,000 examples, LoRA vs Gemini: −2.3 points [−7.3, +2.7] on exact records, −0.3 on intent, −5.2 [−9.6, −0.8] on slot F1. LoRA at 100 is the mean of three seeds (33, 31, 32)."
+          }
+        },
+        {
+          "h": "What the curve says"
+        },
+        {
+          "ul": [
+            "**At 100 examples the big model wins by 22 points.** It has seen far more language, and its prompt lists every label.",
+            "**On the same small model, fine-tuning beats prompting once there is data:** a tie at 100, then +12 points at 500 and +15 at 2,000.",
+            "**The big model's curve flattens:** 55%, 64%, 66%. More examples in the pool only change which 10 it sees. The fine-tuned model kept climbing."
+          ]
+        },
+        {
+          "h": "Format was never the problem"
+        },
+        "I expected LoRA to fix formatting first and accuracy later. It didn't need to: every method produced valid JSON on 99.7 to 100% of requests. What failed at 100 examples was labels. The fine-tuned model never sees the label list, and 22 of the 60 intents weren't in its 100 examples, so it invented plausible ones: 58 replies used intents that don't exist, like “recipe” or “email_send”. At 2,000 examples, covering all 60, schema compliance reached 97%.",
+        {
+          "h": "What it costs"
+        },
+        {
+          "ul": [
+            "**Input:** 31 tokens per request for the fine-tuned model against about 900 for the prompts with examples.",
+            "**Compute:** 190 GPU-seconds per 1,000 requests on a T4, against 355 for the same model prompted.",
+            "**Training:** 40 seconds for 100 examples, 3 minutes for 2,000, on a free GPU. The adapter is 1.2% of the model's parameters."
+          ]
+        },
+        {
+          "h": "How the hypotheses did"
+        },
+        {
+          "ul": [
+            "**With about 100 examples, the prompted big model wins:** true, 55% vs 32%.",
+            "**With about 2,000, the fine-tuned model matches it:** mostly true. It matched on exact records, intent and valid JSON, and stayed 5 points behind on slot extraction.",
+            "**LoRA fixes format before accuracy:** false. Format was fine from the start, and labels were the real problem."
+          ]
+        },
+        {
+          "h": "Limits"
+        },
+        "One task with short, well-defined labels, which suits fine-tuning; open-ended extraction would favour the bigger model more. One seed at 500 and 2,000, LoRA settings not tuned, and the API model is Flash-Lite, not the largest available. Giving the fine-tuned model the label list, or constraining its output to the schema, would probably fix most of its early errors; that's the next experiment, not a result. Every prediction and the code are in [lora-vs-prompting on GitHub](https://github.com/jpgg2105/lora-vs-prompting/blob/main/RESULTS.md); how LoRA itself works is in the explainer [How fine-tuning with LoRA works](/writing/how-lora-fine-tuning-works/)."
+      ]
+    },
     {
       "slug": "what-stops-prompt-injection",
       "kind": "article",
@@ -2272,7 +2458,7 @@ footer a{color:var(--muted)}
         "LoRA trains well under 1% of the parameters, so gradients and optimizer state shrink and it fits on smaller GPUs. The frozen weights still have to fit; QLoRA stores them in 4 bits.",
         "The rank (8 here) sets how much the adapter can change. Higher rank, more capacity and more memory.",
         "QLoRA goes further by storing the frozen base in 4-bit, so even larger models fit on one GPU.",
-        "Try prompting and RAG first. Fine-tune when you need a consistent style, format or behavior that prompts can't hold.",
+        "Try prompting first, then measure. On a structured-extraction task, a larger model prompted with 10 examples beat a LoRA-tuned 1.5B model at 100 labelled examples (55% vs 32% exact records); at 2,000 the fine-tuned model was within 2 points while reading 29× fewer input tokens. Write-up: “When does LoRA fine-tuning beat a good prompt?”",
         "It works because the weight change needed to adapt a large model appears to have low rank: Hu et al.'s hypothesis, motivated by the low intrinsic dimension Aghajanyan et al. (2021) measured."
       ],
       "refs": [
@@ -2287,6 +2473,10 @@ footer a{color:var(--muted)}
         [
           "Aghajanyan et al. (2021). Intrinsic Dimensionality Explains the Effectiveness of Language Model Fine-Tuning. ACL.",
           "https://arxiv.org/abs/2012.13255"
+        ],
+        [
+          "García (2026). lora-vs-prompting: learning curve, predictions and code.",
+          "https://github.com/jpgg2105/lora-vs-prompting/blob/main/RESULTS.md"
         ]
       ]
     },
@@ -3104,6 +3294,7 @@ footer a{color:var(--muted)}
     ]
   ],
   "featured": [
+    "lora-vs-prompting",
     "what-stops-prompt-injection",
     "does-hybrid-search-pay-for-itself",
     "does-an-agent-beat-a-single-llm-call",
@@ -6072,6 +6263,72 @@ const SCENES = {
       K.alpha(s5 * K.seg(S, 4.85, 4.95)); K.text("60 questions: a direction to test, not a significant result", 60, 82, { size: 2.2, align: "center", color: C.muted });
     }
     note("vectors want chunks that fit the model; keywords like longer ones", 4.6, 5.2, C.accent);
+    K.alpha(1);
+  },
+  /* ---------- LoRA vs prompting: the learning curve ---------- */
+  proj_lvp(K, S, time){
+    const C = K.C, ctx = K.ctx;
+    const vis = (a, b) => K.seg(S, a, a + .15) * (1 - K.seg(S, b - .12, b));
+    const note = (t, a, b, col) => { K.alpha(K.seg(S, a, a + .2) * (1 - K.seg(S, b - .1, b))); K.text(t, 60, 94, { size: 2.7, align: "center", color: col || C.muted, weight: 600 }); };
+    // 1. the task
+    const s1 = vis(0, 1.05);
+    if (s1 > 0){
+      K.alpha(s1 * K.seg(S, .02, .12)); K.text("a request to a voice assistant", 60, 14, { size: 2.4, align: "center", color: C.muted });
+      K.rect(16, 18, 88, 10, 2, { fill: C.surface, stroke: C.strong }); K.text("“wake me up at five am this week”", 60, 23, { size: 3, align: "center", weight: 600 });
+      K.alpha(s1 * K.seg(S, .2, .3)); K.arrow(60, 30, 60, 38, { color: C.accent, hs: 1 });
+      K.alpha(s1 * K.seg(S, .3, .4)); K.rect(12, 40, 96, 14, 2, { fill: C.surface, stroke: C.accent, lw: .45 });
+      K.text('{"intent": "alarm_set",', 18, 44.5, { size: 2.4, mono: true });
+      K.text(' "slots": {"time": "five am", "date": "this week"}}', 18, 49.5, { size: 2.4, mono: true });
+      K.alpha(s1 * K.seg(S, .5, .6)); K.text("60 intents · 55 slot types · 300 test requests (MASSIVE)", 60, 60, { size: 2.4, align: "center", color: C.muted });
+      const m = [["a big model, prompted", "Gemini Flash-Lite + 10 retrieved examples", C.warn], ["a small model, prompted", "Qwen2.5-1.5B + 10 retrieved examples", C.strong], ["a small model, fine-tuned", "Qwen2.5-1.5B + LoRA, short instruction", C.ok]];
+      m.forEach(([t, sub, col], i) => { K.alpha(s1 * K.seg(S, .6 + i * .08, .7 + i * .08)); K.dot(24, 66 + i * 8.5, 1.1, { fill: col }); K.text(t, 28, 66 + i * 8.5, { size: 2.5, weight: 700 }); K.text(sub, 28, 69.8 + i * 8.5, { size: 2.2, color: C.muted }); });
+    }
+    note("same labelled examples for all three: 100, 500 or 2,000", .6, 1.05);
+    // 2 + 3. the curve
+    const s23 = vis(1.02, 3.05);
+    if (s23 > 0){
+      const X0 = 18, X1 = 108, Y0 = 78, Y1 = 14, xs = [100, 500, 2000];
+      const px = n => K.lerp(X0, X1, Math.log10(n / 100) / Math.log10(20)), py = v => K.lerp(Y0, Y1, v / .8);
+      K.alpha(s23); K.line(X0, Y0, X1, Y0, { color: C.strong }); K.line(X0, Y0, X0, Y1, { color: C.strong });
+      xs.forEach(n => K.text(n.toLocaleString("en-US"), px(n), Y0 + 4, { size: 2.3, align: "center", color: C.muted }));
+      K.text("labelled examples", (X0 + X1) / 2, Y0 + 9, { size: 2.2, align: "center", color: C.muted });
+      [0, .2, .4, .6, .8].forEach(v => { K.text(`${Math.round(v * 100)}%`, X0 - 2, py(v), { size: 2.1, align: "right", color: C.muted }); if (v) K.line(X0, py(v), X1, py(v), { color: C.line, dash: [.6, .8] }); });
+      K.text("exact record", X0, Y1 - 4, { size: 2.2, color: C.muted });
+      const lines = [["Gemini, prompted", [.553, .64, .66], C.warn, 1.1, 0], ["Qwen, prompted", [.31, .397, .487], C.strong, 2.1, 1], ["Qwen + LoRA", [.319, .513, .637], C.ok, 2.35, 2]];
+      lines.forEach(([t, vals, col, t0, li]) => {
+        const p = K.seg(S, t0, t0 + .35); if (p <= 0) return;
+        K.alpha(s23);
+        ctx.beginPath(); vals.forEach((v, i) => { const x = px(xs[i]), y = py(v); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); });
+        ctx.save(); ctx.beginPath(); ctx.rect(0, 0, K.lerp(X0, X1 + 2, p), 100); ctx.clip();
+        ctx.beginPath(); vals.forEach((v, i) => { const x = px(xs[i]), y = py(v); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); });
+        ctx.strokeStyle = col; ctx.lineWidth = .7; ctx.stroke();
+        vals.forEach((v, i) => K.dot(px(xs[i]), py(v), 1.1, { fill: col }));
+        ctx.restore();
+        K.alpha(s23 * K.seg(S, t0 + .3, t0 + .4));
+        K.dot(X0 + 4, Y1 + 2 + li * 5, 1, { fill: col }); K.text(t, X0 + 7, Y1 + 2 + li * 5, { size: 2.3, color: col === C.strong ? C.ink : col, weight: 700 });
+        vals.forEach((v, i) => {
+          const below = li === 1 || (li === 2 && i === 2);
+          K.text(`${Math.round(v * 100)}`, px(xs[i]) + (li === 2 && i === 2 ? -2.5 : i === 0 ? 2.2 : 0), py(v) + (below ? 3 : -2.8),
+            { size: 2.1, mono: true, align: li === 2 && i === 2 ? "right" : i === 0 ? "left" : "center", color: col === C.strong ? C.muted : col, halo: true });
+        });
+      });
+    }
+    note("100 examples: the prompted big model wins by 22 points", 1.45, 2.05, C.warn);
+    note("2,000 examples: the fine-tuned 1.5B model is within 2 points", 2.7, 3.05, C.ok);
+    // 4. cost
+    const s4 = vis(3.02, 4.2);
+    if (s4 > 0){
+      K.alpha(s4); K.text("input tokens per request", 60, 14, { size: 2.6, align: "center", weight: 700 });
+      const rows = [["prompt with 10 examples", 900, C.accent], ["fine-tuned, short instruction", 31, C.ok]];
+      rows.forEach(([t, n, col], i) => {
+        const y = 26 + i * 11, w = 60 * n / 900 * K.ease(K.seg(S, 3.1 + i * .1, 3.4 + i * .1));
+        K.alpha(s4 * K.seg(S, 3.08 + i * .1, 3.18 + i * .1)); K.text(t, 44, y, { size: 2.4, align: "right", weight: 600 });
+        K.rect(48, y - 2.2, Math.max(.6, w), 4.4, 1, { fill: col }); K.text(`~${n}`, 48 + Math.max(.6, w) + 2, y, { size: 2.4, mono: true, weight: 700, color: col });
+      });
+      const facts = [["29× fewer input tokens", 3.45], ["190 vs 355 GPU-seconds per 1,000 requests (T4)", 3.55], ["3 minutes of training on a free GPU", 3.65], ["but 100 examples weren't enough: it invented labels", 3.75]];
+      facts.forEach(([t, t0], i) => { K.alpha(s4 * K.seg(S, t0, t0 + .1)); K.text(t, 60, 54 + i * 7, { size: 2.5, align: "center", color: i === 3 ? C.warn : C.ink, weight: i ? 500 : 700 }); });
+    }
+    note("past a few hundred examples, fine-tuning is the cheaper way to run it", 3.6, 4.2, C.ok);
     K.alpha(1);
   },
 };

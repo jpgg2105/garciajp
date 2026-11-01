@@ -121,7 +121,7 @@
     <span class="go"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"></path></svg></span>
   </a></div>
       </section>
-      <section><div class="sh"><h2>Recent writing</h2><a href="/writing/">All writing</a></div><div class="posts"><a class="post" href="/writing/what-stops-prompt-injection/"><span class="d num">Nov 1, 2026</span><h3>What actually stops prompt injection? I tested six defences</h3><span class="tag article">Article</span><p>I planted 36 injections in the documents a tool-using assistant reads. Undefended, 42% worked; a one-paragraph warning cut that to 6%. One fake policy update beat every defence, and the strongest filter cost the answers.</p></a><a class="post" href="/writing/does-hybrid-search-pay-for-itself/"><span class="d num">Nov 1, 2026</span><h3>Does hybrid search plus reranking pay for itself? I measured my RAG pipeline</h3><span class="tag article">Article</span><p>I took my RAG service apart stage by stage on 1,008 labelled questions. The biggest gain was a one-line tokenizer fix, the reranker reorders more than it finds, and hybrid fusion added nothing until BM25 was fixed.</p></a><a class="post" href="/writing/does-an-agent-beat-a-single-llm-call/"><span class="d num">Oct 31, 2026</span><h3>Does a four-agent loop beat a single LLM call? I measured it</h3><span class="tag article">Article</span><p>On 100 multi-hop questions, my research agent answered 86% correctly against 74% for one retrieve-and-answer call, at about 6× the calls. Where the gain comes from, where it loses, and what I'd change.</p></a></div></section>
+      <section><div class="sh"><h2>Recent writing</h2><a href="/writing/">All writing</a></div><div class="posts"><a class="post" href="/writing/lora-vs-prompting/"><span class="d num">Nov 1, 2026</span><h3>When does LoRA fine-tuning beat a good prompt? I measured the crossover</h3><span class="tag article">Article</span><p>A 1.5B model fine-tuned with LoRA against a larger model prompted with examples, on the same 100, 500 and 2,000 labelled examples. The prompt won easily at 100; at 2,000 the small model was within 2 points at 1/29 of the input.</p></a><a class="post" href="/writing/what-stops-prompt-injection/"><span class="d num">Nov 1, 2026</span><h3>What actually stops prompt injection? I tested six defences</h3><span class="tag article">Article</span><p>I planted 36 injections in the documents a tool-using assistant reads. Undefended, 42% worked; a one-paragraph warning cut that to 6%. One fake policy update beat every defence, and the strongest filter cost the answers.</p></a><a class="post" href="/writing/does-hybrid-search-pay-for-itself/"><span class="d num">Nov 1, 2026</span><h3>Does hybrid search plus reranking pay for itself? I measured my RAG pipeline</h3><span class="tag article">Article</span><p>I took my RAG service apart stage by stage on 1,008 labelled questions. The biggest gain was a one-line tokenizer fix, the reranker reorders more than it finds, and hybrid fusion added nothing until BM25 was fixed.</p></a></div></section>
       
   <section class="cta">
     <h2>Hiring, or need an AI feature built? Let's talk.</h2>
@@ -136,9 +136,9 @@
 <!-- ===================== CONTENT =====================
      Everything on the site comes from this JSON. Edit it, then run `python build.py`.
      See README.md for what each field does. -->
-<script src="/assets/content.js?v=69f08c5257"></script>
+<script src="/assets/content.js?v=d4c983baf0"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/motion@11.11.13/dist/motion.js"></script>
-<script src="/assets/site.js?v=634cd5baf9"></script>
+<script src="/assets/site.js?v=df59417aed"></script>
 </body>
 </html>

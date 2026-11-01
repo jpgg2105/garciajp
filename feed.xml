@@ -8,6 +8,13 @@
   <language>en</language>
   <lastBuildDate>Sun, 01 Nov 2026 12:00:00 +0000</lastBuildDate>
   <item>
+    <title>When does LoRA fine-tuning beat a good prompt? I measured the crossover</title>
+    <link>https://garciajp.com/writing/lora-vs-prompting/</link>
+    <guid isPermaLink="true">https://garciajp.com/writing/lora-vs-prompting/</guid>
+    <pubDate>Sun, 01 Nov 2026 12:00:00 +0000</pubDate>
+    <description>A 1.5B model fine-tuned with LoRA against a larger model prompted with examples, on the same 100, 500 and 2,000 labelled examples. The prompt won easily at 100; at 2,000 the small model was within 2 points at 1/29 of the input.</description>
+  </item>
+  <item>
     <title>What actually stops prompt injection? I tested six defences</title>
     <link>https://garciajp.com/writing/what-stops-prompt-injection/</link>
     <guid isPermaLink="true">https://garciajp.com/writing/what-stops-prompt-injection/</guid>

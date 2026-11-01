@@ -3,6 +3,7 @@
 /projects/
 /projects/agent-injection-lab/
 /projects/chatbots-and-outreach/
+/projects/lora-vs-prompting/
 /projects/research-agent/
 /projects/retrieval-ablation/
 /projects/schools-analytics-dashboard/
@@ -38,4 +39,5 @@
 /writing/how-transformers-work/
 /writing/how-vector-search-works/
 /writing/long-context-vs-rag/
+/writing/lora-vs-prompting/
 /writing/what-stops-prompt-injection/

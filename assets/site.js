@@ -2956,6 +2956,72 @@ const SCENES = {
     note("vectors want chunks that fit the model; keywords like longer ones", 4.6, 5.2, C.accent);
     K.alpha(1);
   },
+  /* ---------- LoRA vs prompting: the learning curve ---------- */
+  proj_lvp(K, S, time){
+    const C = K.C, ctx = K.ctx;
+    const vis = (a, b) => K.seg(S, a, a + .15) * (1 - K.seg(S, b - .12, b));
+    const note = (t, a, b, col) => { K.alpha(K.seg(S, a, a + .2) * (1 - K.seg(S, b - .1, b))); K.text(t, 60, 94, { size: 2.7, align: "center", color: col || C.muted, weight: 600 }); };
+    // 1. the task
+    const s1 = vis(0, 1.05);
+    if (s1 > 0){
+      K.alpha(s1 * K.seg(S, .02, .12)); K.text("a request to a voice assistant", 60, 14, { size: 2.4, align: "center", color: C.muted });
+      K.rect(16, 18, 88, 10, 2, { fill: C.surface, stroke: C.strong }); K.text("“wake me up at five am this week”", 60, 23, { size: 3, align: "center", weight: 600 });
+      K.alpha(s1 * K.seg(S, .2, .3)); K.arrow(60, 30, 60, 38, { color: C.accent, hs: 1 });
+      K.alpha(s1 * K.seg(S, .3, .4)); K.rect(12, 40, 96, 14, 2, { fill: C.surface, stroke: C.accent, lw: .45 });
+      K.text('{"intent": "alarm_set",', 18, 44.5, { size: 2.4, mono: true });
+      K.text(' "slots": {"time": "five am", "date": "this week"}}', 18, 49.5, { size: 2.4, mono: true });
+      K.alpha(s1 * K.seg(S, .5, .6)); K.text("60 intents · 55 slot types · 300 test requests (MASSIVE)", 60, 60, { size: 2.4, align: "center", color: C.muted });
+      const m = [["a big model, prompted", "Gemini Flash-Lite + 10 retrieved examples", C.warn], ["a small model, prompted", "Qwen2.5-1.5B + 10 retrieved examples", C.strong], ["a small model, fine-tuned", "Qwen2.5-1.5B + LoRA, short instruction", C.ok]];
+      m.forEach(([t, sub, col], i) => { K.alpha(s1 * K.seg(S, .6 + i * .08, .7 + i * .08)); K.dot(24, 66 + i * 8.5, 1.1, { fill: col }); K.text(t, 28, 66 + i * 8.5, { size: 2.5, weight: 700 }); K.text(sub, 28, 69.8 + i * 8.5, { size: 2.2, color: C.muted }); });
+    }
+    note("same labelled examples for all three: 100, 500 or 2,000", .6, 1.05);
+    // 2 + 3. the curve
+    const s23 = vis(1.02, 3.05);
+    if (s23 > 0){
+      const X0 = 18, X1 = 108, Y0 = 78, Y1 = 14, xs = [100, 500, 2000];
+      const px = n => K.lerp(X0, X1, Math.log10(n / 100) / Math.log10(20)), py = v => K.lerp(Y0, Y1, v / .8);
+      K.alpha(s23); K.line(X0, Y0, X1, Y0, { color: C.strong }); K.line(X0, Y0, X0, Y1, { color: C.strong });
+      xs.forEach(n => K.text(n.toLocaleString("en-US"), px(n), Y0 + 4, { size: 2.3, align: "center", color: C.muted }));
+      K.text("labelled examples", (X0 + X1) / 2, Y0 + 9, { size: 2.2, align: "center", color: C.muted });
+      [0, .2, .4, .6, .8].forEach(v => { K.text(`${Math.round(v * 100)}%`, X0 - 2, py(v), { size: 2.1, align: "right", color: C.muted }); if (v) K.line(X0, py(v), X1, py(v), { color: C.line, dash: [.6, .8] }); });
+      K.text("exact record", X0, Y1 - 4, { size: 2.2, color: C.muted });
+      const lines = [["Gemini, prompted", [.553, .64, .66], C.warn, 1.1, 0], ["Qwen, prompted", [.31, .397, .487], C.strong, 2.1, 1], ["Qwen + LoRA", [.319, .513, .637], C.ok, 2.35, 2]];
+      lines.forEach(([t, vals, col, t0, li]) => {
+        const p = K.seg(S, t0, t0 + .35); if (p <= 0) return;
+        K.alpha(s23);
+        ctx.beginPath(); vals.forEach((v, i) => { const x = px(xs[i]), y = py(v); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); });
+        ctx.save(); ctx.beginPath(); ctx.rect(0, 0, K.lerp(X0, X1 + 2, p), 100); ctx.clip();
+        ctx.beginPath(); vals.forEach((v, i) => { const x = px(xs[i]), y = py(v); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); });
+        ctx.strokeStyle = col; ctx.lineWidth = .7; ctx.stroke();
+        vals.forEach((v, i) => K.dot(px(xs[i]), py(v), 1.1, { fill: col }));
+        ctx.restore();
+        K.alpha(s23 * K.seg(S, t0 + .3, t0 + .4));
+        K.dot(X0 + 4, Y1 + 2 + li * 5, 1, { fill: col }); K.text(t, X0 + 7, Y1 + 2 + li * 5, { size: 2.3, color: col === C.strong ? C.ink : col, weight: 700 });
+        vals.forEach((v, i) => {
+          const below = li === 1 || (li === 2 && i === 2);
+          K.text(`${Math.round(v * 100)}`, px(xs[i]) + (li === 2 && i === 2 ? -2.5 : i === 0 ? 2.2 : 0), py(v) + (below ? 3 : -2.8),
+            { size: 2.1, mono: true, align: li === 2 && i === 2 ? "right" : i === 0 ? "left" : "center", color: col === C.strong ? C.muted : col, halo: true });
+        });
+      });
+    }
+    note("100 examples: the prompted big model wins by 22 points", 1.45, 2.05, C.warn);
+    note("2,000 examples: the fine-tuned 1.5B model is within 2 points", 2.7, 3.05, C.ok);
+    // 4. cost
+    const s4 = vis(3.02, 4.2);
+    if (s4 > 0){
+      K.alpha(s4); K.text("input tokens per request", 60, 14, { size: 2.6, align: "center", weight: 700 });
+      const rows = [["prompt with 10 examples", 900, C.accent], ["fine-tuned, short instruction", 31, C.ok]];
+      rows.forEach(([t, n, col], i) => {
+        const y = 26 + i * 11, w = 60 * n / 900 * K.ease(K.seg(S, 3.1 + i * .1, 3.4 + i * .1));
+        K.alpha(s4 * K.seg(S, 3.08 + i * .1, 3.18 + i * .1)); K.text(t, 44, y, { size: 2.4, align: "right", weight: 600 });
+        K.rect(48, y - 2.2, Math.max(.6, w), 4.4, 1, { fill: col }); K.text(`~${n}`, 48 + Math.max(.6, w) + 2, y, { size: 2.4, mono: true, weight: 700, color: col });
+      });
+      const facts = [["29× fewer input tokens", 3.45], ["190 vs 355 GPU-seconds per 1,000 requests (T4)", 3.55], ["3 minutes of training on a free GPU", 3.65], ["but 100 examples weren't enough: it invented labels", 3.75]];
+      facts.forEach(([t, t0], i) => { K.alpha(s4 * K.seg(S, t0, t0 + .1)); K.text(t, 60, 54 + i * 7, { size: 2.5, align: "center", color: i === 3 ? C.warn : C.ink, weight: i ? 500 : 700 }); });
+    }
+    note("past a few hundred examples, fine-tuning is the cheaper way to run it", 3.6, 4.2, C.ok);
+    K.alpha(1);
+  },
 };
 
 /* stage controller */
