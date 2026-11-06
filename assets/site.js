@@ -3053,7 +3053,7 @@ const SCENES = {
 
   /* ---------- Loop engineering: loops around the agent loop ---------- */
   loops(K, S){
-    const C = K.C, ctx = K.ctx, cx = 60, cy = 47, r1 = 10, r2 = 26, r3 = 38;
+    const C = K.C, ctx = K.ctx, cx = 60, cy = 46, r1 = 12, r2 = 29, r3 = 41;
     const vis = (a, b) => K.seg(S, a, a + .15) * (1 - K.seg(S, b - .12, b));
     const note = (t, a, b, col) => { K.alpha(K.seg(S, a, a + .2) * (1 - K.seg(S, b - .1, b))); K.text(t, 60, 94, { size: 2.7, align: "center", color: col || C.muted, weight: 600 }); };
     const ring = (r, col, lw, dash) => { ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.strokeStyle = col; ctx.lineWidth = lw; ctx.setLineDash(dash || []); ctx.stroke(); ctx.setLineDash([]); };
@@ -3064,13 +3064,13 @@ const SCENES = {
     const a1 = K.seg(S, .02, .15) * back;
     if (a1 > 0){
       K.alpha(a1); ring(r1, C.accent, .5);
-      [["model", -Math.PI / 2], ["tools", 0], ["results", Math.PI / 2]].forEach(([t, a]) => { const [x, y] = on(r1, a); chip(x, y, t, C.accent, 12.5); });
+      [["model", -Math.PI / 2], ["tools", Math.PI / 4], ["results", 3 * Math.PI / 4]].forEach(([t, a]) => { const [x, y] = on(r1, a); chip(x, y, t, C.accent, 12); });
       const spin = K.seg(S, .15, .8) * 2.5;
       if (spin > 0 && spin < 2.5){ const [x, y] = on(r1, -Math.PI / 2 + spin * Math.PI * 2); K.dot(x, y, 1.1, { fill: C.accent }); }
-      K.alpha(a1 * K.seg(S, .2, .3)); K.text(`turn ${Math.min(3, 1 + Math.floor(spin))}`, cx - 1, cy, { size: 2.2, align: "center", color: C.muted, mono: true });
+      K.alpha(a1 * K.seg(S, .2, .3)); K.text(`turn ${Math.min(3, 1 + Math.floor(spin))}`, cx, cy - 1, { size: 2.2, align: "center", color: C.muted, mono: true });
       const fa = a1 * (1 - K.seg(S, 1, 1.1));
-      K.alpha(fa); K.arrow(65, 39, 80, 26, { p: K.seg(S, .8, .92), color: C.ok, hs: 1 });
-      K.alpha(fa * K.seg(S, .9, .95)); K.fit("final answer, or max turns", 81, 23.5, 36, { size: 2.2, color: C.ok, weight: 600 });
+      K.alpha(fa); K.arrow(66, 33, 80, 22, { p: K.seg(S, .8, .92), color: C.ok, hs: 1 });
+      K.alpha(fa * K.seg(S, .9, .95)); K.fit("final answer, or max turns", 82, 19.5, 34, { size: 2.2, color: C.ok, weight: 600 });
     }
     note("call the model, run its tools, feed back the results, repeat", .3, 1.05);
     // 2. the verification loop
@@ -3087,8 +3087,8 @@ const SCENES = {
       K.alpha(fb); K.fit("fail: feedback", cx, cy + r2 + 3.5, 40, { size: 2.3, align: "center", color: C.warn, weight: 600 });
       K.fit("“found the prison, not the closing date”", cx, cy + r2 + 7.5, 60, { size: 2, align: "center", color: C.warn });
       const ps = a2 * (1 - K.seg(S, 1.95, 2.05));
-      K.alpha(ps); K.arrow(gx + 10, cy, 114, cy, { p: K.seg(S, 1.68, 1.8), color: C.ok, hs: 1 });
-      K.alpha(ps * K.seg(S, 1.78, 1.84)); K.text("pass", 105, cy - 2.6, { size: 2.3, align: "center", color: C.ok, weight: 700 });
+      K.alpha(ps); K.arrow(gx + 10, cy, 116, cy, { p: K.seg(S, 1.68, 1.8), color: C.ok, hs: 1 });
+      K.alpha(ps * K.seg(S, 1.78, 1.84)); K.text("pass", 108, cy - 2.6, { size: 2.3, align: "center", color: C.ok, weight: 700 });
     }
     note("my critic sent 26 of 100 questions back for a second round", 1.35, 2.05, C.warn);
     // 3. stop rules
@@ -3107,13 +3107,13 @@ const SCENES = {
     // 4. event-driven
     const L4 = K.seg(S, 3.02, 3.15) * (1 - K.seg(S, 3.95, 4.08));
     if (L4 > 0){
-      const tr = [["schedule", "every day, 9:00", 30], ["webhook", "a new ticket", 47], ["new document", "added to a folder", 64]];
+      const tr = [["schedule", "every day, 9:00", 26], ["webhook", "a new ticket", 46], ["new document", "added to a folder", 66]];
       tr.forEach(([t, sub, y], i) => {
         K.alpha(L4 * K.seg(S, 3.08 + i * .1, 3.18 + i * .1));
-        K.rect(2, y - 4.5, 24, 9, 2, { fill: C.surface, stroke: C.strong }); K.fit(t, 14, y - 1.6, 22, { size: 2.5, align: "center", weight: 600 }); K.fit(sub, 14, y + 2.2, 22, { size: 2, align: "center", color: C.muted });
+        K.rect(1, y - 4.5, 22, 9, 2, { fill: C.surface, stroke: C.strong }); K.fit(t, 12, y - 1.6, 20, { size: 2.5, align: "center", weight: 600 }); K.fit(sub, 12, y + 2.2, 20, { size: 2, align: "center", color: C.muted });
         const [tx, ty] = on(r2, Math.PI - (y - cy) / 40);
-        K.alpha(L4); K.arrow(26, y, tx, ty, { p: K.seg(S, 3.2 + i * .1, 3.4 + i * .1), color: C.accent, hs: .9 });
-        K.packet(26, y, tx, ty, K.seg(S, 3.45 + i * .15, 3.7 + i * .15), { r: .9 });
+        K.alpha(L4); K.arrow(23, y, tx, ty, { p: K.seg(S, 3.2 + i * .1, 3.4 + i * .1), color: C.accent, hs: .9 });
+        K.packet(23, y, tx, ty, K.seg(S, 3.45 + i * .15, 3.7 + i * .15), { r: .9 });
       });
     }
     note("something outside starts each run: the agent is part of a system", 3.3, 4.05);
