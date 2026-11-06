@@ -508,6 +508,9 @@ footer a{color:var(--muted)}
     "goatcounter": "jpgarcia2154"
   },
   "writingOrder": [
+    "how-agent-harnesses-work",
+    "how-agent-loops-work",
+    "how-agent-graphs-work",
     "lora-vs-prompting",
     "what-stops-prompt-injection",
     "how-prompt-injection-works",
@@ -1388,6 +1391,190 @@ footer a{color:var(--muted)}
     "explainer": "Scroll-driven visual guides to how AI and software techniques work."
   },
   "posts": [
+    {
+      "slug": "how-agent-harnesses-work",
+      "kind": "explainer",
+      "scene": "harness",
+      "ogFrame": 4.9,
+      "date": "2026-11-06",
+      "title": "How an agent harness works",
+      "excerpt": "An agent is a model plus a harness: everything around it that decides what it sees, what it can do, what it remembers and what you can check afterwards.",
+      "intro": "Two teams can use the same model and build very different agents, because most of an agent isn't the model. LangChain puts it as agent = model + harness, where the harness is every piece of code, configuration and execution logic that isn't the model. Scroll through its four jobs. This is the first of three explainers, with [loops](/writing/how-agent-loops-work/) and [graphs](/writing/how-agent-graphs-work/).",
+      "steps": [
+        [
+          "Take the model out of the diagram",
+          "A model turns text into text. It can't read a file, call an API, remember yesterday or ask for permission. Each of those is code around the model, and all of it together is the harness: the system prompt, the tools, the workspace, the memory, the permission rules and the logs."
+        ],
+        [
+          "What goes in: context",
+          "Before every call the harness decides what goes into the context window: instructions, tool descriptions, retrieved documents, memory and the state of the task. The model knows only that. In my research agent, the citations come from the search tool, not from the model, so a cited source always exists."
+        ],
+        [
+          "What comes out: actions, with permissions",
+          "A tool call is a request; the harness decides whether it runs. Searches run in a sandbox, file access stays inside the workspace, and risky actions wait for approval. In my prompt-injection lab, an approval gate on email stopped all 12 hijacking attempts, although the model tried 5 times: it doesn't depend on the model obeying."
+        ],
+        [
+          "What survives: state between sessions",
+          "A context window ends; long tasks don't. Anthropic found that compaction alone wasn't enough for coding agents that work across many sessions. Their harness has a first session write a feature list, a progress file and an initial git commit; every later session reads them, works on one feature, and commits."
+        ],
+        [
+          "What you can see: traces and checks",
+          "The harness logs every model call, tool input and output, tokens and time, and runs deterministic checks such as tests or a linter. Without that trace you can't tell whether a run failed because of the model, or because the harness gave it the wrong context or a broken tool."
+        ]
+      ],
+      "takeaways": [
+        "Before blaming the model or switching to a bigger one, look at what the harness showed it and what it let it do. Stale context, vague tool descriptions and missing exit conditions look like model mistakes.",
+        "Least privilege applies to agents. Of the four defenses in my injection lab, the approval gate was the only one that brought hijacking to zero, and it was code, not a prompt.",
+        "More isn't better: each extra tool is one more choice the model can get wrong, and each extra document is more text to get lost in.",
+        "The vocabulary is new and loosely used. The definition that holds up is the simple one: everything that isn't the model. The loops that check its work are covered in [How agent loops work](/writing/how-agent-loops-work/)."
+      ],
+      "refs": [
+        [
+          "Trivedy (2026). The Anatomy of an Agent Harness. LangChain blog.",
+          "https://www.langchain.com/blog/the-anatomy-of-an-agent-harness"
+        ],
+        [
+          "Young (2025). Effective harnesses for long-running agents. Anthropic Engineering.",
+          "https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents"
+        ],
+        [
+          "OpenAI. Running agents: the agent loop and max_turns. OpenAI Agents SDK documentation.",
+          "https://openai.github.io/openai-agents-python/running_agents/"
+        ],
+        [
+          "García (2026). agent-injection-lab: 360 runs, traces and write-up.",
+          "https://github.com/jpgg2105/agent-injection-lab/blob/main/RESULTS.md"
+        ],
+        [
+          "García (2026). research-agent: orchestrator with a bounded research and critique loop.",
+          "https://github.com/jpgg2105/research-agent/blob/main/src/research_agent/orchestrator.py"
+        ]
+      ]
+    },
+    {
+      "slug": "how-agent-loops-work",
+      "kind": "explainer",
+      "scene": "loops",
+      "ogFrame": 4.9,
+      "date": "2026-11-06",
+      "title": "How agent loops work: the loops around the loop",
+      "excerpt": "Every agent runs a loop of model calls and tool calls. Loop engineering adds the loops around it: one that checks the work, one that starts runs, one that improves the agent, and rules for when each stops.",
+      "intro": "Every tool-using agent already runs a loop: call the model, run the tools it asks for, feed back the results, repeat. Loop engineering, a name that caught on in 2026, is designing the loops around that one: what checks the work, what starts a run, what improves the agent over time, and what makes each loop stop. This is the second of three explainers, after [the harness](/writing/how-agent-harnesses-work/).",
+      "steps": [
+        [
+          "The agent loop",
+          "The model gets the task and either answers or asks for tools. The harness runs the tools, appends the results, and calls the model again. The loop ends on a final answer or at a turn limit: OpenAI's Agents SDK raises an error once max_turns is exceeded, rather than letting it run on."
+        ],
+        [
+          "The verification loop",
+          "A grader checks the output against something outside the model: tests, a schema, whether the citations exist, or a rubric. A failure goes back with feedback and the agent tries again. In my research agent the grader is a critic that reads the findings and asks follow-up questions; it sent 26 of 100 benchmark questions back for a second round."
+        ],
+        [
+          "Stop on evidence, not confidence",
+          "Every loop needs a rule for stopping: the check passes, a maximum number of rounds, a budget, or a hand-off to a person. “The agent says it's done” isn't one; Anthropic saw long-running coding agents declare projects finished too early. My research loop stops when the critic is satisfied, has no follow-ups, or after two rounds, so a strict critic can't loop forever."
+        ],
+        [
+          "Loops started by events",
+          "An agent doesn't have to wait for someone to type. A schedule, a webhook or a new document can start each run, and the agent becomes one component running inside a larger system, which is why its stop rules and budgets matter more."
+        ],
+        [
+          "The improvement loop",
+          "Read the traces of past runs, find where they fail, change the harness (a prompt, a tool, a limit) and run the same test set again. LangChain calls this hill climbing. Without a fixed test set, a version that feels better can be worse."
+        ]
+      ],
+      "takeaways": [
+        "Loops cost calls. My agent used 5.7 model calls per question against 1 for a single call, for 86% correct against 74% on 100 multi-hop questions. Add a loop where a failure costs more than the check.",
+        "Prefer checks the model can't talk its way past: tests, schemas, does the cited source exist. A grader that is the same model can share the writer's blind spots, so give it a separate context at least.",
+        "Order loops by cost: try the cheap path first and loop only when it fails. On my benchmark, a single call first and the agent only when the call said the sources were insufficient would have scored 87% at about 2.1 calls per question. That's simulated after the fact, so it's a hypothesis to test, not a result.",
+        "The ideas are older than the name: Anthropic described the evaluator-optimizer loop and iteration limits in 2024. Where the loops sit, and in what order, is the subject of [How agent graphs work](/writing/how-agent-graphs-work/)."
+      ],
+      "refs": [
+        [
+          "Runkle (2026). The Art of Loop Engineering. LangChain blog.",
+          "https://www.langchain.com/blog/the-art-of-loop-engineering"
+        ],
+        [
+          "Schluntz and Zhang (2024). Building effective agents. Anthropic Engineering.",
+          "https://www.anthropic.com/engineering/building-effective-agents"
+        ],
+        [
+          "OpenAI. Running agents: the agent loop and max_turns. OpenAI Agents SDK documentation.",
+          "https://openai.github.io/openai-agents-python/running_agents/"
+        ],
+        [
+          "Young (2025). Effective harnesses for long-running agents. Anthropic Engineering.",
+          "https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents"
+        ],
+        [
+          "García (2026). agent-benchmark: a multi-agent loop vs a single LLM call on 100 HotpotQA questions.",
+          "https://github.com/jpgg2105/agent-benchmark/blob/main/RESULTS.md"
+        ],
+        [
+          "García (2026). research-agent: orchestrator with a bounded research and critique loop.",
+          "https://github.com/jpgg2105/research-agent/blob/main/src/research_agent/orchestrator.py"
+        ]
+      ]
+    },
+    {
+      "slug": "how-agent-graphs-work",
+      "kind": "explainer",
+      "scene": "graph",
+      "ogFrame": 3.4,
+      "date": "2026-11-06",
+      "title": "How agent graphs work: nodes, edges and safe cycles",
+      "excerpt": "A graph makes an agent's control flow explicit: steps are nodes, allowed next steps are edges, and shared state moves along them. Here is my research agent drawn as one, and when not to draw one.",
+      "intro": "A graph is a way to write down what may run next. Steps are nodes, the allowed next steps are edges, and a shared state moves along them. That makes branching, parallel work, retries and pauses explicit instead of hiding them in prompt text. Scroll through my research agent drawn as a graph. This is the last of three explainers, after [the harness](/writing/how-agent-harnesses-work/) and [loops](/writing/how-agent-loops-work/).",
+      "steps": [
+        [
+          "Nodes, edges and state",
+          "A node is one step: a plain function, a model call, an agent or a person. An edge says which step may run next. The state is the record every node reads from and writes to; in my research agent that's the question, the plan, the findings, the critiques and the report."
+        ],
+        [
+          "Fan out, then join",
+          "The planner splits the question into sub-questions, and one researcher per sub-question searches and reads at the same time. The critic waits until all of them are back. AutoGen's GraphFlow names the two join rules: wait for all incoming edges, or run as soon as any arrives."
+        ],
+        [
+          "Conditional edges",
+          "Some edges carry a condition. The critic's verdict picks the next step: if the findings are sufficient, the synthesizer writes the answer; if there are gaps, the critic's follow-up questions go back to the researchers."
+        ],
+        [
+          "Cycles with exits, and checkpoints",
+          "That back edge is a loop, and a graph makes its exit part of the design: in my agent, two rounds at most, then synthesize whatever was found. Frameworks such as LangGraph also save the state at each step, so a run that crashes can resume where it stopped, and a person can inspect or change the state before it continues."
+        ],
+        [
+          "When not to draw one",
+          "Anthropic separates workflows, where code fixes the paths, from agents, where the model decides its next step, and recommends the simplest option that works. A graph earns its place when there are real branches, parallel work, approvals or recovery paths. If the path changes with every task, a fixed graph freezes your guesses; run a simpler agent first and draw the paths that keep repeating in its traces."
+        ]
+      ],
+      "takeaways": [
+        "Harness, loop and graph are layers, not rivals: the graph runs inside the harness, and loops are cycles in the graph. When something fails, ask which layer owns it. A missing tool or lost state is the harness, a close-but-unreliable answer needs a loop with a check, and steps in the wrong order are the graph.",
+        "My research agent's graph has a known weakness: the planner writes every sub-question before any search runs, so the second hop of a question can't use what the first found. The fix I'd test next is a graph change, an edge that lets each sub-question see earlier findings.",
+        "A graph doesn't need a framework. My orchestrator is one short Python class with a while loop; frameworks add saved state, streaming and pausing for a person.",
+        "A workflow graph isn't a knowledge graph: its nodes are steps and its edges are control flow, not entities and relations."
+      ],
+      "refs": [
+        [
+          "Microsoft. GraphFlow (Workflows). AutoGen AgentChat documentation.",
+          "https://microsoft.github.io/autogen/stable/user-guide/agentchat-user-guide/graph-flow.html"
+        ],
+        [
+          "LangChain. LangGraph overview. LangGraph documentation.",
+          "https://docs.langchain.com/oss/python/langgraph/overview"
+        ],
+        [
+          "Schluntz and Zhang (2024). Building effective agents. Anthropic Engineering.",
+          "https://www.anthropic.com/engineering/building-effective-agents"
+        ],
+        [
+          "García (2026). research-agent: orchestrator with a bounded research and critique loop.",
+          "https://github.com/jpgg2105/research-agent/blob/main/src/research_agent/orchestrator.py"
+        ],
+        [
+          "García (2026). agent-benchmark: a multi-agent loop vs a single LLM call on 100 HotpotQA questions.",
+          "https://github.com/jpgg2105/agent-benchmark/blob/main/RESULTS.md"
+        ]
+      ]
+    },
     {
       "slug": "lora-vs-prompting",
       "kind": "article",
@@ -3648,6 +3835,7 @@ function exKit(ctx, C, fsc = 1){
     ctx.fillText(s, x, y);
   };
   K.width = (s,o={}) => { ctx.font = K.font(o); return ctx.measureText(s).width; };
+  K.fit = (s,x,y,maxw,o={}) => { const w = K.width(s, o); K.text(s, x, y, w > maxw ? { ...o, size: (o.size || 3.6) * maxw / w } : o); };
   K.line = (x1,y1,x2,y2,o={}) => {
     ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2);
     ctx.strokeStyle = o.color || C.strong; ctx.lineWidth = o.lw || .35; ctx.setLineDash(o.dash || []); ctx.stroke(); ctx.setLineDash([]);
@@ -6339,6 +6527,261 @@ const SCENES = {
     note("vectors want chunks that fit the model; keywords like longer ones", 4.6, 5.2, C.accent);
     K.alpha(1);
   },
+  /* ---------- Agent harness: everything that isn't the model ---------- */
+  harness(K, S){
+    const C = K.C;
+    const vis = (a, b) => K.seg(S, a, a + .15) * (1 - K.seg(S, b - .12, b));
+    const note = (t, a, b, col) => { K.alpha(K.seg(S, a, a + .2) * (1 - K.seg(S, b - .1, b))); K.text(t, 60, 94, { size: 2.7, align: "center", color: col || C.muted, weight: 600 }); };
+    // a layer is bright during its own step and stays, dimmed, afterwards
+    const layer = a => K.seg(S, a, a + .12) * (1 - .55 * K.seg(S, a + 1, a + 1.12));
+    // the model, and the frame around it
+    K.alpha(K.seg(S, .02, .15));
+    K.node(60, 47, 26, 13, "model", { sub: "text in, text out", size: 3.4, stroke: C.accent, lw: .5 });
+    const fr = K.seg(S, .3, .55);
+    if (fr > 0){
+      K.alpha(fr * (1 - .4 * K.seg(S, 1, 1.12)));
+      K.ctx.setLineDash([1.2, .9]); K.rect(4, 5, 112, 83, 4, { stroke: C.accent, lw: .4 }); K.ctx.setLineDash([]);
+      K.text("harness", 7.5, 9, { size: 2.6, color: C.accent, weight: 700 });
+    }
+    const s0 = vis(.45, 1.05);
+    if (s0 > 0){
+      K.alpha(s0); K.text("agent = model + harness", 60, 66, { size: 3.6, align: "center", weight: 700 });
+      K.text("the harness is every piece of code, configuration", 60, 72.5, { size: 2.4, align: "center", color: C.muted });
+      K.text("and execution logic that isn't the model", 60, 76.5, { size: 2.4, align: "center", color: C.muted });
+    }
+    note("same model, different harness, different agent", .6, 1.05);
+    // 1. what goes in
+    const L1 = layer(1);
+    if (L1 > 0){
+      const items = ["system prompt", "tool descriptions", "retrieved documents", "memory", "task state"];
+      K.alpha(L1); K.text("what goes in", 21, 16, { size: 2.5, align: "center", color: C.muted, weight: 700 });
+      items.forEach((t, i) => {
+        const y = 22 + i * 8.6;
+        K.alpha(L1 * K.seg(S, 1.05 + i * .07, 1.15 + i * .07));
+        K.rect(8, y - 3.2, 26, 6.4, 1.6, { fill: C.surface, stroke: C.strong });
+        K.fit(t, 21, y, 24, { size: 2.25, align: "center" });
+        K.alpha(L1 * .8); K.packet(34, y, 47, 47, K.seg(S, 1.45 + i * .06, 1.75 + i * .06), { r: .9 });
+      });
+    }
+    note("the model knows only what the harness puts in its window", 1.4, 2.05);
+    // 2. what comes out, and what is allowed to run
+    const L2 = layer(2);
+    if (L2 > 0){
+      K.alpha(L2); K.text("what comes out", 97, 16, { size: 2.5, align: "center", color: C.muted, weight: 700 });
+      const row = (y, t, sub, col, t0) => { K.alpha(L2 * K.seg(S, t0, t0 + .1)); K.rect(81, y - 4, 32, 8, 1.8, { fill: C.surface, stroke: col }); K.fit(t, 84, y - 1.2, 22, { size: 2.35, weight: 600, mono: true }); K.fit(sub, 84, y + 2.1, 27, { size: 2, color: C.muted }); };
+      row(25, "search_docs()", "runs in a sandbox", C.strong, 2.05);
+      row(36, "read_file()", "only inside the workspace", C.strong, 2.1);
+      row(52, "send_email()", "needs approval", C.warn, 2.15);
+      K.alpha(L2); K.packet(73, 45, 81, 25, K.seg(S, 2.25, 2.45), { r: 1 });
+      K.alpha(L2 * K.seg(S, 2.45, 2.52)); K.check(110, 25, 2.4, C.ok);
+      K.packet(73, 49, 81, 52, K.seg(S, 2.55, 2.75), { r: 1, color: C.warn });
+      const x = K.seg(S, 2.75, 2.82);
+      if (x > 0){
+        K.alpha(L2 * x); K.line(108.5, 50.5, 111.5, 53.5, { color: C.warn, lw: .55 }); K.line(111.5, 50.5, 108.5, 53.5, { color: C.warn, lw: .55 });
+        K.fit("to: records@lumen-audit…", 97, 59.5, 32, { size: 2, align: "center", color: C.warn, mono: true });
+        K.fit("blocked: the user never gave it", 97, 63.5, 32, { size: 2, align: "center", color: C.warn });
+      }
+    }
+    note("a tool call is a request; the harness decides whether it runs", 2.35, 2.75);
+    note("in my lab, the gate stopped all 12 hijack emails", 2.75, 3.05, C.ok);
+    // 3. what survives between sessions
+    const L3 = layer(3);
+    if (L3 > 0){
+      K.alpha(L3); K.rect(8, 79, 104, 6.5, 1.6, { fill: C.raised, stroke: C.accent, lw: .4 });
+      K.fit("on disk: progress file · feature list · git commits", 60, 82.3, 100, { size: 2.3, align: "center", weight: 600 });
+      [20, 44, 68].forEach((x, i) => {
+        const t0 = 3.08 + i * .27, on = K.seg(S, t0, t0 + .06), done = K.seg(S, t0 + .22, t0 + .27);
+        if (on <= 0) return;
+        K.alpha(L3 * on * (1 - .6 * done));
+        K.rect(x - 10, 66.5, 20, 7, 1.6, { fill: C.surface, stroke: done ? C.line : C.strong });
+        K.fit(`session ${i + 1}`, x, 69, 18, { size: 2.3, align: "center", weight: 600 });
+        K.fit(done ? "context gone" : "one feature", x, 72, 18, { size: 1.9, align: "center", color: C.muted });
+        K.alpha(L3 * on);
+        if (i) K.arrow(x - 4, 79, x - 4, 74, { p: K.seg(S, t0 + .02, t0 + .08), color: C.accent, hs: .9 });
+        K.arrow(x + 4, 73.5, x + 4, 78.6, { p: K.seg(S, t0 + .14, t0 + .2), color: C.accent, hs: .9 });
+      });
+      K.alpha(L3 * K.seg(S, 3.85, 3.92)); K.fit("reads, then writes", 96, 70, 22, { size: 2.1, align: "center", color: C.accent });
+    }
+    note("a new session reads where things stand, then does one feature", 3.35, 4.05);
+    // 4. what you can see
+    const L4 = layer(4);
+    if (L4 > 0){
+      const ev = [["model · 1.4k tokens", C.strong], ["search · 0.3 s", C.strong], ["model · 0.9k tokens", C.strong], ["tests pass", C.ok]];
+      ev.forEach(([t, col], i) => {
+        K.alpha(L4 * K.seg(S, 4.1 + i * .12, 4.2 + i * .12));
+        K.rect(31 + i * 20.5, 7.7, 19.5, 5.6, 1.4, { fill: C.surface, stroke: col });
+        K.fit(t, 40.75 + i * 20.5, 10.5, 17.5, { size: 1.95, align: "center", color: col === C.ok ? C.ok : C.ink });
+      });
+    }
+    note("log every call, so you can tell a model failure from a harness failure", 4.4, 5.1);
+    K.alpha(1);
+  },
+
+  /* ---------- Loop engineering: loops around the agent loop ---------- */
+  loops(K, S){
+    const C = K.C, ctx = K.ctx, cx = 60, cy = 47, r1 = 10, r2 = 26, r3 = 38;
+    const vis = (a, b) => K.seg(S, a, a + .15) * (1 - K.seg(S, b - .12, b));
+    const note = (t, a, b, col) => { K.alpha(K.seg(S, a, a + .2) * (1 - K.seg(S, b - .1, b))); K.text(t, 60, 94, { size: 2.7, align: "center", color: col || C.muted, weight: 600 }); };
+    const ring = (r, col, lw, dash) => { ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.strokeStyle = col; ctx.lineWidth = lw; ctx.setLineDash(dash || []); ctx.stroke(); ctx.setLineDash([]); };
+    const on = (r, a) => [cx + r * Math.cos(a), cy + r * Math.sin(a)];
+    const chip = (x, y, t, col, w, size) => { const s = size || 2.2, ww = w || Math.min(30, K.width(t, { size: s, weight: 600 }) + 4); K.rect(x - ww / 2, y - 2.7, ww, 5.4, 1.4, { fill: C.surface, stroke: col, lw: .4 }); K.fit(t, x, y, ww - 1.5, { size: s, align: "center", weight: 600 }); };
+    const back = 1 - .75 * vis(2, 3.05);   // the stop-rules step dims the loops behind its panel
+    // 1. the agent loop
+    const a1 = K.seg(S, .02, .15) * back;
+    if (a1 > 0){
+      K.alpha(a1); ring(r1, C.accent, .5);
+      [["model", -Math.PI / 2], ["tools", 0], ["results", Math.PI / 2]].forEach(([t, a]) => { const [x, y] = on(r1, a); chip(x, y, t, C.accent, 12.5); });
+      const spin = K.seg(S, .15, .8) * 2.5;
+      if (spin > 0 && spin < 2.5){ const [x, y] = on(r1, -Math.PI / 2 + spin * Math.PI * 2); K.dot(x, y, 1.1, { fill: C.accent }); }
+      K.alpha(a1 * K.seg(S, .2, .3)); K.text(`turn ${Math.min(3, 1 + Math.floor(spin))}`, cx - 1, cy, { size: 2.2, align: "center", color: C.muted, mono: true });
+      const fa = a1 * (1 - K.seg(S, 1, 1.1));
+      K.alpha(fa); K.arrow(65, 39, 80, 26, { p: K.seg(S, .8, .92), color: C.ok, hs: 1 });
+      K.alpha(fa * K.seg(S, .9, .95)); K.fit("final answer, or max turns", 81, 23.5, 36, { size: 2.2, color: C.ok, weight: 600 });
+    }
+    note("call the model, run its tools, feed back the results, repeat", .3, 1.05);
+    // 2. the verification loop
+    const a2 = K.seg(S, 1.02, 1.15) * back;
+    if (a2 > 0){
+      K.alpha(a2); ring(r2, C.strong, .4);
+      const gx = cx + r2;
+      K.alpha(a2 * K.seg(S, 1.08, 1.18)); K.rect(gx - 10, cy - 5, 20, 10, 2, { fill: C.surface, stroke: C.warn, lw: .45 });
+      K.fit("grader", gx, cy - 1.7, 18, { size: 2.7, align: "center", weight: 700 }); K.fit("tests · schema · critic", gx, cy + 2.3, 18, { size: 1.9, align: "center", color: C.muted });
+      // round 1 fails and goes back with feedback, round 2 passes
+      const f = K.seg(S, 1.3, 1.62);
+      if (f > 0 && f < 1){ const [x, y] = on(r2, f * Math.PI); K.alpha(a2); K.dot(x, y, 1.1, { fill: C.warn }); }
+      const fb = a2 * K.seg(S, 1.3, 1.38) * (1 - .5 * K.seg(S, 1.7, 1.8)) * (1 - K.seg(S, 1.95, 2.05));
+      K.alpha(fb); K.fit("fail: feedback", cx, cy + r2 + 3.5, 40, { size: 2.3, align: "center", color: C.warn, weight: 600 });
+      K.fit("“found the prison, not the closing date”", cx, cy + r2 + 7.5, 60, { size: 2, align: "center", color: C.warn });
+      const ps = a2 * (1 - K.seg(S, 1.95, 2.05));
+      K.alpha(ps); K.arrow(gx + 10, cy, 114, cy, { p: K.seg(S, 1.68, 1.8), color: C.ok, hs: 1 });
+      K.alpha(ps * K.seg(S, 1.78, 1.84)); K.text("pass", 105, cy - 2.6, { size: 2.3, align: "center", color: C.ok, weight: 700 });
+    }
+    note("my critic sent 26 of 100 questions back for a second round", 1.35, 2.05, C.warn);
+    // 3. stop rules
+    const s3 = vis(2.02, 3.05);
+    if (s3 > 0){
+      K.alpha(s3); K.rect(14, 16, 92, 58, 3, { fill: C.raised, stroke: C.strong });
+      K.fit("when does the loop stop?", 60, 22.5, 84, { size: 3, align: "center", weight: 700 });
+      const rules = [["the grader passes: tests, schema, citations", true], ["max rounds: my research agent stops after 2", true], ["the budget or time limit runs out", true], ["it hands over to a person", true], ["“the agent says it's done”", false]];
+      rules.forEach(([t, ok], i) => {
+        const y = 32 + i * 8.4; K.alpha(s3 * K.seg(S, 2.15 + i * .12, 2.25 + i * .12));
+        if (ok) K.check(23, y, 2.6, C.ok); else { K.line(21.6, y - 1.4, 24.4, y + 1.4, { color: C.warn, lw: .55 }); K.line(24.4, y - 1.4, 21.6, y + 1.4, { color: C.warn, lw: .55 }); }
+        K.fit(t, 28, y, 74, { size: 2.6, color: ok ? C.ink : C.warn, weight: ok ? 500 : 600 });
+      });
+    }
+    note("loop on evidence, not on the model's confidence", 2.6, 3.05);
+    // 4. event-driven
+    const L4 = K.seg(S, 3.02, 3.15) * (1 - K.seg(S, 3.95, 4.08));
+    if (L4 > 0){
+      const tr = [["schedule", "every day, 9:00", 30], ["webhook", "a new ticket", 47], ["new document", "added to a folder", 64]];
+      tr.forEach(([t, sub, y], i) => {
+        K.alpha(L4 * K.seg(S, 3.08 + i * .1, 3.18 + i * .1));
+        K.rect(2, y - 4.5, 24, 9, 2, { fill: C.surface, stroke: C.strong }); K.fit(t, 14, y - 1.6, 22, { size: 2.5, align: "center", weight: 600 }); K.fit(sub, 14, y + 2.2, 22, { size: 2, align: "center", color: C.muted });
+        const [tx, ty] = on(r2, Math.PI - (y - cy) / 40);
+        K.alpha(L4); K.arrow(26, y, tx, ty, { p: K.seg(S, 3.2 + i * .1, 3.4 + i * .1), color: C.accent, hs: .9 });
+        K.packet(26, y, tx, ty, K.seg(S, 3.45 + i * .15, 3.7 + i * .15), { r: .9 });
+      });
+    }
+    note("something outside starts each run: the agent is part of a system", 3.3, 4.05);
+    // 5. the improvement loop
+    const a5 = K.seg(S, 4.02, 4.15);
+    if (a5 > 0){
+      K.alpha(a5); ring(r3, C.accent, .35, [1.2, 1]);
+      const st = [["analyze failures", -3 * Math.PI / 4], ["change the harness", -Math.PI / 4], ["re-run the test set", Math.PI / 4], ["new traces", 3 * Math.PI / 4]];
+      st.forEach(([t, a], i) => { const [x, y] = on(r3, a); K.alpha(a5 * K.seg(S, 4.1 + i * .1, 4.2 + i * .1)); chip(x, y, t, C.accent, null, 2.3); });
+      const g = K.seg(S, 4.5, 4.95);
+      if (g > 0 && g < 1){ const [x, y] = on(r3, 3 * Math.PI / 4 + g * Math.PI * 2); K.alpha(a5); K.dot(x, y, 1.2, { fill: C.accent }); }
+    }
+    note("same test set before and after, or “better” is a guess", 4.4, 5.1, C.accent);
+    K.alpha(1);
+  },
+
+  /* ---------- Agent graphs: my research agent as nodes and edges ---------- */
+  graph(K, S){
+    const C = K.C, ctx = K.ctx;
+    const vis = (a, b) => K.seg(S, a, a + .15) * (1 - K.seg(S, b - .12, b));
+    const note = (t, a, b, col) => { K.alpha(K.seg(S, a, a + .2) * (1 - K.seg(S, b - .1, b))); K.text(t, 60, 94, { size: 2.7, align: "center", color: col || C.muted, weight: 600 }); };
+    const G = 1 - K.seg(S, 4.02, 4.2);           // the last step sets the graph aside
+    const ap = (t0) => K.seg(S, t0, t0 + .1) * G;
+    const N = { q: [11, 47, 17], p: [31, 47, 16], r0: [55, 27, 19], r1: [55, 47, 19], r2: [55, 67, 19], c: [80, 47, 17], y: [104, 47, 19] };
+    const R = ["r0", "r1", "r2"];
+    // edges
+    const edge = (x1, y1, x2, y2, t0, col) => { K.alpha(ap(t0)); K.arrow(x1, y1, x2, y2, { p: K.seg(S, t0, t0 + .12), color: col || C.strong, hs: .9 }); };
+    edge(19.5, 47, 23, 47, .12);
+    R.forEach((k, i) => { edge(39, 47, 45.5, N[k][1], .25 + i * .03); edge(64.5, N[k][1], 72, 47, .42 + i * .03); });
+    const verdict = K.seg(S, 2.55, 2.62);
+    edge(88.5, 47, 94.5, 47, .55, verdict > 0 ? C.ok : C.strong);
+    // the back edge: critic -> researchers
+    const bk = ap(.6), hot = K.seg(S, 2.1, 2.18) * (1 - K.seg(S, 2.55, 2.62));
+    if (bk > 0){
+      K.alpha(bk); const col = hot > 0 ? C.warn : C.strong;
+      ctx.beginPath(); ctx.moveTo(80, 41.5); ctx.lineTo(80, 13); ctx.lineTo(55, 13); ctx.strokeStyle = col; ctx.lineWidth = hot > 0 ? .5 : .35; ctx.setLineDash(hot > 0 ? [] : [1, .8]); ctx.stroke(); ctx.setLineDash([]);
+      K.arrow(55, 13, 55, 21.5, { color: col, hs: .9 });
+      const lbl = S < 3 ? "gaps: follow-up questions" : (S < 3.5 ? "round 1 of 2" : "round 2 of 2: exit after this");
+      K.text(lbl, 67.5, 10, { size: 2.2, align: "center", color: hot > 0 || S >= 3 ? C.warn : C.muted, weight: 600 });
+      K.alpha(bk * K.seg(S, 1.02, 1.1) * (S < 2 ? 1 : 0));
+    }
+    // nodes
+    const node = (k, label, sub, t0, col) => { const [x, y, w] = N[k]; K.alpha(ap(t0)); K.rect(x - w / 2, y - 5.5, w, 11, 2.4, { fill: C.surface, stroke: col || C.strong, lw: .35 }); K.fit(label, x, y - 1.7, w - 2, { size: 2.8, align: "center", weight: 600 }); K.fit(sub, x, y + 2.5, w - 2, { size: 2.3, align: "center", color: C.muted, weight: 400 }); };
+    node("q", "question", "from the user", .02);
+    node("p", "planner", "splits it", .08);
+    // researchers finish at different times in the fan-out step
+    const fin = [1.5, 1.68, 1.82];
+    R.forEach((k, i) => {
+      const busy = K.seg(S, 1.28, 1.32) * (1 - K.seg(S, fin[i], fin[i] + .03));
+      node(k, "researcher", busy > 0 ? "searching…" : "search + read", .16 + i * .03, busy > 0 ? C.accent : C.strong);
+      const ok = K.seg(S, fin[i], fin[i] + .04) * (1 - K.seg(S, 2.05, 2.1));
+      if (ok > 0){ K.alpha(ok * G); K.dot(N[k][0] + 9.5, N[k][1] - 5.5, 1.9, { fill: C.surface, stroke: C.ok, lw: .4 }); K.check(N[k][0] + 9.5, N[k][1] - 5.5, 1.7, C.ok); }
+    });
+    const nDone = fin.filter(t => S >= t).length;
+    const critSub = S >= 1.25 && S < 2 ? `waits for all: ${nDone}/3` : (S >= 2.05 && S < 2.55 ? "2 gaps" : S >= 2.55 && S < 3 ? "sufficient" : "enough?");
+    node("c", "critic", critSub, .34, S >= 2.05 && S < 2.55 ? C.warn : (S >= 2.55 && S < 3 ? C.ok : C.strong));
+    node("y", "synthesizer", "writes the answer", .48, verdict > 0 && S < 3 ? C.ok : C.strong);
+    // state panel
+    const st = ap(.62);
+    if (st > 0){
+      const fields = [["question", .7, 0], ["plan", .85, 0], ["findings", 1.85, 2.4], ["critiques", 2.05, 2.5], ["report", 2.7, 0]];
+      K.alpha(st); K.fit("shared state", 10, 79.5, 15.5, { size: 2.3, color: C.muted, weight: 700 });
+      fields.forEach(([f, t1], i) => {
+        const lit = K.seg(S, t1, t1 + .06) * (1 - K.seg(S, t1 + .3, t1 + .36));
+        const x = 27 + i * 18.5; K.alpha(st); K.rect(x, 76.5, 17, 6, 1.4, { fill: lit > 0 ? C.fill : C.surface, stroke: lit > 0 ? C.accent : C.line });
+        K.text(f, x + 8.5, 79.5, { size: 2.2, align: "center", mono: true, color: lit > 0 ? C.accent : C.ink });
+      });
+    }
+    // packets: the run moving through the graph
+    K.alpha(G);
+    K.packet(19.5, 47, 23, 47, K.seg(S, .65, .75));
+    R.forEach((k, i) => K.packet(39, 47, 45.5, N[k][1], K.seg(S, 1.08, 1.25)));
+    R.forEach((k, i) => K.packet(64.5, N[k][1], 72, 47, K.seg(S, fin[i] + .02, fin[i] + .14)));
+    if (S > 2.15 && S < 2.5){ const t = K.seg(S, 2.15, 2.45), pts = [[80, 41.5], [80, 13], [55, 13], [55, 21.5]], seg = Math.min(2, Math.floor(t * 3)), u = t * 3 - seg; K.dot(K.lerp(pts[seg][0], pts[seg + 1][0], u), K.lerp(pts[seg][1], pts[seg + 1][1], u), 1.2, { fill: C.warn }); }
+    K.packet(88.5, 47, 94.5, 47, K.seg(S, 2.62, 2.78), { color: C.ok });
+    // checkpoints on the edges
+    const cp = K.seg(S, 3.1, 3.2) * G * (1 - K.seg(S, 3.95, 4.05));
+    if (cp > 0){
+      [[42, 37.5], [76, 37.5], [91.5, 52.5]].forEach(([x, y], i) => { K.alpha(cp * K.seg(S, 3.15 + i * .08, 3.25 + i * .08)); K.rect(x - 1.6, y - 1.6, 3.2, 3.2, .6, { fill: C.raised, stroke: C.accent, lw: .4 }); K.line(x - .8, y - .3, x + .8, y - .3, { color: C.accent, lw: .3 }); });
+      K.alpha(cp * K.seg(S, 3.45, 3.55)); K.text("checkpoint: a crashed run resumes here", 91, 58, { size: 2.1, align: "center", color: C.accent });
+    }
+    note("nodes are steps; edges are the allowed next steps", .5, 1.05);
+    note("fan out in parallel, then join when all three are back", 1.3, 2.05, C.accent);
+    note("the critic's verdict picks the next edge", 2.2, 3.05);
+    note("a cycle needs an exit: two rounds at most, then synthesize", 3.3, 4.05, C.warn);
+    // 5. graph or free agent
+    const s5 = vis(4.05, 5.15);
+    if (s5 > 0){
+      const box = (x, t, sub, col) => { K.rect(x, 16, 50, 58, 3, { fill: C.raised, stroke: col, lw: .4 }); K.text(t, x + 25, 23, { size: 3, align: "center", weight: 700, color: col }); K.text(sub, x + 25, 28, { size: 2.2, align: "center", color: C.muted }); };
+      K.alpha(s5 * K.seg(S, 4.1, 4.2)); box(6, "workflow", "predefined code paths", C.accent);
+      [[16, 44], [31, 36], [31, 52], [46, 44]].forEach(([x, y]) => K.dot(x, y, 2, { fill: C.accent }));
+      K.arrow(18, 43, 29, 37, { color: C.accent, hs: .8 }); K.arrow(18, 45, 29, 51, { color: C.accent, hs: .8 }); K.arrow(33, 37, 44, 43, { color: C.accent, hs: .8 }); K.arrow(33, 51, 44, 45, { color: C.accent, hs: .8 });
+      K.text("inspectable, testable", 31, 62, { size: 2.3, align: "center" }); K.text("freezes your guesses", 31, 66.5, { size: 2.3, align: "center", color: C.muted });
+      K.alpha(s5 * K.seg(S, 4.25, 4.35)); box(64, "agent", "the model picks the next step", C.ink);
+      ctx.beginPath(); ctx.arc(89, 44, 8, 0, Math.PI * 2); ctx.strokeStyle = C.strong; ctx.lineWidth = .45; ctx.stroke();
+      const sp = K.seg(S, 4.35, 4.9) * 3; K.dot(89 + 8 * Math.cos(sp * Math.PI * 2), 44 + 8 * Math.sin(sp * Math.PI * 2), 1.2, { fill: C.ink });
+      K.text("flexible", 89, 62, { size: 2.3, align: "center" }); K.text("harder to predict", 89, 66.5, { size: 2.3, align: "center", color: C.muted });
+    }
+    note("start simple; draw the paths that keep repeating in your traces", 4.45, 5.15);
+    K.alpha(1);
+  },
+
   /* ---------- LoRA vs prompting: the learning curve ---------- */
   proj_lvp(K, S, time){
     const C = K.C, ctx = K.ctx;
@@ -6502,11 +6945,11 @@ const explainerHTML = p => {
         <a class="crumb" href="${url("/writing/")}">${ICONS.arrow} All writing</a>
         <div class="ex-meta">${tagHTML(p.kind)}<span>${n} steps${reduce ? "" : " · scroll to play"}</span></div>
         <h1>${esc(p.title)}</h1>
-        <p class="lede">${esc(p.intro)}</p>
+        <p class="lede">${inl(p.intro)}</p>
       </section>
       ${exStage(p.scene, p.title, p.steps)}
       <section class="cv">
-        <h2>In short</h2><div><ul class="plain">${p.takeaways.map(t => `<li>${esc(t)}</li>`).join("")}</ul></div>
+        <h2>In short</h2><div><ul class="plain">${p.takeaways.map(t => `<li>${inl(t)}</li>`).join("")}</ul></div>
         ${p.refs && p.refs.length ? `<h2>References</h2><div><ol class="refs">${p.refs.map(([t, u]) => `<li>${u ? `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(t)}</a>` : esc(t)}</li>`).join("")}</ol></div>` : ""}
         ${p.source ? `<h2>Source</h2><div><p class="src">${esc(p.source.text)} <a href="${esc(p.source.url)}" target="_blank" rel="noopener">${esc(p.source.link)}</a></p></div>` : ""}
         <h2>Share</h2><div>${shareHTML(p)}</div>

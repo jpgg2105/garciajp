@@ -6,7 +6,28 @@
   <atom:link href="https://garciajp.com/feed.xml" rel="self" type="application/rss+xml"/>
   <description>Animated explainers and notes on building with AI: RAG, agents, evaluation, alignment and problem solving.</description>
   <language>en</language>
-  <lastBuildDate>Sun, 01 Nov 2026 12:00:00 +0000</lastBuildDate>
+  <lastBuildDate>Fri, 06 Nov 2026 12:00:00 +0000</lastBuildDate>
+  <item>
+    <title>How an agent harness works</title>
+    <link>https://garciajp.com/writing/how-agent-harnesses-work/</link>
+    <guid isPermaLink="true">https://garciajp.com/writing/how-agent-harnesses-work/</guid>
+    <pubDate>Fri, 06 Nov 2026 12:00:00 +0000</pubDate>
+    <description>An agent is a model plus a harness: everything around it that decides what it sees, what it can do, what it remembers and what you can check afterwards.</description>
+  </item>
+  <item>
+    <title>How agent loops work: the loops around the loop</title>
+    <link>https://garciajp.com/writing/how-agent-loops-work/</link>
+    <guid isPermaLink="true">https://garciajp.com/writing/how-agent-loops-work/</guid>
+    <pubDate>Fri, 06 Nov 2026 12:00:00 +0000</pubDate>
+    <description>Every agent runs a loop of model calls and tool calls. Loop engineering adds the loops around it: one that checks the work, one that starts runs, one that improves the agent, and rules for when each stops.</description>
+  </item>
+  <item>
+    <title>How agent graphs work: nodes, edges and safe cycles</title>
+    <link>https://garciajp.com/writing/how-agent-graphs-work/</link>
+    <guid isPermaLink="true">https://garciajp.com/writing/how-agent-graphs-work/</guid>
+    <pubDate>Fri, 06 Nov 2026 12:00:00 +0000</pubDate>
+    <description>A graph makes an agent&#x27;s control flow explicit: steps are nodes, allowed next steps are edges, and shared state moves along them. Here is my research agent drawn as one, and when not to draw one.</description>
+  </item>
   <item>
     <title>When does LoRA fine-tuning beat a good prompt? I measured the crossover</title>
     <link>https://garciajp.com/writing/lora-vs-prompting/</link>

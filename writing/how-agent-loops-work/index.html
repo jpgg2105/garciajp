@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>How agent loops work: the loops around the loop · Juan Pablo García</title>
+<meta name="description" content="Every agent runs a loop of model calls and tool calls. Loop engineering adds the loops around it: one that checks the work, one that starts runs, one that improves the agent, and rules for when each stops.">
+<link rel="canonical" href="https://garciajp.com/writing/how-agent-loops-work/">
+<link rel="alternate" type="application/rss+xml" title="Juan Pablo García · Writing" href="/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Juan Pablo García">
+<meta property="og:url" content="https://garciajp.com/writing/how-agent-loops-work/">
+<meta property="og:title" content="How agent loops work: the loops around the loop · Juan Pablo García">
+<meta property="og:description" content="Every agent runs a loop of model calls and tool calls. Loop engineering adds the loops around it: one that checks the work, one that starts runs, one that improves the agent, and rules for when each stops.">
+<meta property="og:image" content="https://garciajp.com/writing/how-agent-loops-work/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="How agent loops work: the loops around the loop, an animated explainer by Juan Pablo García">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://garciajp.com/writing/how-agent-loops-work/og.png">
+<meta name="author" content="Juan Pablo García">
+<meta name="msvalidate.01" content="DEC2476C7613BDF59BE67C7E9087EA30">
+<script type="application/ld+json" id="ld">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "url": "https://garciajp.com/writing/how-agent-loops-work/", "headline": "How agent loops work: the loops around the loop", "description": "Every agent runs a loop of model calls and tool calls. Loop engineering adds the loops around it: one that checks the work, one that starts runs, one that improves the agent, and rules for when each stops.", "datePublished": "2026-11-06", "author": {"@type": "Person", "@id": "https://garciajp.com/#person", "name": "Juan Pablo García", "url": "https://garciajp.com/", "image": "https://garciajp.com/og.png", "jobTitle": "AI Developer", "description": "Juan Pablo García, AI developer in Argentina. RAG pipelines and multi-agent systems, built for production and measured with evals.", "email": "mailto:jpgarcia2154@gmail.com", "address": {"@type": "PostalAddress", "addressLocality": "San Juan", "addressRegion": "San Juan", "addressCountry": "AR"}, "alumniOf": [{"@type": "CollegeOrUniversity", "name": "University of Pennsylvania"}, {"@type": "CollegeOrUniversity", "name": "Universidad de Palermo"}], "worksFor": {"@type": "Organization", "name": "Nodos Hub"}, "knowsAbout": ["Retrieval-augmented generation", "Multi-agent systems", "LLM evaluation", "Python", "FastAPI", "React", "PostgreSQL", "Vector search"], "sameAs": ["https://github.com/jpgg2105", "https://www.linkedin.com/in/juan-pablo-garcia-guerrero", "https://x.com/garciajpgg21"]}, "genre": "Explainers", "citation": [{"@type": "CreativeWork", "name": "Runkle (2026). The Art of Loop Engineering. LangChain blog.", "url": "https://www.langchain.com/blog/the-art-of-loop-engineering"}, {"@type": "CreativeWork", "name": "Schluntz and Zhang (2024). Building effective agents. Anthropic Engineering.", "url": "https://www.anthropic.com/engineering/building-effective-agents"}, {"@type": "CreativeWork", "name": "OpenAI. Running agents: the agent loop and max_turns. OpenAI Agents SDK documentation.", "url": "https://openai.github.io/openai-agents-python/running_agents/"}, {"@type": "CreativeWork", "name": "Young (2025). Effective harnesses for long-running agents. Anthropic Engineering.", "url": "https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents"}, {"@type": "CreativeWork", "name": "García (2026). agent-benchmark: a multi-agent loop vs a single LLM call on 100 HotpotQA questions.", "url": "https://github.com/jpgg2105/agent-benchmark/blob/main/RESULTS.md"}, {"@type": "CreativeWork", "name": "García (2026). research-agent: orchestrator with a bounded research and critique loop.", "url": "https://github.com/jpgg2105/research-agent/blob/main/src/research_agent/orchestrator.py"}]}]}</script>
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0E0F12">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231D6B70'/%3E%3Ctext x='32' y='42' font-family='Helvetica,Arial,sans-serif' font-size='28' font-weight='700' fill='%23FFFFFF' text-anchor='middle'%3EJP%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@400;500;600;700&family=Instrument+Sans:wght@500&family=Funnel+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="/assets/site.css?v=8b1fa9f2bc">
+</head>
+<body>
+<a class="skip" href="#view">Skip to content</a>
+<header class="top" id="top">
+  <div class="wrap">
+    <a class="brand" href="/" data-nav>Juan Pablo García</a>
+    <nav class="nav" id="nav" aria-label="Main"><a href="/" data-k="home">Home</a><a href="/projects/" data-k="projects">Projects</a><a href="/writing/" data-k="writing" aria-current="page">Writing</a><a href="/resume/" data-k="resume">Resume</a><a href="/stack/" data-k="stack">Stack</a><a href="/services/" data-k="services">How I work</a><a href="/book/" data-k="book">Contact</a></nav>
+  </div>
+</header>
+
+<main class="wrap" id="view" tabindex="-1">
+    <div class="page">
+      <section class="proj-head">
+        <a class="crumb" href="/writing/"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"></path></svg> All writing</a>
+        <div class="ex-meta"><span class="tag explainer">Explainer</span><span>5 steps · scroll to play</span></div>
+        <h1>How agent loops work: the loops around the loop</h1>
+        <p class="lede">Every tool-using agent already runs a loop: call the model, run the tools it asks for, feed back the results, repeat. Loop engineering, a name that caught on in 2026, is designing the loops around that one: what checks the work, what starts a run, what improves the agent over time, and what makes each loop stop. This is the second of three explainers, after <a href="/writing/how-agent-harnesses-work/">the harness</a>.</p>
+      </section>
+      
+      <section class="build explainer" id="ex" data-scene="loops" aria-label="How agent loops work: the loops around the loop, step by step">
+        <div class="build-track" style="height:450vh">
+          <div class="pin">
+            <ol class="steps"><li class="step on"><span class="n">1</span><h3>The agent loop</h3><p>The model gets the task and either answers or asks for tools. The harness runs the tools, appends the results, and calls the model again. The loop ends on a final answer or at a turn limit: OpenAI's Agents SDK raises an error once max_turns is exceeded, rather than letting it run on.</p></li><li class="step"><span class="n">2</span><h3>The verification loop</h3><p>A grader checks the output against something outside the model: tests, a schema, whether the citations exist, or a rubric. A failure goes back with feedback and the agent tries again. In my research agent the grader is a critic that reads the findings and asks follow-up questions; it sent 26 of 100 benchmark questions back for a second round.</p></li><li class="step"><span class="n">3</span><h3>Stop on evidence, not confidence</h3><p>Every loop needs a rule for stopping: the check passes, a maximum number of rounds, a budget, or a hand-off to a person. “The agent says it's done” isn't one; Anthropic saw long-running coding agents declare projects finished too early. My research loop stops when the critic is satisfied, has no follow-ups, or after two rounds, so a strict critic can't loop forever.</p></li><li class="step"><span class="n">4</span><h3>Loops started by events</h3><p>An agent doesn't have to wait for someone to type. A schedule, a webhook or a new document can start each run, and the agent becomes one component running inside a larger system, which is why its stop rules and budgets matter more.</p></li><li class="step"><span class="n">5</span><h3>The improvement loop</h3><p>Read the traces of past runs, find where they fail, change the harness (a prompt, a tool, a limit) and run the same test set again. LangChain calls this hill climbing. Without a fixed test set, a version that feels better can be worse.</p></li></ol>
+            <div class="screen" aria-hidden="true">
+              <div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="file">How agent loops work: the loops around the loop</span><span class="sample">Illustration</span></div>
+              <canvas width="532" height="476"></canvas>
+            </div>
+            <div class="ex-stills"><div class="ex-still"><h3>The agent loop</h3><p>The model gets the task and either answers or asks for tools. The harness runs the tools, appends the results, and calls the model again. The loop ends on a final answer or at a turn limit: OpenAI's Agents SDK raises an error once max_turns is exceeded, rather than letting it run on.</p><canvas aria-hidden="true"></canvas></div><div class="ex-still"><h3>The verification loop</h3><p>A grader checks the output against something outside the model: tests, a schema, whether the citations exist, or a rubric. A failure goes back with feedback and the agent tries again. In my research agent the grader is a critic that reads the findings and asks follow-up questions; it sent 26 of 100 benchmark questions back for a second round.</p><canvas aria-hidden="true"></canvas></div><div class="ex-still"><h3>Stop on evidence, not confidence</h3><p>Every loop needs a rule for stopping: the check passes, a maximum number of rounds, a budget, or a hand-off to a person. “The agent says it's done” isn't one; Anthropic saw long-running coding agents declare projects finished too early. My research loop stops when the critic is satisfied, has no follow-ups, or after two rounds, so a strict critic can't loop forever.</p><canvas aria-hidden="true"></canvas></div><div class="ex-still"><h3>Loops started by events</h3><p>An agent doesn't have to wait for someone to type. A schedule, a webhook or a new document can start each run, and the agent becomes one component running inside a larger system, which is why its stop rules and budgets matter more.</p><canvas aria-hidden="true"></canvas></div><div class="ex-still"><h3>The improvement loop</h3><p>Read the traces of past runs, find where they fail, change the harness (a prompt, a tool, a limit) and run the same test set again. LangChain calls this hill climbing. Without a fixed test set, a version that feels better can be worse.</p><canvas aria-hidden="true"></canvas></div></div>
+            <div class="progress"><i style="transform: scaleX(0);"></i></div>
+          </div>
+        </div>
+      </section>
+      <section class="cv">
+        <h2>In short</h2><div><ul class="plain"><li>Loops cost calls. My agent used 5.7 model calls per question against 1 for a single call, for 86% correct against 74% on 100 multi-hop questions. Add a loop where a failure costs more than the check.</li><li>Prefer checks the model can't talk its way past: tests, schemas, does the cited source exist. A grader that is the same model can share the writer's blind spots, so give it a separate context at least.</li><li>Order loops by cost: try the cheap path first and loop only when it fails. On my benchmark, a single call first and the agent only when the call said the sources were insufficient would have scored 87% at about 2.1 calls per question. That's simulated after the fact, so it's a hypothesis to test, not a result.</li><li>The ideas are older than the name: Anthropic described the evaluator-optimizer loop and iteration limits in 2024. Where the loops sit, and in what order, is the subject of <a href="/writing/how-agent-graphs-work/">How agent graphs work</a>.</li></ul></div>
+        <h2>References</h2><div><ol class="refs"><li><a href="https://www.langchain.com/blog/the-art-of-loop-engineering" target="_blank" rel="noopener">Runkle (2026). The Art of Loop Engineering. LangChain blog.</a></li><li><a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" rel="noopener">Schluntz and Zhang (2024). Building effective agents. Anthropic Engineering.</a></li><li><a href="https://openai.github.io/openai-agents-python/running_agents/" target="_blank" rel="noopener">OpenAI. Running agents: the agent loop and max_turns. OpenAI Agents SDK documentation.</a></li><li><a href="https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents" target="_blank" rel="noopener">Young (2025). Effective harnesses for long-running agents. Anthropic Engineering.</a></li><li><a href="https://github.com/jpgg2105/agent-benchmark/blob/main/RESULTS.md" target="_blank" rel="noopener">García (2026). agent-benchmark: a multi-agent loop vs a single LLM call on 100 HotpotQA questions.</a></li><li><a href="https://github.com/jpgg2105/research-agent/blob/main/src/research_agent/orchestrator.py" target="_blank" rel="noopener">García (2026). research-agent: orchestrator with a bounded research and critique loop.</a></li></ol></div>
+        
+        <h2>Share</h2><div><div class="share">
+      <a class="btn line" href="https://x.com/intent/post?text=How%20agent%20loops%20work%3A%20the%20loops%20around%20the%20loop%3A%20an%20animated%2C%20step-by-step%20explainer&amp;url=https%3A%2F%2Fgarciajp.com%2Fwriting%2Fhow-agent-loops-work%2F" target="_blank" rel="noopener" data-ev="share/x/how-agent-loops-work"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.66l-5.21-6.82-5.97 6.82H1.67l7.73-8.84L1.25 2.25h6.83l4.71 6.23 5.45-6.23Zm-1.16 17.52h1.83L7.08 4.13H5.12l11.96 15.64Z"></path></svg> Post on X</a>
+      <a class="btn line" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fgarciajp.com%2Fwriting%2Fhow-agent-loops-work%2F" target="_blank" rel="noopener" data-ev="share/linkedin/how-agent-loops-work"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"></path></svg> Share on LinkedIn</a>
+      <button class="btn line" type="button" data-share="https://garciajp.com/writing/how-agent-loops-work/" data-title="How agent loops work: the loops around the loop"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.6 9.4a3 3 0 0 0 4.3 0l2.2-2.2a3 3 0 0 0-4.3-4.3l-.9.9"></path><path d="M9.4 6.6a3 3 0 0 0-4.3 0L2.9 8.8a3 3 0 0 0 4.3 4.3l.9-.9"></path></svg> <span>Copy link</span></button>
+    </div>
+    <p class="share-note">Teaching this to a class or a new teammate? Send them the link.</p></div>
+      </section>
+      
+      
+  <section class="cta">
+    <h2>Want to work together?</h2>
+    <div class="row" style="justify-content:space-between;gap:20px">
+      <div class="row" style="flex:1 1 320px"><a class="btn" href="mailto:jpgarcia2154@gmail.com">Email me <span class="arr"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"></path></svg></span></a><a class="btn line" href="/resume/">Read my resume</a><a class="btn line" href="/book/">Schedule a call</a></div>
+      <div class="socials"><a href="https://github.com/jpgg2105" target="_blank" rel="noopener" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.56-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.19-3.08-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.82 1.19 3.08 0 4.41-2.69 5.38-5.25 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"></path></svg></a><a href="https://www.linkedin.com/in/juan-pablo-garcia-guerrero" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"></path></svg></a><a href="https://x.com/garciajpgg21" target="_blank" rel="noopener" aria-label="X (Twitter)"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.66l-5.21-6.82-5.97 6.82H1.67l7.73-8.84L1.25 2.25h6.83l4.71 6.23 5.45-6.23Zm-1.16 17.52h1.83L7.08 4.13H5.12l11.96 15.64Z"></path></svg></a></div>
+    </div>
+  </section>
+    </div></main>
+<footer><div class="wrap"><span id="foot">© 2026 Juan Pablo García · San Juan, Argentina (UTC−3)</span><a id="footMail" href="mailto:jpgarcia2154@gmail.com">jpgarcia2154@gmail.com</a></div></footer>
+
+<!-- ===================== CONTENT =====================
+     Everything on the site comes from this JSON. Edit it, then run `python build.py`.
+     See README.md for what each field does. -->
+<script src="/assets/content.js?v=d030f09111"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/motion@11.11.13/dist/motion.js"></script>
+<script src="/assets/site.js?v=74c6e09901"></script>
+</body>
+</html>
