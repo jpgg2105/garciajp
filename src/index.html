@@ -122,14 +122,18 @@ main{padding-bottom:96px;min-height:70vh}
 
 /* BUILD STAGE */
 .build-track{height:420vh}
-.pin{position:sticky;top:calc(var(--head) + env(safe-area-inset-top,0px) + 16px);height:calc(100vh - var(--head) - 32px);height:calc(100svh - var(--head) - env(safe-area-inset-top,0px) - 32px);min-height:560px;max-height:820px;background:var(--stage);border-radius:28px;display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:40px;padding:clamp(28px,4vw,56px);overflow:hidden}
-.steps{display:flex;flex-direction:column;justify-content:center;gap:6px;min-width:0;list-style:none;margin:0;padding:0}
-.step{display:grid;grid-template-columns:36px minmax(0,1fr);gap:4px 12px;padding:14px 0;color:color-mix(in srgb,var(--stage-ink) 45%,transparent);transition:color .3s ease}
+.pin{position:sticky;top:calc(var(--head) + env(safe-area-inset-top,0px) + 16px);height:calc(100vh - var(--head) - 32px);height:calc(100svh - var(--head) - env(safe-area-inset-top,0px) - 32px);min-height:560px;max-height:820px;background:var(--stage);border-radius:28px;display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);grid-template-rows:minmax(0,1fr);gap:40px;padding:clamp(28px,4vw,56px);overflow:hidden}
+.steps{display:flex;flex-direction:column;justify-content:safe center;gap:6px;min-width:0;list-style:none;margin:0;padding:0;overflow:hidden}
+/* the open paragraph animates as a grid row (0fr to 1fr), so opening one step and closing the other take the same time and the column's height stays steady */
+.steps.fade-top{-webkit-mask-image:linear-gradient(transparent,#000 24px);mask-image:linear-gradient(transparent,#000 24px)}
+.steps.fade-bottom{-webkit-mask-image:linear-gradient(#000 calc(100% - 24px),transparent);mask-image:linear-gradient(#000 calc(100% - 24px),transparent)}
+.steps.fade-top.fade-bottom{-webkit-mask-image:linear-gradient(transparent,#000 24px,#000 calc(100% - 24px),transparent);mask-image:linear-gradient(transparent,#000 24px,#000 calc(100% - 24px),transparent)}
+.step{display:grid;grid-template-columns:36px minmax(0,1fr);grid-template-rows:auto 0fr;gap:4px 12px;padding:12px 0;color:color-mix(in srgb,var(--stage-ink) 45%,transparent);transition:color .3s ease,grid-template-rows .45s var(--ease-out)}
 .step .n{font-size:15px;font-weight:600;padding-top:6px;font-variant-numeric:tabular-nums}
 .step h3{font-size:clamp(22px,2.4vw,30px);color:inherit}
-.step p{grid-column:2;font-size:15.5px;max-height:0;opacity:0;overflow:hidden;transition:max-height .45s var(--ease-out),opacity .3s ease}
-.step.on{color:var(--stage-ink)}
-.step.on p{max-height:420px;opacity:1}
+.step p{grid-column:2;font-size:15.5px;min-height:0;opacity:0;overflow:hidden;transition:opacity .3s ease}
+.step.on{color:var(--stage-ink);grid-template-rows:auto 1fr}
+.step.on p{opacity:1}
 .progress{position:absolute;left:clamp(28px,4vw,56px);right:clamp(28px,4vw,56px);bottom:22px;height:3px;border-radius:3px;background:color-mix(in srgb,var(--stage-ink) 16%,transparent)}
 .progress i{position:absolute;inset:0;border-radius:inherit;background:var(--stage-ink);transform-origin:left;transform:scaleX(0)}
 .screen{position:relative;align-self:center;min-width:0;height:min(100%,520px);background:var(--surface);border:1px solid color-mix(in srgb,var(--stage-ink) 14%,transparent);border-radius:18px;box-shadow:0 30px 70px -24px rgba(0,0,0,.65);overflow:hidden}
@@ -363,7 +367,8 @@ footer a{color:var(--muted)}
   .step.on{opacity:1;transform:none;filter:none;pointer-events:auto}
   .step .n{padding-top:3px;font-size:14px}
   .step h3{font-size:clamp(22px,5.6vw,30px)}
-  .step p{max-height:none;opacity:1;font-size:15px;line-height:1.45}
+  .step,.step.on{grid-template-rows:auto auto}
+  .step p{opacity:1;font-size:15px;line-height:1.45}
   .screen{height:auto;align-self:stretch;border-radius:16px}
   .screen .bar{height:38px}
   .layer{inset:38px 0 0 0;padding:16px}
@@ -6896,6 +6901,23 @@ function initExplainer(){
   }
   const canvas = host.querySelector(".screen canvas"), steps = [...host.querySelectorAll(".steps .step")], bar = host.querySelector(".progress i");
   const track = host.querySelector(".build-track");
+  /* When the step titles plus the open paragraph are taller than the column (long steps, short
+     windows), scroll the column so the open step sits in the middle, instead of letting it overflow. */
+  const list = host.querySelector(".steps"), wide = matchMedia("(min-width: 961px)");
+  const follow = idx => {
+    if (!list || !wide.matches) return;
+    const gap = parseFloat(getComputedStyle(list).rowGap) || 0;
+    const base = steps.map(st => st.offsetHeight - st.querySelector("p").offsetHeight);
+    const extra = steps[idx].querySelector("p").scrollHeight;
+    const total = base.reduce((a, b) => a + b, 0) + gap * (steps.length - 1) + extra, col = list.clientHeight;
+    let top = 0;
+    if (total > col){
+      const y = base.slice(0, idx).reduce((a, b) => a + b + gap, 0);
+      top = Math.max(0, Math.min(total - col, y + (base[idx] + extra) / 2 - col / 2, y - 28));   // keep the open title clear of the top fade
+    }
+    list.scrollTo({ top, behavior: reduce ? "auto" : "smooth" });
+    list.classList.toggle("fade-top", top > 1); list.classList.toggle("fade-bottom", total > col && top < total - col - 1);
+  };
   let P = 0, Pd = -1, last = 0, cur = -1, raf = 0, visible = true, alive = true, done = false;
   const setP = p => {
     P = Math.min(.9999, Math.max(0, p));
@@ -6913,7 +6935,7 @@ function initExplainer(){
     const dt = Math.min(.05, last ? (now - last) / 1000 : .016); last = now;
     Pd = Pd < 0 ? P : Pd + (P - Pd) * (1 - Math.exp(-dt * 10));
     const S = Pd * N, idx = Math.min(N - 1, Math.floor(S));
-    if (idx !== cur){ cur = idx; steps.forEach((s, i) => s.classList.toggle("on", i === idx)); }
+    if (idx !== cur){ cur = idx; steps.forEach((s, i) => s.classList.toggle("on", i === idx)); follow(idx); }
     bar.style.transform = `scaleX(${Pd})`;
     exDraw(canvas, scene, S, (now - t0) / 1000, C);
     raf = requestAnimationFrame(frame);

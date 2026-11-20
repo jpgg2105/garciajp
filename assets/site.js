@@ -3323,6 +3323,23 @@ function initExplainer(){
   }
   const canvas = host.querySelector(".screen canvas"), steps = [...host.querySelectorAll(".steps .step")], bar = host.querySelector(".progress i");
   const track = host.querySelector(".build-track");
+  /* When the step titles plus the open paragraph are taller than the column (long steps, short
+     windows), scroll the column so the open step sits in the middle, instead of letting it overflow. */
+  const list = host.querySelector(".steps"), wide = matchMedia("(min-width: 961px)");
+  const follow = idx => {
+    if (!list || !wide.matches) return;
+    const gap = parseFloat(getComputedStyle(list).rowGap) || 0;
+    const base = steps.map(st => st.offsetHeight - st.querySelector("p").offsetHeight);
+    const extra = steps[idx].querySelector("p").scrollHeight;
+    const total = base.reduce((a, b) => a + b, 0) + gap * (steps.length - 1) + extra, col = list.clientHeight;
+    let top = 0;
+    if (total > col){
+      const y = base.slice(0, idx).reduce((a, b) => a + b + gap, 0);
+      top = Math.max(0, Math.min(total - col, y + (base[idx] + extra) / 2 - col / 2, y - 28));   // keep the open title clear of the top fade
+    }
+    list.scrollTo({ top, behavior: reduce ? "auto" : "smooth" });
+    list.classList.toggle("fade-top", top > 1); list.classList.toggle("fade-bottom", total > col && top < total - col - 1);
+  };
   let P = 0, Pd = -1, last = 0, cur = -1, raf = 0, visible = true, alive = true, done = false;
   const setP = p => {
     P = Math.min(.9999, Math.max(0, p));
@@ -3340,7 +3357,7 @@ function initExplainer(){
     const dt = Math.min(.05, last ? (now - last) / 1000 : .016); last = now;
     Pd = Pd < 0 ? P : Pd + (P - Pd) * (1 - Math.exp(-dt * 10));
     const S = Pd * N, idx = Math.min(N - 1, Math.floor(S));
-    if (idx !== cur){ cur = idx; steps.forEach((s, i) => s.classList.toggle("on", i === idx)); }
+    if (idx !== cur){ cur = idx; steps.forEach((s, i) => s.classList.toggle("on", i === idx)); follow(idx); }
     bar.style.transform = `scaleX(${Pd})`;
     exDraw(canvas, scene, S, (now - t0) / 1000, C);
     raf = requestAnimationFrame(frame);
