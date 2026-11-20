@@ -232,13 +232,13 @@ if other:
 # 2. pre-render: run each page in a headless browser and keep the HTML it produces
 OG_CARD = """([scene, S, title, n, excerpt]) => {
   document.body.innerHTML = '';
-  document.body.style.cssText = 'margin:0;background:#0E0F12;overflow:hidden';
+  document.body.style.cssText = 'margin:0;background:#000;overflow:hidden';
   const esc = s => s.replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[c]);
   const c = document.createElement('div');
-  c.style.cssText = 'position:fixed;inset:0;width:1200px;height:630px;box-sizing:border-box;padding:64px 0 60px 72px;display:grid;grid-template-columns:520px 1fr;gap:40px;font-family:var(--f-body);color:#ECEDF1;background:#0E0F12';
+  c.style.cssText = 'position:fixed;inset:0;width:1200px;height:630px;box-sizing:border-box;padding:64px 0 60px 72px;display:grid;grid-template-columns:520px 1fr;gap:40px;font-family:var(--f-body);color:#ECEDF1;background:#000';
   c.innerHTML = `
     <div style="display:flex;flex-direction:column;justify-content:space-between;min-width:0">
-      <div style="display:flex;align-items:center;gap:14px;font:500 22px var(--f-body);color:#9EA2AD"><b style="width:44px;height:44px;border-radius:12px;background:#1D6B70;color:#fff;display:grid;place-items:center;font:700 19px var(--f-display)">JP</b>garciajp.com</div>
+      <div style="display:flex;align-items:center;gap:14px;font:500 22px var(--f-body);color:#9EA2AD"><svg width="40" height="40" viewBox="0 0 64 64"><defs><linearGradient id="og-g" gradientUnits="userSpaceOnUse" x1="8" y1="8" x2="56" y2="56"><stop offset="0" stop-color="#7DD3A0"/><stop offset="1" stop-color="#7AB8E8"/></linearGradient></defs><path d="M8 12 H56 L32 54 Z" fill="none" stroke="url(#og-g)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/></svg>garciajp.com</div>
       <div>
         <div style="font:500 20px var(--f-body);color:#7FD6CB;margin-bottom:18px">Animated explainer · ${n} steps</div>
         <h1 style="margin:0;font:600 ${title.length > 48 ? 50 : title.length > 30 ? 58 : 66}px/1.04 var(--f-display);letter-spacing:-.03em;color:#F1FBFA">${esc(title)}</h1>
@@ -247,9 +247,9 @@ OG_CARD = """([scene, S, title, n, excerpt]) => {
     </div>
     <div style="position:relative">
       <div style="position:absolute;left:0;top:-4px;width:700px;height:640px;background:#0F3338;border-radius:36px 0 0 36px"></div>
-      <div style="position:absolute;left:44px;top:62px;width:500px;background:#17181D;border:1px solid #24575C;border-radius:18px;overflow:hidden;box-shadow:0 30px 70px -24px rgba(0,0,0,.7)">
+      <div style="position:absolute;left:44px;top:62px;width:500px;background:#000;border:1px solid #24575C;border-radius:18px;overflow:hidden;box-shadow:0 30px 70px -24px rgba(0,0,0,.7)">
         <div style="height:40px;border-bottom:1px solid #2A2C33;display:flex;align-items:center;gap:8px;padding:0 16px"><i style="width:10px;height:10px;border-radius:50%;background:#3A3D46"></i><i style="width:10px;height:10px;border-radius:50%;background:#3A3D46"></i><i style="width:10px;height:10px;border-radius:50%;background:#3A3D46"></i></div>
-        <canvas id="ogc" style="display:block;width:500px;height:417px;background:#17181D"></canvas>
+        <canvas id="ogc" style="display:block;width:500px;height:417px;background:#000"></canvas>
       </div>
     </div>`;
   document.body.appendChild(c);
