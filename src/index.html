@@ -23,7 +23,14 @@
 <script type="application/ld+json" id="ld">{}</script>
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#0E0F12">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231D6B70'/%3E%3Ctext x='32' y='42' font-family='Helvetica,Arial,sans-serif' font-size='28' font-weight='700' fill='%23FFFFFF' text-anchor='middle'%3EJP%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<script>
+/* The accent hue drifts on a 90 s cycle. Start each page where the shared clock says it is,
+   so every visit opens on a different color and moving between pages doesn't reset it. */
+document.documentElement.style.animationDelay = -(Date.now() % 90000) / 1000 + "s";
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@400;500;600;700&family=Instrument+Sans:wght@500&family=Funnel+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
@@ -3570,6 +3577,20 @@ const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":
 const fmt = iso => new Date(iso+"T12:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const M = window.Motion || null;
+
+/* The tab icon follows the page's accent hue (browsers that render SVG favicons: Chrome, Edge, Firefox). */
+if (!reduce){
+  const icon = document.querySelector('link[rel="icon"][type="image/svg+xml"]');
+  let last = -1;
+  const paint = () => {
+    const h = Math.round(parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--hue")));
+    if (!icon || !isFinite(h) || Math.abs(h - last) < 2) return;
+    last = h;
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><linearGradient id="g" gradientUnits="userSpaceOnUse" x1="10" y1="10" x2="54" y2="54"><stop offset="0" stop-color="oklch(.82 .11 ${h})"/><stop offset="1" stop-color="oklch(.8 .1 ${h + 30})"/></linearGradient></defs><rect width="64" height="64" rx="14" fill="#0E0F12"/><path d="M14 17 H50 L32 49 Z" fill="none" stroke="url(#g)" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    icon.href = "data:image/svg+xml," + encodeURIComponent(svg);
+  };
+  paint(); setInterval(paint, 1500);
+}
 
 /* Real paths on garciajp.com (garciajp.com/projects/research-agent/). Hash paths when opened as a file or in a preview. */
 const HASH = location.protocol === "file:" || document.documentElement.dataset.mode === "hash";

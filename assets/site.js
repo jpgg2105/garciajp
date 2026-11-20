@@ -5,6 +5,20 @@ const fmt = iso => new Date(iso+"T12:00:00").toLocaleDateString("en-US",{month:"
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const M = window.Motion || null;
 
+/* The tab icon follows the page's accent hue (browsers that render SVG favicons: Chrome, Edge, Firefox). */
+if (!reduce){
+  const icon = document.querySelector('link[rel="icon"][type="image/svg+xml"]');
+  let last = -1;
+  const paint = () => {
+    const h = Math.round(parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--hue")));
+    if (!icon || !isFinite(h) || Math.abs(h - last) < 2) return;
+    last = h;
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><linearGradient id="g" gradientUnits="userSpaceOnUse" x1="10" y1="10" x2="54" y2="54"><stop offset="0" stop-color="oklch(.82 .11 ${h})"/><stop offset="1" stop-color="oklch(.8 .1 ${h + 30})"/></linearGradient></defs><rect width="64" height="64" rx="14" fill="#0E0F12"/><path d="M14 17 H50 L32 49 Z" fill="none" stroke="url(#g)" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    icon.href = "data:image/svg+xml," + encodeURIComponent(svg);
+  };
+  paint(); setInterval(paint, 1500);
+}
+
 /* Real paths on garciajp.com (garciajp.com/projects/research-agent/). Hash paths when opened as a file or in a preview. */
 const HASH = location.protocol === "file:" || document.documentElement.dataset.mode === "hash";
 const url = p => HASH ? "#" + p : p;
