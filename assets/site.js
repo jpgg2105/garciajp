@@ -13,7 +13,7 @@ if (!reduce){
     const h = Math.round(parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--hue")));
     if (!icon || !isFinite(h) || Math.abs(h - last) < 2) return;
     last = h;
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><linearGradient id="g" gradientUnits="userSpaceOnUse" x1="10" y1="10" x2="54" y2="54"><stop offset="0" stop-color="oklch(.82 .11 ${h})"/><stop offset="1" stop-color="oklch(.8 .1 ${h + 30})"/></linearGradient></defs><rect width="64" height="64" rx="14" fill="#0E0F12"/><path d="M14 17 H50 L32 49 Z" fill="none" stroke="url(#g)" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><style>.a{stop-color:oklch(.82 .11 ${h})}.b{stop-color:oklch(.8 .1 ${h + 30})}@media (prefers-color-scheme:light){.a{stop-color:oklch(.55 .12 ${h})}.b{stop-color:oklch(.52 .12 ${h + 30})}}</style><defs><linearGradient id="g" gradientUnits="userSpaceOnUse" x1="8" y1="8" x2="56" y2="56"><stop offset="0" class="a"/><stop offset="1" class="b"/></linearGradient></defs><path d="M8 12 H56 L32 54 Z" fill="none" stroke="url(#g)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
     icon.href = "data:image/svg+xml," + encodeURIComponent(svg);
   };
   paint(); setInterval(paint, 1500);
