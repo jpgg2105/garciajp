@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Juan Pablo García · Resume</title>
+<!-- Source of resume.pdf. Render with Chromium: page.pdf(format="Letter", prefer_css_page_size=True, print_background=True) -->
+<style>
+@page { size: Letter; margin: 0.36in 0.5in; }
+* { box-sizing: border-box; }
+body { margin: 0; font-family: "Inter", sans-serif; font-size: 9.1pt; line-height: 1.3; color: #16181d; }
+a { color: inherit; text-decoration: none; }
+header { text-align: center; margin-bottom: 4pt; }
+h1 { font-size: 20pt; font-weight: 700; margin: 0 0 1pt; letter-spacing: -0.2pt; }
+.role { font-size: 10.5pt; font-weight: 500; color: #1d6b70; margin-bottom: 1.5pt; }
+.avail { font-size: 9pt; font-weight: 600; margin-bottom: 4pt; }
+.contact { color: #50545e; font-size: 8.8pt; line-height: 1.35; }
+.contact span + span::before { content: "·"; margin: 0 6pt; color: #9aa0aa; }
+h2 { font-size: 9pt; font-weight: 700; letter-spacing: 1.1pt; text-transform: uppercase; color: #1d6b70; margin: 8.5pt 0 4pt; padding-bottom: 2pt; border-bottom: 0.7pt solid #d8dbe0; }
+.item { margin-bottom: 4.5pt; }
+.row { display: flex; justify-content: space-between; gap: 12pt; }
+.when { color: #50545e; white-space: nowrap; font-size: 8.8pt; }
+.row > span:first-child { white-space: nowrap; }
+.sub { color: #50545e; }
+ul { margin: 1.5pt 0 0; padding-left: 13pt; }
+li { margin: 1pt 0; }
+li::marker { color: #1d6b70; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Juan Pablo García</h1>
+  <div class="role">AI Developer · RAG, agents and LLM evaluation</div>
+  <div class="avail">Available now for full-time remote work</div>
+  <div class="contact">
+    <span>San Juan, Argentina (UTC−3)</span><span><a href="mailto:jpgarcia2154@gmail.com">jpgarcia2154@gmail.com</a></span><span><a href="https://garciajp.com">garciajp.com</a></span><br>
+    <span><a href="https://www.linkedin.com/in/juan-pablo-garcia-guerrero">linkedin.com/in/juan-pablo-garcia-guerrero</a></span><span><a href="https://github.com/jpgg2105">github.com/jpgg2105</a></span><span><a href="https://x.com/garciajpgg21">x.com/garciajpgg21</a></span>
+  </div>
+</header>
+
+<h2>Experience</h2>
+<div class="item">
+  <div class="row"><span><b>AI Developer</b>, Nodos Hub · Remote, part-time contract</span><span class="when">Feb 2025 – Present</span></div>
+  <ul>
+    <li>Built a React and FastAPI analytics dashboard, now in production, tracking student attendance, performance and risk indicators across hundreds of schools for an education-sector client, with Excel export.</li>
+    <li>Own the full deployment pipeline from GitLab to a cloud Linux server (Gunicorn, systemd, nginx) across separate dev and prod environments, with SSO against the client's identity system.</li>
+    <li>Built LLM chatbots (Gemini, Pinecone) in PHP and Python, plus an automated lead-scraping and WhatsApp outreach pipeline using n8n, Airtable and the OpenAI API.</li>
+  </ul>
+</div>
+<div class="item">
+  <div class="row"><span><b>AI Developer</b>, Glow Talent · Remote, part-time contract</span><span class="when">Sep 2025 – Jul 2026</span></div>
+  <ul>
+    <li>Built a multi-tenant SaaS platform from scratch as the sole developer, from database design to deployment, using Python, Flask, PostgreSQL, SQLAlchemy and Alembic.</li>
+    <li>Built retrieval-augmented generation (ChromaDB, Gemini) and LLM-based evaluation features.</li>
+    <li>Implemented role-based access control with JWT authentication, and automated QA with headless-browser testing.</li>
+  </ul>
+</div>
+
+<h2>Projects</h2>
+<div class="item">
+  <div class="row"><span><b>Research agent and benchmark</b> · <a href="https://github.com/jpgg2105/research-agent">research-agent</a> · <a href="https://github.com/jpgg2105/agent-benchmark">agent-benchmark</a> · <a href="https://github.com/jpgg2105/ai-document-analyst">ai-document-analyst</a></span><span class="when">Python, FastAPI, React, Docker</span></div>
+  <ul>
+    <li>A planner, researcher, critic and synthesizer loop against a single LLM call on 100 HotpotQA multi-hop questions, same model and search index: 86% vs 74% correct (+12 points, 95% CI +4 to +20) at about 6× the calls.</li>
+  </ul>
+</div>
+<div class="item">
+  <div class="row"><span><b>Retrieval ablation</b> · <a href="https://github.com/jpgg2105/retrieval-ablation">retrieval-ablation</a></span><span class="when">sentence-transformers, BM25, BEIR</span></div>
+  <ul>
+    <li>Measured each retrieval stage of my RAG service on 1,008 labeled questions: a one-line BM25 tokenizer fix raised recall@5 from 55% to 78%; the reranker took over 95% of query time, and 10 candidates did as well as 20. Fixes merged.</li>
+  </ul>
+</div>
+<div class="item">
+  <div class="row"><span><b>Prompt injection lab</b> · <a href="https://github.com/jpgg2105/agent-injection-lab">agent-injection-lab</a></span><span class="when">Gemini, tool-using agent</span></div>
+  <ul>
+    <li>Planted 36 injections in a tool-using assistant's documents and tested four defenses over 360 runs: a system-prompt warning cut successful attacks from 42% to 6%; an approval gate stopped every hijacking email, not leaks in the answer.</li>
+  </ul>
+</div>
+<div class="item">
+  <div class="row"><span><b>LoRA vs prompting</b> · <a href="https://github.com/jpgg2105/lora-vs-prompting">lora-vs-prompting</a></span><span class="when">PEFT, Transformers, Colab T4</span></div>
+  <ul>
+    <li>Fine-tuned Qwen2.5-1.5B with LoRA against few-shot Gemini Flash-Lite on structured extraction at 100, 500 and 2,000 labeled examples: prompting won by over 20 points at 100; at 2,000 LoRA was within noise (64% vs 66% exact) with 29× fewer input tokens.</li>
+  </ul>
+</div>
+
+<h2>Education</h2>
+<div class="item">
+  <div class="row"><span><b>Universidad de Palermo</b></span><span class="when">Oct 2024 – Jul 2029 (expected)</span></div>
+  <div class="sub">B.Eng. in Artificial Intelligence Engineering; intermediate AI Analyst degree expected Dec 2026</div>
+</div>
+<div class="item">
+  <div class="row"><span><b>University of Pennsylvania</b></span><span class="when">Aug 2023 – May 2024</span></div>
+  <div class="sub">Full-year exchange, BSE Computer Science. GPA 3.88/4.0, 80% scholarship, completed with academic honors</div>
+</div>
+<div class="item">
+  <div class="row"><span><b>Escuela Industrial D. F. Sarmiento</b></span><span class="when">2016 – 2022</span></div>
+  <div class="sub">Electronics Technician. GPA 9.40, graduated Valedictorian (Abanderado)</div>
+</div>
+
+<h2>Technical skills</h2>
+<ul>
+  <li><b>AI / ML:</b> RAG, LLM integration (Gemini, OpenAI, Anthropic), vector search (ChromaDB, Pinecone, Qdrant), multi-agent systems, LLM evaluation, LoRA fine-tuning (PEFT, Transformers), PyTorch, scikit-learn</li>
+  <li><b>Backend and frontend:</b> Python, FastAPI, Flask, REST APIs, SQLAlchemy, Alembic, JWT, RBAC, OAuth; React, TypeScript, Vite, Tailwind CSS</li>
+  <li><b>Infrastructure:</b> PostgreSQL, Docker, GitHub Actions, Git, Linux, Gunicorn, systemd, nginx, Azure, pytest, Playwright</li>
+  <li><b>Languages:</b> Python, TypeScript, JavaScript, SQL, Java, PHP, C</li>
+</ul>
+
+<h2>Honors and languages</h2>
+<ul>
+  <li>Bronze Medal, International Junior Science Olympiad (Qatar, 2019); Gold Medal, National Junior Science Olympiad (2019); 80% UPenn scholarship; 100% ITBA scholarship offer. Spanish (native), English (C2), French (A2), Italian (basic).</li>
+</ul>
+</body>
+</html>

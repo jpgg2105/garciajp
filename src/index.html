@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Juan Pablo García · AI Developer, RAG and Multi-Agent Systems</title>
-<meta name="description" content="Juan Pablo García, AI developer in Argentina. RAG pipelines and multi-agent systems, built for production and measured with evals.">
+<meta name="description" content="Juan Pablo García, AI developer in Argentina. I build RAG and agent systems and measure whether they work.">
 <link rel="canonical" href="https://garciajp.com/">
 <link rel="alternate" type="application/rss+xml" title="Juan Pablo García · Writing" href="/feed.xml">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Juan Pablo García">
 <meta property="og:url" content="https://garciajp.com/">
 <meta property="og:title" content="Juan Pablo García">
-<meta property="og:description" content="Juan Pablo García, AI developer in Argentina. RAG pipelines and multi-agent systems, built for production and measured with evals.">
+<meta property="og:description" content="Juan Pablo García, AI developer in Argentina. I build RAG and agent systems and measure whether they work.">
 <meta property="og:image" content="https://garciajp.com/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -491,7 +491,7 @@ footer a{color:var(--muted)}
 {
   "name": "Juan Pablo García",
   "domain": "https://garciajp.com",
-  "description": "Juan Pablo García, AI developer in Argentina. RAG pipelines and multi-agent systems, built for production and measured with evals.",
+  "description": "Juan Pablo García, AI developer in Argentina. I build RAG and agent systems and measure whether they work.",
   "email": "jpgarcia2154@gmail.com",
   "location": "San Juan, Argentina (UTC−3)",
   "person": {
@@ -547,7 +547,7 @@ footer a{color:var(--muted)}
     "how-database-indexes-work",
     "how-docker-containers-work"
   ],
-  "resumePdf": "resume.pdf?v=89fa6d2e",
+  "resumePdf": "resume.pdf?v=7c847ffa",
   "booked": [
     "2026-10"
   ],
@@ -563,7 +563,7 @@ footer a{color:var(--muted)}
       "client": "Personal project",
       "role": "Author",
       "when": "2026",
-      "summary": "A RAG service, a four-agent research loop and a benchmark that tests whether the loop beats a single LLM call. On 100 multi-hop questions it did: 86% correct against 74%.",
+      "summary": "A RAG service, a four-agent research loop and a benchmark that tests whether the loop beats a single LLM call. On 100 multi-hop questions it got 86% right against 74%. Most of its wins came where the single call said the sources weren't enough, which only its prompt allowed, so a rerun with matching prompts is next.",
       "problem": "Multi-agent systems are easy to demo. I wanted to know whether a multi-agent loop actually beats a single LLM call on the same questions.",
       "solution": "Three parts that build on each other: ai-document-analyst, a RAG service with hybrid retrieval; research-agent, a four-role agent that uses it as a tool; and agent-benchmark, a harness that runs the agent and a single call on the same questions. In the benchmark both searched the same local BM25 index over the HotpotQA paragraphs, so the comparison isolates the agent loop from the RAG service.",
       "flows": [
@@ -580,7 +580,7 @@ footer a{color:var(--muted)}
             ],
             [
               "Researcher",
-              "Calls the RAG service"
+              "Calls a search tool"
             ],
             [
               "Critic",
@@ -641,7 +641,7 @@ footer a{color:var(--muted)}
           ],
           [
             "Four roles work in a loop",
-            "A planner plans the research, a researcher gathers evidence through the RAG service, a critic reviews the findings, names what's missing and asks follow-up questions, and a synthesizer writes the answer."
+            "A planner plans the research, a researcher gathers evidence through a search tool (the RAG service in the full system, a local BM25 index in the benchmark), a critic reviews the findings, names what's missing and asks follow-up questions, and a synthesizer writes the answer."
           ],
           [
             "The benchmark runs both",
@@ -865,7 +865,7 @@ footer a{color:var(--muted)}
       "client": "Personal project",
       "role": "Author",
       "when": "2026",
-      "summary": "A 1.5B model fine-tuned with LoRA against a larger model prompted with examples, on the same labeled data. The prompt won by over 20 points at 100 examples; at 2,000 the small model was 2 points behind, within noise.",
+      "summary": "A 1.5B model fine-tuned with LoRA against a larger model prompted with examples, on the same labeled data. The prompt won by over 20 points at 100 examples, partly because only the prompt listed the labels; at 2,000 the small model was 2 points behind, within noise.",
       "problem": "Teams keep asking whether to fine-tune a small model or prompt a large one, and the answer depends on how much labeled data they have. I wanted the actual crossover point for one realistic task.",
       "solution": "Structured extraction on MASSIVE (intent and slots as JSON), with pools of 100, 500 and 2,000 labeled examples. LoRA trains on each pool; the prompts retrieve their examples from the same pool. GPU runs in a Colab notebook, the API baseline locally, scored with paired intervals.",
       "flows": [
@@ -1207,7 +1207,7 @@ footer a{color:var(--muted)}
         "role": "Research agent and benchmark",
         "at": "research-agent · agent-benchmark · ai-document-analyst",
         "points": [
-          "A planner, researcher, critic and synthesizer loop against a single LLM call on 100 HotpotQA multi-hop questions, same model and search index: 86% correct against 74% (+12 points, 95% CI +4 to +20), at about 6× the calls. Built on my RAG service (hybrid retrieval, cross-encoder reranking); CI and tests run without API keys."
+          "A planner, researcher, critic and synthesizer loop against a single LLM call on 100 HotpotQA multi-hop questions, same model and search index: 86% correct against 74% (+12 points, 95% CI +4 to +20), at about 6× the calls."
         ]
       },
       {

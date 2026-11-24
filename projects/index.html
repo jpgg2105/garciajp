@@ -20,7 +20,7 @@
 <meta name="twitter:image" content="https://garciajp.com/og.png">
 <meta name="author" content="Juan Pablo García">
 <meta name="msvalidate.01" content="DEC2476C7613BDF59BE67C7E9087EA30">
-<script type="application/ld+json" id="ld">{"@context": "https://schema.org", "@graph": [{"@type": "CollectionPage", "url": "https://garciajp.com/projects/", "name": "Projects", "author": {"@type": "Person", "@id": "https://garciajp.com/#person", "name": "Juan Pablo García", "url": "https://garciajp.com/", "image": "https://garciajp.com/og.png", "jobTitle": "AI Developer", "description": "Juan Pablo García, AI developer in Argentina. RAG pipelines and multi-agent systems, built for production and measured with evals.", "email": "mailto:jpgarcia2154@gmail.com", "address": {"@type": "PostalAddress", "addressLocality": "San Juan", "addressRegion": "San Juan", "addressCountry": "AR"}, "alumniOf": [{"@type": "CollegeOrUniversity", "name": "University of Pennsylvania"}, {"@type": "CollegeOrUniversity", "name": "Universidad de Palermo"}], "worksFor": {"@type": "Organization", "name": "Nodos Hub"}, "knowsAbout": ["Retrieval-augmented generation", "Multi-agent systems", "LLM evaluation", "Python", "FastAPI", "React", "PostgreSQL", "Vector search"], "sameAs": ["https://github.com/jpgg2105", "https://www.linkedin.com/in/juan-pablo-garcia-guerrero", "https://x.com/garciajpgg21"]}, "hasPart": [{"@type": "CreativeWork", "name": "Research agent with its own benchmark", "url": "https://garciajp.com/projects/research-agent/"}, {"@type": "CreativeWork", "name": "Retrieval ablation of my RAG pipeline", "url": "https://garciajp.com/projects/retrieval-ablation/"}, {"@type": "CreativeWork", "name": "Prompt injection lab", "url": "https://garciajp.com/projects/agent-injection-lab/"}, {"@type": "CreativeWork", "name": "LoRA vs prompting: how much data fine-tuning needs", "url": "https://garciajp.com/projects/lora-vs-prompting/"}, {"@type": "CreativeWork", "name": "Analytics dashboard for hundreds of schools", "url": "https://garciajp.com/projects/schools-analytics-dashboard/"}, {"@type": "CreativeWork", "name": "Chatbots and an outreach pipeline", "url": "https://garciajp.com/projects/chatbots-and-outreach/"}]}]}</script>
+<script type="application/ld+json" id="ld">{"@context": "https://schema.org", "@graph": [{"@type": "CollectionPage", "url": "https://garciajp.com/projects/", "name": "Projects", "author": {"@type": "Person", "@id": "https://garciajp.com/#person", "name": "Juan Pablo García", "url": "https://garciajp.com/", "image": "https://garciajp.com/og.png", "jobTitle": "AI Developer", "description": "Juan Pablo García, AI developer in Argentina. I build RAG and agent systems and measure whether they work.", "email": "mailto:jpgarcia2154@gmail.com", "address": {"@type": "PostalAddress", "addressLocality": "San Juan", "addressRegion": "San Juan", "addressCountry": "AR"}, "alumniOf": [{"@type": "CollegeOrUniversity", "name": "University of Pennsylvania"}, {"@type": "CollegeOrUniversity", "name": "Universidad de Palermo"}], "worksFor": {"@type": "Organization", "name": "Nodos Hub"}, "knowsAbout": ["Retrieval-augmented generation", "Multi-agent systems", "LLM evaluation", "Python", "FastAPI", "React", "PostgreSQL", "Vector search"], "sameAs": ["https://github.com/jpgg2105", "https://www.linkedin.com/in/juan-pablo-garcia-guerrero", "https://x.com/garciajpgg21"]}, "hasPart": [{"@type": "CreativeWork", "name": "Research agent with its own benchmark", "url": "https://garciajp.com/projects/research-agent/"}, {"@type": "CreativeWork", "name": "Retrieval ablation of my RAG pipeline", "url": "https://garciajp.com/projects/retrieval-ablation/"}, {"@type": "CreativeWork", "name": "Prompt injection lab", "url": "https://garciajp.com/projects/agent-injection-lab/"}, {"@type": "CreativeWork", "name": "LoRA vs prompting: how much data fine-tuning needs", "url": "https://garciajp.com/projects/lora-vs-prompting/"}, {"@type": "CreativeWork", "name": "Analytics dashboard for hundreds of schools", "url": "https://garciajp.com/projects/schools-analytics-dashboard/"}, {"@type": "CreativeWork", "name": "Chatbots and an outreach pipeline", "url": "https://garciajp.com/projects/chatbots-and-outreach/"}]}]}</script>
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#000000">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
@@ -51,7 +51,7 @@ document.documentElement.style.animationDelay = -(Date.now() % 90000) / 1000 + "
         <div class="plist">
   <a class="prow" href="/projects/research-agent/">
     <div><h3 class="shift" style="--i:0">Research agent with its own benchmark</h3><span class="meta">Personal project · 2026</span></div>
-    <p>A RAG service, a four-agent research loop and a benchmark that tests whether the loop beats a single LLM call. On 100 multi-hop questions it did: 86% correct against 74%.</p>
+    <p>A RAG service, a four-agent research loop and a benchmark that tests whether the loop beats a single LLM call. On 100 multi-hop questions it got 86% right against 74%. Most of its wins came where the single call said the sources weren't enough, which only its prompt allowed, so a rerun with matching prompts is next.</p>
     <span class="go"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"></path></svg></span>
   </a>
   <a class="prow" href="/projects/retrieval-ablation/">
@@ -66,7 +66,7 @@ document.documentElement.style.animationDelay = -(Date.now() % 90000) / 1000 + "
   </a>
   <a class="prow" href="/projects/lora-vs-prompting/">
     <div><h3 class="shift" style="--i:3">LoRA vs prompting: how much data fine-tuning needs</h3><span class="meta">Personal project · 2026</span></div>
-    <p>A 1.5B model fine-tuned with LoRA against a larger model prompted with examples, on the same labeled data. The prompt won by over 20 points at 100 examples; at 2,000 the small model was 2 points behind, within noise.</p>
+    <p>A 1.5B model fine-tuned with LoRA against a larger model prompted with examples, on the same labeled data. The prompt won by over 20 points at 100 examples, partly because only the prompt listed the labels; at 2,000 the small model was 2 points behind, within noise.</p>
     <span class="go"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"></path></svg></span>
   </a>
   <a class="prow" href="/projects/schools-analytics-dashboard/">
@@ -93,7 +93,7 @@ document.documentElement.style.animationDelay = -(Date.now() % 90000) / 1000 + "
 <!-- ===================== CONTENT =====================
      Everything on the site comes from this JSON. Edit it, then run `python build.py`.
      See README.md for what each field does. -->
-<script src="/assets/content.js?v=d030f09111"></script>
+<script src="/assets/content.js?v=c7a419501f"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/motion@11.11.13/dist/motion.js"></script>
 <script src="/assets/site.js?v=c3dee32939"></script>
