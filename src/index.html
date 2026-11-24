@@ -624,7 +624,7 @@ footer a{color:var(--muted)}
         "GitHub Actions",
         "pytest"
       ],
-      "result": "On 100 HotpotQA multi-hop questions, with the same model and search index for both, the agent answered 86% correctly against 74% for a single call (+12 points, 95% CI +4 to +20), at about 6× the LLM calls. A second evaluator agreed with the automatic grader on 39 of 40 answers. Write-up: [Does a four-agent loop beat a single LLM call? I measured it](/writing/does-an-agent-beat-a-single-llm-call/)",
+      "result": "On 100 HotpotQA multi-hop questions, with the same model and search index for both, the agent answered 86% correctly against 74% for a single call (+12 points, 95% CI +4 to +20), at about 6× the LLM calls. A second LLM grader from a different model family, grading blind, agreed with the automatic grader on 39 of 40 answers. Write-up: [Does a four-agent loop beat a single LLM call? I measured it](/writing/does-an-agent-beat-a-single-llm-call/)",
       "code": "https://github.com/jpgg2105/research-agent",
       "codeNote": "",
       "demo": "",
@@ -2014,7 +2014,7 @@ footer a{color:var(--muted)}
         {
           "h": "Can the grader be trusted?"
         },
-        "The same model answered and graded, so a second evaluator, different from the judge, graded 40 answers (20 per system) against the gold answers, without knowing which system wrote them or what the judge said. The sample leans toward the questions where the two systems disagreed. It agreed with the judge on 39 of 40 (Cohen's κ = 0.92). The one disagreement was the judge being strict: the gold answer was \"Plymouth Gin\" and the agent said \"gin\".",
+        "The same model answered and graded, so a second LLM grader, from a different model family than the judge, graded 40 answers (20 per system) against the gold answers, without knowing which system wrote them or what the judge said. The sample leans toward the questions where the two systems disagreed. It agreed with the judge on 39 of 40 (Cohen's κ = 0.92). The one disagreement was the judge being strict: the gold answer was \"Plymouth Gin\" and the agent said \"gin\".",
         {
           "h": "What I'd change next"
         },
@@ -2028,7 +2028,7 @@ footer a{color:var(--muted)}
         {
           "h": "Limits"
         },
-        "One hundred questions give intervals of about ±9 points per system, so the overall gain is clear and the comparison-question gain isn't. It's one small model on Wikipedia-style questions with short answers. The prompts also weren't symmetric: the single call was told to say so when the sources were insufficient, and the agent's synthesizer wasn't. Since 13 of the 15 wins are questions where the single call gave up, part of the gap may come from that instruction; rerunning with matching prompts is the fair test. Everything is reproducible: the code, the question sample, every answer and the second evaluator's grades are in [agent-benchmark on GitHub](https://github.com/jpgg2105/agent-benchmark/blob/main/RESULTS.md)."
+        "One hundred questions give intervals of about ±9 points per system, so the overall gain is clear and the comparison-question gain isn't. It's one small model on Wikipedia-style questions with short answers. The prompts also weren't symmetric: the single call was told to say so when the sources were insufficient, and the agent's synthesizer wasn't. Since 13 of the 15 wins are questions where the single call gave up, part of the gap may come from that instruction; rerunning with matching prompts is the fair test. Everything is reproducible: the code, the question sample, every answer and the second grader's grades are in [agent-benchmark on GitHub](https://github.com/jpgg2105/agent-benchmark/blob/main/RESULTS.md)."
       ]
     },
     {
