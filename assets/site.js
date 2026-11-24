@@ -3471,7 +3471,7 @@ const V = {
         <h1>I build RAG and agent systems, <em>and measure whether they work.</em></h1>
         <p class="sub">Hi, I'm Juan Pablo. I've built products end to end as the <b>only AI developer</b>, from the database to deployment.</p>
         <div class="row"><a class="btn" href="${url("/projects/")}">See my work <span class="arr">${ICONS.arrow}</span></a><a class="btn line" href="${url("/resume/")}">Resume</a><a class="btn line" href="mailto:${esc(SITE.email)}">Email me</a></div>
-        <ul class="avail" aria-label="Availability"><li><b>Open to remote roles and projects</b></li><li>UTC−3, overlaps US working hours</li><li>English C2 · Spanish native</li></ul>
+        <ul class="avail" aria-label="Availability"><li><b>Available now, full-time remote</b></li><li>UTC−3, overlaps US working hours</li><li>English C2 · Spanish native</li></ul>
       </section>
       ${buildStage()}
       <section>
