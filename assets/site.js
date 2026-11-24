@@ -135,7 +135,7 @@ const AGENTS = [
 ];
 const RUN = `
   <div class="run">
-    <div class="run-head"><div><h4>Agent run</h4><span class="muted" style="font-size:14px">a real benchmark question · 5 calls</span></div><div class="run-score num">86%<small>correct on 100 questions vs 74%</small></div></div>
+    <div class="run-head"><div><h4>Agent run</h4><span class="muted" style="font-size:14px">a real benchmark question · 5 calls</span></div><div class="run-score num">86%<small>correct on 100 questions vs 78%</small></div></div>
     ${AGENTS.map(([n,t,s,f]) => `<div class="agent" data-row><b>${n}</b><span class="t">${t}${f ? '<span class="flag">Revised</span>' : ""}</span><span class="muted num" style="font-size:14px">${s}</span></div>`).join("")}
   </div>`;
 const SHIP = `
@@ -148,7 +148,7 @@ const SHIP = `
 const STEPS = [
   { t:"Model the data", d:"Schemas that keep every customer's data apart and still make sense two years from now.", file:"schema.sql" },
   { t:"Retrieve the right context", d:"Keyword and vector search, a reranker, and every stage measured, so the model answers from the right passages.", file:"POST /api/search" },
-  { t:"Let agents split the question", d:"A planner breaks a question into searches, so the agent finds the second fact a single search misses: 86% correct against 74% on 100 multi-hop questions.", file:"Agent run", real: true },
+  { t:"Let agents split the question", d:"A planner breaks a question into searches, so the agent finds the second fact a single search misses: 90% correct against 72% on 50 questions that need a second search.", file:"Agent run", real: true },
   { t:"Ship it", d:"Deployed on a real server, tested, and handed over with docs.", file:"production" },
 ];
 
@@ -1883,11 +1883,11 @@ const SCENES = {
         K.alpha(B * ra); K.line(93, 51, 96, 33 + k * 6, { color: C.line });
         K.text(`${qq} ${a}`, 98, 33 + k * 6, { size: 2.3, mono: true }); K.check(116, 33 + k * 6, 1.8, C.ok);
       });
-      // the measured result (100 HotpotQA questions, 31 Oct 2026)
+      // the measured result (100 HotpotQA questions; baseline rerun with matched prompts, 24 Nov 2026)
       const ra = B * K.seg(S, 3.7, 3.85);
       if (ra > 0){
         K.alpha(ra); K.rect(30, 79, 60, 9, 2, { fill: C.surface, stroke: C.accent, lw: .45 });
-        K.text("100 questions:  loop 86%  ·  one call 74%", 60, 83.5, { size: 2.6, align: "center", weight: 600, color: C.accent });
+        K.text("100 questions:  loop 86%  ·  one call 78%", 60, 83.5, { size: 2.6, align: "center", weight: 600, color: C.accent });
       }
     }
     note("both approaches, the same questions, scored the same way", 3.6, 4.05, C.accent);

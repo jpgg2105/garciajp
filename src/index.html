@@ -547,7 +547,7 @@ footer a{color:var(--muted)}
     "how-database-indexes-work",
     "how-docker-containers-work"
   ],
-  "resumePdf": "resume.pdf?v=a3fb0908",
+  "resumePdf": "resume.pdf?v=20e3f0f4",
   "booked": [
     "2026-10"
   ],
@@ -563,7 +563,7 @@ footer a{color:var(--muted)}
       "client": "Personal project",
       "role": "Author",
       "when": "2026",
-      "summary": "A RAG service, a four-agent research loop and a benchmark that tests whether the loop beats a single LLM call. On 100 multi-hop questions it got 86% right against 74%. Most of its wins came where the single call said the sources weren't enough, which only its prompt allowed, so a rerun with matching prompts is next.",
+      "summary": "A RAG service, a four-agent research loop and a benchmark that tests whether the loop beats a single LLM call. On 100 multi-hop questions it got 86% right against 78% for a single call with the same instructions, and 90% against 72% on the questions that need a second search.",
       "problem": "Multi-agent systems are easy to demo. I wanted to know whether a multi-agent loop actually beats a single LLM call on the same questions.",
       "solution": "Three parts that build on each other: ai-document-analyst, a RAG service with hybrid retrieval; research-agent, a four-role agent that uses it as a tool; and agent-benchmark, a harness that runs the agent and a single call on the same questions. In the benchmark both searched the same local BM25 index over the HotpotQA paragraphs, so the comparison isolates the agent loop from the RAG service.",
       "flows": [
@@ -611,7 +611,7 @@ footer a{color:var(--muted)}
         }
       ],
       "notes": [
-        "The gain is concentrated in bridge questions (70% to 90%), where one search finds only one of the two facts needed.",
+        "The whole gain is on bridge questions (72% to 90%), where one search finds only one of the two facts needed. On comparison questions a single call does as well.",
         "A follow-up ablation of the RAG service found its BM25 tokenizer was the weak point: splitting on word characters lifted keyword recall@5 from 55% to 78%. Write-up: [Does hybrid search plus reranking pay for itself? I measured my RAG pipeline](/writing/does-hybrid-search-pay-for-itself/)",
         "The benchmark harness runs the agent loop and a single-shot baseline on the same questions.",
         "CI and tests run without API keys, so anyone can reproduce the setup."
@@ -624,7 +624,7 @@ footer a{color:var(--muted)}
         "GitHub Actions",
         "pytest"
       ],
-      "result": "On 100 HotpotQA multi-hop questions, with the same model and search index for both, the agent answered 86% correctly against 74% for a single call (+12 points, 95% CI +4 to +20), at about 6× the LLM calls. A second LLM grader from a different model family, grading blind, agreed with the automatic grader on 39 of 40 answers. Write-up: [Does a four-agent loop beat a single LLM call? I measured it](/writing/does-an-agent-beat-a-single-llm-call/)",
+      "result": "On 100 HotpotQA multi-hop questions, with the same model, search index and prompt rules for both, the agent answered 86% correctly against 78% for a single call (+8 points, 95% CI 0 to +17), at about 6× the LLM calls. On bridge questions, where a second search is needed, it was 90% against 72% (+18, 95% CI +6 to +30). A first run showed 86% against 74%, but only the single call had been told it could give up; rerunning it with matched prompts corrected that. A second LLM grader from a different model family, grading blind, agreed with the automatic grader on 39 of 40 answers. Write-up: [Does a four-agent loop beat a single LLM call? I measured it](/writing/does-an-agent-beat-a-single-llm-call/)",
       "code": "https://github.com/jpgg2105/research-agent",
       "codeNote": "",
       "demo": "",
@@ -645,7 +645,7 @@ footer a{color:var(--muted)}
           ],
           [
             "The benchmark runs both",
-            "agent-benchmark sends the same questions to the agent loop and to a single-shot baseline, both searching the same local BM25 index, and scores every answer the same way. On 100 HotpotQA multi-hop questions the loop answered 86% correctly, the single call 74%."
+            "agent-benchmark sends the same questions to the agent loop and to a single-shot baseline, both searching the same local BM25 index, and scores every answer the same way. On 100 HotpotQA multi-hop questions the loop answered 86% correctly and the single call 78%, with the gain all on questions that need a second search."
           ],
           [
             "Anyone can rerun it",
@@ -1207,7 +1207,7 @@ footer a{color:var(--muted)}
         "role": "Research agent and benchmark",
         "at": "research-agent · agent-benchmark · ai-document-analyst",
         "points": [
-          "A planner, researcher, critic and synthesizer loop against a single LLM call on 100 HotpotQA multi-hop questions, same model and search index: 86% correct against 74% (+12 points, 95% CI +4 to +20), at about 6× the calls."
+          "A planner, researcher, critic and synthesizer loop against a single LLM call on 100 HotpotQA multi-hop questions, same model and search index: 86% vs 78% correct with matched prompts (+8 points, 95% CI 0 to +17) and +18 points on questions that need a second search, at about 6× the calls."
         ]
       },
       {
@@ -1495,7 +1495,7 @@ footer a{color:var(--muted)}
         ]
       ],
       "takeaways": [
-        "Loops cost calls. My agent used 5.7 model calls per question against 1 for a single call, for 86% correct against 74% on 100 multi-hop questions. Add a loop where a failure costs more than the check.",
+        "Loops cost calls. My agent used 5.7 model calls per question against 1 for a single call, for 86% correct against 78% on 100 multi-hop questions, a gain that came entirely from questions needing a second search. Add a loop where a failure costs more than the check.",
         "Prefer checks the model can't talk its way past: tests, schemas, does the cited source exist. A grader that is the same model can share the writer's blind spots, so give it a separate context at least.",
         "Order loops by cost: try the cheap path first and loop only when it fails. On my benchmark, a single call first and the agent only when the call said the sources were insufficient would have scored 87% at about 2.1 calls per question. That's simulated after the fact, so it's a hypothesis to test, not a result.",
         "The ideas are older than the name: Anthropic described the evaluator-optimizer loop and iteration limits in 2024. Where the loops sit, and in what order, is the subject of [How agent graphs work](/writing/how-agent-graphs-work/)."
@@ -1929,10 +1929,10 @@ footer a{color:var(--muted)}
       "date": "2026-10-31",
       "read": 6,
       "title": "Does a four-agent loop beat a single LLM call? I measured it",
-      "excerpt": "On 100 multi-hop questions, my research agent answered 86% correctly against 74% for one retrieve-and-answer call, at about 6× the calls. Where the gain comes from, where it loses, and what I'd change.",
+      "excerpt": "On 100 multi-hop questions, my research agent answered 86% correctly against 78% for one call, at about 6× the calls, and the whole gain was on questions that need a second search. Plus the bias I found in my own first run.",
       "body": [
         "Multi-agent systems demo well. I wanted to know whether mine actually beats the simple alternative, so I ran both on the same 100 questions, with the same model and the same search index, and compared them question by question.",
-        "**Short answer: yes, by 12 points, at about 6× the LLM calls.** The research agent (a planner, researchers, a critic and a synthesizer) answered 86% of the questions correctly. A single call that retrieves 10 paragraphs and answers got 74%. The paired difference is +12 points, with a 95% confidence interval of +4 to +20.",
+        "**Short answer: yes, on questions that need a second search, at about 6× the LLM calls.** The research agent (a planner, researchers, a critic and a synthesizer) answered 86% of the questions correctly. A single call that retrieves 10 paragraphs and answers, under the same rule about missing information, got 78%. The paired difference is +8 points, with a 95% confidence interval of 0 to +17. On bridge questions it's 90% against 72%, +18 points (+6 to +30). My first run showed a bigger gap, 86% against 74%, because only the single call had been told it could say the sources were insufficient. Below is how I found that and what changed.",
         {
           "h": "The setup"
         },
@@ -1958,27 +1958,27 @@ footer a{color:var(--muted)}
             "rows": [
               [
                 "Correct (judge)",
-                "74%",
+                "78%",
                 "86%",
-                "+12 [+4, +20]"
+                "+8 [0, +17]"
               ],
               [
                 "Exact match",
-                "51%",
+                "58%",
                 "61%",
-                "+10 [+2, +18]"
+                "+3 [−6, +12]"
               ],
               [
                 "Bridge questions",
-                "70%",
+                "72%",
                 "90%",
-                "+20 [+10, +32]"
+                "+18 [+6, +30]"
               ],
               [
                 "Comparison questions",
-                "78%",
+                "84%",
                 "82%",
-                "+4 [−6, +16]"
+                "−2 [−12, +8]"
               ],
               [
                 "LLM calls per question",
@@ -1988,20 +1988,25 @@ footer a{color:var(--muted)}
               ],
               [
                 "Tokens per question (in / out)",
-                "1,496 / 39",
+                "1,498 / 42",
                 "3,710 / 449",
                 ""
               ]
             ],
-            "note": "Differences are paired: the same questions for both systems, with 95% bootstrap intervals. Latency isn't compared because both ran under a free-tier rate limit, so most of the measured time was waiting."
+            "note": "The single call here is the rerun with matched prompts (24 November); the agent's answers are from the first run. Differences are paired, on the same questions, with 95% bootstrap intervals. Latency isn't compared because both ran under a free-tier rate limit, so most of the measured time is waiting."
           }
         },
         {
           "h": "Where the gain comes from"
         },
-        "The agent won 15 questions, lost 3 and tied 82. In 13 of the 15 wins, the single call had answered that the sources were insufficient. In 11 of them, its one search had found only one of the two paragraphs it needed. The agent's searches found both in 14.",
+        "In the first run the agent won 15 questions, lost 3 and tied 82. In 13 of the 15 wins, the single call had answered that the sources were insufficient. In 11 of them, its one search had found only one of the two paragraphs it needed. The agent's searches found both in 14.",
         "A typical case: \"What year did the prison where William Penn wrote *No Cross, No Crown* stop being used as a prison?\" The single call found the Tower of London but no date, and gave up. The agent split it into \"Where was Penn imprisoned?\" and \"When did that prison stop being used as one?\", and the second search found the answer: 1952.",
         "The critic sent the hardest questions back. It accepted the first round 74 times and asked for a second round 26 times; on those 26 the single call managed 54% and the agent 77%. That's an observation, not a measured effect of the critic: it picked those questions itself, and I didn't run the agent without it.",
+        {
+          "h": "The bias in my first run"
+        },
+        "Those 13 wins had a second explanation. The single call's prompt said \"If the sources are insufficient, say so plainly\", and the agent's synthesizer had no such line, only \"Do not introduce facts that are not present in the findings.\" So I reran the single call with the agent's rule instead, keeping everything else the same.",
+        "It went from 74% to 78%, and the gap from 12 points to 8, with an interval that now reaches zero. About a third of the first result was the instruction. But the single call still gave up 10 times without being invited to, because one search really hadn't found the second fact. On those bridge questions the agent's lead held at 18 points. On comparison questions, where one search usually finds both things, the single call was as good.",
         {
           "h": "Where it loses"
         },
@@ -2022,13 +2027,13 @@ footer a{color:var(--muted)}
           "ul": [
             "**Sequential hops:** let each sub-question see what earlier ones found.",
             "**Shorter answers** for comparison questions.",
-            "**Routing:** run the single call first and the agent only when it gives up. Simulated on these results it would score about 87% at about 2 calls per question. That's a hypothesis for the next run, not a result."
+            "**Routing:** run the single call first and the agent only for questions that need a second hop. The first run suggested about 87% at about 2 calls per question, but that relied on the single call giving up, which it does less with matched prompts, so it needs its own test."
           ]
         },
         {
           "h": "Limits"
         },
-        "One hundred questions give intervals of about ±9 points per system, so the overall gain is clear and the comparison-question gain isn't. It's one small model on Wikipedia-style questions with short answers. The prompts also weren't symmetric: the single call was told to say so when the sources were insufficient, and the agent's synthesizer wasn't. Since 13 of the 15 wins are questions where the single call gave up, part of the gap may come from that instruction; rerunning with matching prompts is the fair test. Everything is reproducible: the code, the question sample, every answer and the second grader's grades are in [agent-benchmark on GitHub](https://github.com/jpgg2105/agent-benchmark/blob/main/RESULTS.md)."
+        "One hundred questions give intervals of about ±9 points per system, so the overall gain is borderline and the bridge-question gain is clear. It's one small model on Wikipedia-style questions with short answers. I reran only the single call, so part of its 4-point change may be the model's own run-to-run variation. Everything is reproducible: the code, the question sample, every answer and the second grader's grades are in [agent-benchmark on GitHub](https://github.com/jpgg2105/agent-benchmark/blob/main/RESULTS.md)."
       ]
     },
     {
@@ -3713,7 +3718,7 @@ const AGENTS = [
 ];
 const RUN = `
   <div class="run">
-    <div class="run-head"><div><h4>Agent run</h4><span class="muted" style="font-size:14px">a real benchmark question · 5 calls</span></div><div class="run-score num">86%<small>correct on 100 questions vs 74%</small></div></div>
+    <div class="run-head"><div><h4>Agent run</h4><span class="muted" style="font-size:14px">a real benchmark question · 5 calls</span></div><div class="run-score num">86%<small>correct on 100 questions vs 78%</small></div></div>
     ${AGENTS.map(([n,t,s,f]) => `<div class="agent" data-row><b>${n}</b><span class="t">${t}${f ? '<span class="flag">Revised</span>' : ""}</span><span class="muted num" style="font-size:14px">${s}</span></div>`).join("")}
   </div>`;
 const SHIP = `
@@ -3726,7 +3731,7 @@ const SHIP = `
 const STEPS = [
   { t:"Model the data", d:"Schemas that keep every customer's data apart and still make sense two years from now.", file:"schema.sql" },
   { t:"Retrieve the right context", d:"Keyword and vector search, a reranker, and every stage measured, so the model answers from the right passages.", file:"POST /api/search" },
-  { t:"Let agents split the question", d:"A planner breaks a question into searches, so the agent finds the second fact a single search misses: 86% correct against 74% on 100 multi-hop questions.", file:"Agent run", real: true },
+  { t:"Let agents split the question", d:"A planner breaks a question into searches, so the agent finds the second fact a single search misses: 90% correct against 72% on 50 questions that need a second search.", file:"Agent run", real: true },
   { t:"Ship it", d:"Deployed on a real server, tested, and handed over with docs.", file:"production" },
 ];
 
@@ -5461,11 +5466,11 @@ const SCENES = {
         K.alpha(B * ra); K.line(93, 51, 96, 33 + k * 6, { color: C.line });
         K.text(`${qq} ${a}`, 98, 33 + k * 6, { size: 2.3, mono: true }); K.check(116, 33 + k * 6, 1.8, C.ok);
       });
-      // the measured result (100 HotpotQA questions, 31 Oct 2026)
+      // the measured result (100 HotpotQA questions; baseline rerun with matched prompts, 24 Nov 2026)
       const ra = B * K.seg(S, 3.7, 3.85);
       if (ra > 0){
         K.alpha(ra); K.rect(30, 79, 60, 9, 2, { fill: C.surface, stroke: C.accent, lw: .45 });
-        K.text("100 questions:  loop 86%  ·  one call 74%", 60, 83.5, { size: 2.6, align: "center", weight: 600, color: C.accent });
+        K.text("100 questions:  loop 86%  ·  one call 78%", 60, 83.5, { size: 2.6, align: "center", weight: 600, color: C.accent });
       }
     }
     note("both approaches, the same questions, scored the same way", 3.6, 4.05, C.accent);

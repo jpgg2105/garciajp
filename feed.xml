@@ -68,7 +68,7 @@
     <link>https://garciajp.com/writing/does-an-agent-beat-a-single-llm-call/</link>
     <guid isPermaLink="true">https://garciajp.com/writing/does-an-agent-beat-a-single-llm-call/</guid>
     <pubDate>Sat, 31 Oct 2026 12:00:00 +0000</pubDate>
-    <description>On 100 multi-hop questions, my research agent answered 86% correctly against 74% for one retrieve-and-answer call, at about 6× the calls. Where the gain comes from, where it loses, and what I&#x27;d change.</description>
+    <description>On 100 multi-hop questions, my research agent answered 86% correctly against 78% for one call, at about 6× the calls, and the whole gain was on questions that need a second search. Plus the bias I found in my own first run.</description>
   </item>
   <item>
     <title>How an LLM request is served: prefill, decode and the KV cache</title>

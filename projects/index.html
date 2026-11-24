@@ -51,7 +51,7 @@ document.documentElement.style.animationDelay = -(Date.now() % 90000) / 1000 + "
         <div class="plist">
   <a class="prow" href="/projects/research-agent/">
     <div><h3 class="shift" style="--i:0">Research agent with its own benchmark</h3><span class="meta">Personal project · 2026</span></div>
-    <p>A RAG service, a four-agent research loop and a benchmark that tests whether the loop beats a single LLM call. On 100 multi-hop questions it got 86% right against 74%. Most of its wins came where the single call said the sources weren't enough, which only its prompt allowed, so a rerun with matching prompts is next.</p>
+    <p>A RAG service, a four-agent research loop and a benchmark that tests whether the loop beats a single LLM call. On 100 multi-hop questions it got 86% right against 78% for a single call with the same instructions, and 90% against 72% on the questions that need a second search.</p>
     <span class="go"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"></path></svg></span>
   </a>
   <a class="prow" href="/projects/retrieval-ablation/">
@@ -93,9 +93,9 @@ document.documentElement.style.animationDelay = -(Date.now() % 90000) / 1000 + "
 <!-- ===================== CONTENT =====================
      Everything on the site comes from this JSON. Edit it, then run `python build.py`.
      See README.md for what each field does. -->
-<script src="/assets/content.js?v=ef46aa4641"></script>
+<script src="/assets/content.js?v=a621c1aa14"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/motion@11.11.13/dist/motion.js"></script>
-<script src="/assets/site.js?v=855aa70227"></script>
+<script src="/assets/site.js?v=14fffdcf2c"></script>
 </body>
 </html>
